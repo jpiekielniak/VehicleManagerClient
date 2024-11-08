@@ -1,0 +1,28 @@
+<div class="sign-in-container">
+  <form [formGroup]="signInForm" (ngSubmit)="onSubmit()">
+    <mat-form-field>
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" required>
+      <mat-error *ngIf="this.signInForm.get('email')?.dirty && !this.signInForm.get('email')?.valid">Nieprawidłowy adres e-mail</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Hasło</mat-label>
+      <input matInput formControlName="password" [type]="hide() ? 'password' : 'text'" required>
+      <mat-error *ngIf="!this.signInForm.get('password')?.valid">Hasło musi zawierać co najmniej 8 znaków</mat-error>
+      <button
+        mat-icon-button
+        matSuffix
+        (click)="clickEvent($event)"
+        [attr.aria-label]="'Ukryj hasło'"
+        [attr.aria-pressed]="hide()"
+      >
+        <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit" [disabled]="signInForm.invalid">
+      Zaloguj się
+    </button>
+  </form>
+</div>
