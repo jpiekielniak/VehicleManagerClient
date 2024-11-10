@@ -3,14 +3,15 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
+    pathMatch: 'full',
     loadComponent: () => import('./components/auth/auth.component').then(m => m.AuthComponent)
   },
   {
     path: 'logowanie',
-    loadComponent: () => import('./components/sign-in/sign-in.component').then(m => m.SignInComponent)
+    loadComponent: () => import('./components/auth/auth.component').then(m => m.AuthComponent)
   },
   {
     path: 'rejestracja',
-    loadComponent: () => import('./components/sign-up/sign-up.component').then(m => m.SignUpComponent)
+    loadComponent: () => import('./components/auth/auth.component').then(m => m.AuthComponent)
   }
 ];

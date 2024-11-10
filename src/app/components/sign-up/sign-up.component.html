@@ -1,28 +1,50 @@
 <div class="sign-up-container">
   <form [formGroup]="signUpForm" (ngSubmit)="onSubmit()">
-    <mat-form-field>
+    <mat-form-field appearance="outline">
       <mat-label>Email</mat-label>
-      <input matInput formControlName="email" required>
-      <mat-error *ngIf="!this.signUpForm.get('email')?.valid">Nieprawidłowy adres e-mail</mat-error>
+      <input
+        matInput
+        formControlName="email"
+        required
+      >
+      <mat-error *ngIf="this.signUpForm.get('email')?.dirty && !this.signUpForm.get('email')?.valid">Nieprawidłowy adres e-mail</mat-error>
     </mat-form-field>
 
-    <mat-form-field>
+    <mat-form-field appearance="outline">
       <mat-label>Hasło</mat-label>
-      <input matInput formControlName="password" [type]="hide() ? 'password' : 'text'" required>
-      <mat-error *ngIf="!this.signUpForm.get('password')?.valid">Hasło musi zawierać co najmniej 8 znaków</mat-error>
+      <input
+        matInput
+        formControlName="password"
+        [type]="hidePassword() ? 'password' : 'text'"
+        required
+      >
+      <mat-error *ngIf="!this.signUpForm.get('password')?.valid">Hasło musi zawierać 8 - 16 znaków</mat-error>
       <button
         mat-icon-button
         matSuffix
-        (click)="clickEvent($event)"
-        [attr.aria-label]="'Ukryj hasło'"
-        [attr.aria-pressed]="hide()"
+        (click)="togglePasswordVisibility($event)"
       >
-        <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
+        <mat-icon>{{hidePassword() ? 'visibility_off' : 'visibility'}}</mat-icon>
       </button>
     </mat-form-field>
 
     <button mat-raised-button color="primary" type="submit" [disabled]="signUpForm.invalid">
       Zarejestruj się
     </button>
+
+    <div *ngIf="registerCompleted()" class="fade-in">
+      <c-alert color="success" class="d-flex align-items-center">
+        <i class="bi-check-circle-fill me-2"></i>
+        <div>Pomyślne zarejestrowano w systemie</div>
+      </c-alert>
+    </div>
+
+    <div *ngIf="isError()" [ngClass]="isError() ? 'fade-in' : 'fade-out'">
+      <c-alert color="danger" class="d-flex align-items-center">
+        <i class="bi-exclamation-triangle-fill me-2"></i>
+        <div>Konto o podanym adresie e-mail już istnieje</div>
+      </c-alert>
+    </div>
+
   </form>
 </div>
