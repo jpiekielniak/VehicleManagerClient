@@ -1,43 +1,48 @@
 <div class="sign-in-container">
-  <form [formGroup]="signInForm" (ngSubmit)="onSubmit()">
-    <mat-form-field appearance="outline">
-      <mat-label>Email</mat-label>
-      <input
-        matInput
-        formControlName="email"
-        required
-      >
-      <mat-error *ngIf="this.signInForm.get('email')?.dirty && !this.signInForm.get('email')?.valid">Nieprawidłowy adres e-mail</mat-error>
-    </mat-form-field>
+  <ng-container>
+    <form [formGroup]="signInForm" (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input
+          matInput
+          formControlName="email"
+          required
+        >
+        <mat-error *ngIf="this.signInForm.get('email')?.dirty && !this.signInForm.get('email')?.valid">
+          Nieprawidłowy adres e-mail
+        </mat-error>
+      </mat-form-field>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Hasło</mat-label>
-      <input
-        matInput
-        formControlName="password"
-        [type]="hidePassword() ? 'password' : 'text'"
-        required
-      >
-      <mat-error *ngIf="!this.signInForm.get('password')?.valid">Hasło musi zawierać 8 - 16 znaków</mat-error>
+      <mat-form-field appearance="outline">
+        <mat-label>Hasło</mat-label>
+        <input matInput formControlName="password" [type]="hidePassword() ? 'password' : 'text'" required>
+        <mat-error *ngIf="!this.signInForm.get('password')?.valid">
+          Hasło musi zawierać 8 - 16 znaków
+        </mat-error>
+        <button
+          mat-icon-button
+          matSuffix
+          (click)="clickEvent($event)"
+        >
+          <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+      </mat-form-field>
+
       <button
-        mat-icon-button
-        matSuffix
-        (click)="clickEvent($event)"
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="signInForm.invalid"
       >
-        <mat-icon>{{hidePassword() ? 'visibility_off' : 'visibility'}}</mat-icon>
+        Zaloguj się
       </button>
-    </mat-form-field>
 
-    <button mat-raised-button color="primary" type="submit" [disabled]="signInForm.invalid">
-      Zaloguj się
-    </button>
-
-    <div *ngIf="isError()" [ngClass]="isError() ? 'fade-in' : 'fade-out'">
-      <c-alert color="warning" class="d-flex align-items-center">
-        <i class="bi-exclamation-triangle-fill me-2"></i>
-        <div>Nieprawidłowe dane do logowania</div>
-      </c-alert>
-    </div>
-
-  </form>
+      <div *ngIf="isError()" [ngClass]="isError() ? 'fade-in' : 'fade-out'">
+        <c-alert color="warning" class="d-flex align-items-center">
+          <i class="bi-exclamation-triangle-fill me-2"></i>
+          <div>Nieprawidłowe dane do logowania</div>
+        </c-alert>
+      </div>
+    </form>
+  </ng-container>
 </div>

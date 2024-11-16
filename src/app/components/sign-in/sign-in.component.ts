@@ -1,4 +1,4 @@
-import {Component, OnInit, signal} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, signal} from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -7,7 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIcon } from "@angular/material/icon";
 import { SignIn } from "./model/SignIn";
 import { AuthService } from "../../services/auth.service";
-import { AlertComponent } from "@coreui/angular";
+import {AlertComponent} from "@coreui/angular";
 
 @Component({
   selector: 'sign-in',
@@ -59,6 +59,7 @@ export class SignInComponent implements OnInit {
   onSubmit() {
     if (this.signInForm.valid) {
       const signInData: SignIn = this.signInForm.value;
+
       this.authService.signIn(signInData).subscribe({
         next: () => window.location.reload(),
         error: () => this.handleLoginError()
