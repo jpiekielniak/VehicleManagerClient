@@ -13,5 +13,9 @@ export const routes: Routes = [
   {
     path: 'rejestracja',
     loadComponent: () => import('./components/auth/auth.component').then(m => m.AuthComponent)
+  },
+  {
+    path: 'pojazdy',
+    loadComponent: () => import('./components/vehicle-list/vehicle-list.component').then(m => m.VehicleListComponent)
   }
 ];

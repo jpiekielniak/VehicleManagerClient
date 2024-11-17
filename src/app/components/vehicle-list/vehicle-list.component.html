@@ -1,0 +1,41 @@
+<div class="vehicle-list">
+  <h1>Lista pojazdów</h1>
+  <p>Liczba pojazdów: {{ totalItemsCount }}</p>
+
+  <div *ngIf="isLoading" class="loading-spinner">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <div *ngIf="!isLoading">
+    <div class="mat-elevation-z8">
+      <table mat-table [dataSource]="dataSource" matSort class="vehicle-table">
+
+        <ng-container matColumnDef="brand">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Marka</th>
+          <td mat-cell *matCellDef="let vehicle">{{ vehicle.brand }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="model">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Model</th>
+          <td mat-cell *matCellDef="let vehicle">{{ vehicle.model }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="licensePlate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Numer rejestracyjny</th>
+          <td mat-cell *matCellDef="let vehicle">{{ vehicle.licensePlate }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+
+    <mat-paginator
+      [length]="totalItemsCount"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="[5, 10, 25]"
+      showFirstLastButtons
+      (page)="onPageChange($event)">
+    </mat-paginator>
+  </div>
+</div>
