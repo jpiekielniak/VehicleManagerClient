@@ -6,6 +6,7 @@ import {SignInType} from '../../types/sign-in.type';
 import {DOCUMENT} from '@angular/common';
 import {SignInResponse} from '../../types/token.type';
 import {API_CONSTANTS} from '../../constants/api.constants';
+import {JwtHelperService} from "@auth0/angular-jwt";
 
 @Injectable({
   providedIn: 'root',
@@ -30,5 +31,15 @@ export class AuthService {
           return false;
         })
       );
+  }
+
+  isLoggedIn() {
+    const localStorage = this.document.defaultView?.localStorage;
+    const jwtHelper = new JwtHelperService();
+    const token = localStorage?.getItem('token');
+    if (!token) {
+      return false;
+    }
+    return !(jwtHelper.isTokenExpired(token));
   }
 }

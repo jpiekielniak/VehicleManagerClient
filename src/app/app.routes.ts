@@ -1,10 +1,11 @@
-import { Routes } from '@angular/router';
+import {Routes} from '@angular/router';
+import {authGuard} from './guards/auth/auth.guard';
 
 export const routes: Routes = [
   {
     path: '',
-    pathMatch: 'full',
-    loadComponent: () => import('./components/auth/auth.component').then(m => m.AuthComponent)
+    redirectTo: 'pojazdy',
+    pathMatch: 'full'
   },
   {
     path: 'logowanie',
@@ -16,6 +17,7 @@ export const routes: Routes = [
   },
   {
     path: 'pojazdy',
-    loadComponent: () => import('./components/vehicle-list/vehicle-list.component').then(m => m.VehicleListComponent)
+    loadComponent: () => import('./components/vehicle-list/vehicle-list.component').then(m => m.VehicleListComponent),
+    canActivate: [authGuard]
   }
 ];
