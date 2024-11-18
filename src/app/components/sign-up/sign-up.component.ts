@@ -1,14 +1,11 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { AuthService } from '../../services/auth.service';
-import { SignUp } from './model/SignUp';
+import { AuthService } from '../../services/auth/auth.service';
+import { SignUpType } from '../../types/sign-up.type';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AlertComponent } from '@coreui/angular';
+import {MaterialImports} from "../../imports/material.imports";
 
 @Component({
   selector: 'sign-up',
@@ -16,10 +13,7 @@ import { AlertComponent } from '@coreui/angular';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatIconModule,
+    ...MaterialImports,
     AlertComponent,
   ],
   templateUrl: './sign-up.component.html',
@@ -59,10 +53,10 @@ export class SignUpComponent implements OnInit {
       return;
     }
 
-    const signUpData: SignUp = this.signUpForm.value;
+    const signUpData: SignUpType = this.signUpForm.value;
     this.authService.signUp(signUpData).subscribe({
       next: () => this.onSignUpSuccess(),
-      error: (error) => this.onSignUpError(error)
+      error: () => this.onSignUpError()
     });
   }
 
@@ -73,7 +67,7 @@ export class SignUpComponent implements OnInit {
     }, 2000);
   }
 
-  private onSignUpError(error: any): void {
+  private onSignUpError(): void {
     this.isError.set(true);
     setTimeout(() => {
       this.isError.set(false);

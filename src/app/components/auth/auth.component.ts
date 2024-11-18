@@ -17,7 +17,7 @@ import {SignUpComponent} from "../sign-up/sign-up.component";
   styleUrls: ['./auth.component.scss']
 })
 export class AuthComponent implements OnInit {
-  selectedTabIndex = 0;
+  selectedTabIndex = 1;
 
   constructor(private router: Router, private route: ActivatedRoute) {}
 

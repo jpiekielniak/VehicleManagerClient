@@ -1,64 +1,38 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import {
-  MatTableDataSource,
-  MatHeaderRow,
-  MatHeaderRowDef,
-  MatCell,
-  MatHeaderCell,
-  MatHeaderCellDef,
-  MatCellDef,
-  MatColumnDef,
-  MatTable,
-  MatRow,
-  MatRowDef
-} from '@angular/material/table';
-import { Vehicle, VehicleListResponse, VehicleService } from '../../services/vehicle.service';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { MatPaginator, PageEvent } from "@angular/material/paginator";
-import { NgIf } from "@angular/common";
-import { MatSort } from "@angular/material/sort";
-import { Subject, takeUntil, finalize } from 'rxjs';
+import {Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {MatTableDataSource} from '@angular/material/table';
+import {MatPaginatorIntl, PageEvent} from '@angular/material/paginator';
+import {finalize, Subject, takeUntil} from 'rxjs';
+import {VEHICLE_LIST_CONSTANTS} from '../../constants/vehicle.constants';
+import {VehicleService} from '../../services/vehicle/vehicle.service';
+import {PaginationService} from '../../services/pagination/pagination.service';
+import {MaterialImports,} from '../../imports/material.imports';
+import {getPolishPaginatorIntl} from "../../shared/get-polish-paginator.intl";
+import {VehicleType} from "../../types/vehicle.type";
+import {PaginationResultType} from "../../types/pagination-result.type";
+
 
 @Component({
   selector: 'app-vehicle-list',
   templateUrl: './vehicle-list.component.html',
   standalone: true,
-  imports: [
-    MatPaginator,
-    MatHeaderRow,
-    MatHeaderRowDef,
-    MatCell,
-    MatHeaderCell,
-    MatHeaderCellDef,
-    MatCellDef,
-    MatColumnDef,
-    MatTable,
-    MatProgressSpinner,
-    NgIf,
-    MatSort,
-    MatRow,
-    MatRowDef
+  imports: [...MaterialImports],
+  providers: [
+    {provide: MatPaginatorIntl, useValue: getPolishPaginatorIntl()}
   ],
   styleUrls: ['./vehicle-list.component.css']
 })
 export class VehicleListComponent implements OnInit, OnDestroy {
   private readonly destroy$ = new Subject<void>();
-  private readonly DEFAULT_PAGE_SIZE = 5;
-  private readonly ANIMATION_DELAY = 200;
+  private readonly vehicleService = inject(VehicleService);
+  protected readonly paginationService = inject(PaginationService);
 
-  dataSource = new MatTableDataSource<Vehicle>();
-  totalItemsCount = 0;
-  pageSize = this.DEFAULT_PAGE_SIZE;
+  dataSource = new MatTableDataSource<VehicleType>();
   isLoading = true;
-  displayedColumns: string[] = ['brand', 'model', 'licensePlate'];
-
-  @ViewChild(MatPaginator) private paginator!: MatPaginator;
-  @ViewChild(MatSort) private sort!: MatSort;
-
-  constructor(private readonly vehicleService: VehicleService) {}
+  displayedColumns = VEHICLE_LIST_CONSTANTS.COLUMNS.DISPLAYED;
+  selectedVehicle: string | null = null;
 
   ngOnInit(): void {
-    this.initializeTable();
+    this.loadVehicles();
   }
 
   ngOnDestroy(): void {
@@ -67,40 +41,43 @@ export class VehicleListComponent implements OnInit, OnDestroy {
   }
 
   onPageChange(event: PageEvent): void {
-    this.pageSize = event.pageSize;
-    this.loadVehicles(event.pageIndex + 1, this.pageSize);
+    this.paginationService.updateState({
+      pageSize: event.pageSize,
+      pageIndex: event.pageIndex
+    });
+
+    this.loadVehicles();
   }
 
-  private initializeTable(): void {
-    this.dataSource.sort = this.sort;
-    this.loadVehicles(1, this.pageSize);
+
+  onRowClick(vehicle: VehicleType): void {
+    this.selectedVehicle = vehicle.vehicleId;
   }
 
-  private loadVehicles(page: number, pageSize: number): void {
+  private loadVehicles(): void {
     this.isLoading = true;
+    const {pageIndex, pageSize} = this.paginationService.getCurrentState();
 
-    this.vehicleService.getVehicles(page, pageSize)
+    this.vehicleService.getVehicles(pageIndex + 1, pageSize)
       .pipe(
         takeUntil(this.destroy$),
         finalize(() => this.isLoading = false)
       )
       .subscribe({
-        next: (response: VehicleListResponse) => {
-          this.handleVehicleResponse(response);
-          this.animateTable();
-        }
+        next: this.handleVehicleResponse.bind(this)
       });
   }
 
-  private handleVehicleResponse(response: VehicleListResponse): void {
-    this.totalItemsCount = response.totalItemsCount;
+  private handleVehicleResponse(response: PaginationResultType<VehicleType>): void {
+    this.paginationService.updateState({totalItems: response.totalItemsCount});
     this.dataSource.data = response.items;
+    this.animateTable();
   }
 
   private animateTable(): void {
     setTimeout(() => {
-      const table = document.querySelector('.vehicle-table');
-      table?.classList.add('show');
-    }, this.ANIMATION_DELAY);
+      const table = document.querySelector(`.${VEHICLE_LIST_CONSTANTS.ANIMATION.TABLE_CLASS}`);
+      table?.classList.add(VEHICLE_LIST_CONSTANTS.ANIMATION.SHOW_CLASS);
+    }, VEHICLE_LIST_CONSTANTS.ANIMATION.DELAY);
   }
 }
