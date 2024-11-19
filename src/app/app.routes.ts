@@ -4,7 +4,7 @@ import {authGuard} from './guards/auth/auth.guard';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'pojazdy',
+    redirectTo: 'moje-pojazdy',
     pathMatch: 'full'
   },
   {
@@ -16,7 +16,7 @@ export const routes: Routes = [
     loadComponent: () => import('./components/auth/auth.component').then(m => m.AuthComponent)
   },
   {
-    path: 'pojazdy',
+    path: 'moje-pojazdy',
     loadComponent: () => import('./components/vehicle-list/vehicle-list.component').then(m => m.VehicleListComponent),
     canActivate: [authGuard]
   }

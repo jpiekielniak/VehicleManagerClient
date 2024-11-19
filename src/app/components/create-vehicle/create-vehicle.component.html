@@ -1,0 +1,118 @@
+<h2 mat-dialog-title>Dodaj nowy pojazd</h2>
+
+<form [formGroup]="createVehicleForm" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <div class="form-grid">
+      <mat-form-field>
+        <mat-label>Marka</mat-label>
+        <input matInput formControlName="brand" required>
+        <mat-error *ngIf="createVehicleForm.get('brand')?.errors?.['required']">
+          Pole wymagane
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Model</mat-label>
+        <input matInput formControlName="model" required>
+        <mat-error *ngIf="createVehicleForm.get('model')?.errors?.['required']">
+          Pole wymagane
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Rok produkcji</mat-label>
+        <input matInput type="number" formControlName="year" required>
+        <mat-error *ngIf="createVehicleForm.get('year')?.errors?.['required']">
+          Pole wymagane
+        </mat-error>
+        <mat-error *ngIf="createVehicleForm.get('year')?.errors?.['min'] || createVehicleForm.get('year')?.errors?.['max']">
+          Rok musi być między 1900 a {{ currentYear }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Numer rejestracyjny</mat-label>
+        <input matInput formControlName="licensePlate" required>
+        <mat-error *ngIf="createVehicleForm.get('licensePlate')?.errors?.['required']">
+          Pole wymagane
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>VIN</mat-label>
+        <input matInput formControlName="vin" required>
+        <mat-error *ngIf="createVehicleForm.get('vin')?.errors?.['required']">
+          Pole wymagane
+        </mat-error>
+        <mat-error *ngIf="createVehicleForm.get('vin')?.errors?.['minlength'] || createVehicleForm.get('vin')?.errors?.['maxlength']">
+          VIN musi mieć dokładnie 17 znaków
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Pojemność silnika</mat-label>
+        <input matInput type="number" formControlName="engineCapacity" required>
+        <mat-error *ngIf="createVehicleForm.get('engineCapacity')?.errors?.['required']">
+          Pole wymagane
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Moc silnika</mat-label>
+        <input matInput type="number" formControlName="enginePower" required>
+        <mat-error *ngIf="createVehicleForm.get('enginePower')?.errors?.['required']">
+          Pole wymagane
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Rodzaj paliwa</mat-label>
+        <mat-select formControlName="fuelType" required>
+          <mat-option *ngFor="let type of fuelTypes" [value]="type.key">
+            {{type.value}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="createVehicleForm.get('fuelType')?.errors?.['required']">
+          Pole wymagane
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Typ skrzyni biegów</mat-label>
+        <mat-select formControlName="gearboxType" required>
+          <mat-option *ngFor="let type of gearboxTypes" [value]="type.key">
+            {{type.value}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="createVehicleForm.get('gearboxType')?.errors?.['required']">
+          Pole wymagane
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Typ pojazdu</mat-label>
+        <mat-select formControlName="vehicleType" required>
+          <mat-option *ngFor="let type of vehicleTypes" [value]="type.key">
+            {{type.value}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="createVehicleForm.get('vehicleType')?.errors?.['required']">
+          Pole wymagane
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </mat-dialog-content>
+
+  <c-alert *ngIf="isError()" color="warning" class="d-flex align-items-center m-auto w-50">
+    <i class="bi-exclamation-triangle-fill me-2"></i>
+    <div>Wystąpił błąd podczas przetwarzania danych</div>
+  </c-alert>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="dialogRef.close()">Anuluj</button>
+    <button mat-button type="reset" (click)="createVehicleForm.reset()">Wyczyść</button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="!createVehicleForm.valid">
+      Dodaj nowy pojazd
+    </button>
+  </mat-dialog-actions>
+</form>

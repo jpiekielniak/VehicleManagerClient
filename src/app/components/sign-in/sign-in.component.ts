@@ -21,12 +21,13 @@ import {Router} from "@angular/router";
 })
 
 export class SignInComponent implements OnInit {
-  signInForm!: FormGroup;
-  hidePassword = signal(true);
-  isError = signal(false);
   private formBuilder = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
+
+  signInForm!: FormGroup;
+  hidePassword = signal(true);
+  isError = signal(false);
 
   ngOnInit() {
     this.initializeForm();
@@ -52,7 +53,7 @@ export class SignInComponent implements OnInit {
   }
 
   handleLoginSuccess() : void {
-    this.router.navigate(['/pojazdy']);
+    this.router.navigate(['/moje-pojazdy']);
   }
 
   onSubmit() : void {

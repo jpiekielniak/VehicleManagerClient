@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import {Component, inject, OnInit, signal} from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth/auth.service';
 import { SignUpType } from '../../types/sign-up.type';
@@ -20,23 +20,22 @@ import {MaterialImports} from "../../imports/material.imports";
   styleUrls: ['./sign-up.component.css']
 })
 export class SignUpComponent implements OnInit {
+  private formBuilder = inject(FormBuilder);
+  private authService = inject(AuthService);
+  private router = inject(Router);
+
   signUpForm!: FormGroup;
   hidePassword = signal(true);
   registerCompleted = signal(false);
   isError = signal(false);
 
-  constructor(
-    private fb: FormBuilder,
-    private authService: AuthService,
-    private router: Router
-  ) {}
 
   ngOnInit(): void {
     this.initializeForm();
   }
 
   private initializeForm(): void {
-    this.signUpForm = this.fb.group({
+    this.signUpForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(16)]]
     });

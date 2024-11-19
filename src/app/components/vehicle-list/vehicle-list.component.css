@@ -1,6 +1,8 @@
 .vehicle-list {
+  align-content: center;
+  justify-content: center;
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 50px auto;
   padding: 20px;
   font-family: 'Roboto', sans-serif;
 }

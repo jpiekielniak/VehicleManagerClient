@@ -9,6 +9,8 @@ import {MaterialImports,} from '../../imports/material.imports';
 import {getPolishPaginatorIntl} from "../../shared/get-polish-paginator.intl";
 import {VehicleType} from "../../types/vehicle.type";
 import {PaginationResultType} from "../../types/pagination-result.type";
+import {MatDialog} from "@angular/material/dialog";
+import {CreateVehicleComponent} from "../create-vehicle/create-vehicle.component";
 
 
 @Component({
@@ -25,6 +27,7 @@ export class VehicleListComponent implements OnInit, OnDestroy {
   private readonly destroy$ = new Subject<void>();
   private readonly vehicleService = inject(VehicleService);
   protected readonly paginationService = inject(PaginationService);
+  private readonly dialog = inject(MatDialog);
 
   dataSource = new MatTableDataSource<VehicleType>();
   isLoading = true;
@@ -79,5 +82,16 @@ export class VehicleListComponent implements OnInit, OnDestroy {
       const table = document.querySelector(`.${VEHICLE_LIST_CONSTANTS.ANIMATION.TABLE_CLASS}`);
       table?.classList.add(VEHICLE_LIST_CONSTANTS.ANIMATION.SHOW_CLASS);
     }, VEHICLE_LIST_CONSTANTS.ANIMATION.DELAY);
+  }
+
+  openVehicleDialog() {
+    const dialogRef = this.dialog.open(CreateVehicleComponent, {
+      width: '800px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      this.loadVehicles();
+    });
   }
 }

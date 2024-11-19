@@ -14,6 +14,8 @@ import {MatError, MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatIcon} from "@angular/material/icon";
 import {MatButton, MatIconButton} from "@angular/material/button";
 import {MatInput} from "@angular/material/input";
+import {MatOption, MatSelect} from "@angular/material/select";
+import { MatDialogActions, MatDialogContent, MatDialogTitle} from "@angular/material/dialog";
 
 export const MaterialImports = [
   MatPaginator,
@@ -26,6 +28,11 @@ export const MaterialImports = [
   MatButton,
   MatIconButton,
   MatInput,
+  MatSelect,
+  MatOption,
+  MatDialogActions,
+  MatDialogContent,
+  MatDialogTitle,
   MatCell,
   MatHeaderCell,
   MatHeaderCellDef,
