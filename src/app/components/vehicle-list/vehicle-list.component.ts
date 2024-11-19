@@ -8,9 +8,10 @@ import {PaginationService} from '../../services/pagination/pagination.service';
 import {MaterialImports,} from '../../imports/material.imports';
 import {getPolishPaginatorIntl} from "../../shared/get-polish-paginator.intl";
 import {VehicleType} from "../../types/vehicle.type";
-import {PaginationResultType} from "../../types/pagination-result.type";
+import {PaginationResult} from "../../types/pagination.result";
 import {MatDialog} from "@angular/material/dialog";
 import {CreateVehicleComponent} from "../create-vehicle/create-vehicle.component";
+import {ConfirmDialogComponent} from "../confirm-dialog/confirm-dialog.component";
 
 
 @Component({
@@ -31,8 +32,9 @@ export class VehicleListComponent implements OnInit, OnDestroy {
 
   dataSource = new MatTableDataSource<VehicleType>();
   isLoading = true;
-  displayedColumns = VEHICLE_LIST_CONSTANTS.COLUMNS.DISPLAYED;
   selectedVehicle: string | null = null;
+  hoveredAction: string | null = null;
+  displayedColumns =  VEHICLE_LIST_CONSTANTS.COLUMNS.DISPLAYED;
 
   ngOnInit(): void {
     this.loadVehicles();
@@ -52,11 +54,6 @@ export class VehicleListComponent implements OnInit, OnDestroy {
     this.loadVehicles();
   }
 
-
-  onRowClick(vehicle: VehicleType): void {
-    this.selectedVehicle = vehicle.vehicleId;
-  }
-
   private loadVehicles(): void {
     this.isLoading = true;
     const {pageIndex, pageSize} = this.paginationService.getCurrentState();
@@ -71,7 +68,7 @@ export class VehicleListComponent implements OnInit, OnDestroy {
       });
   }
 
-  private handleVehicleResponse(response: PaginationResultType<VehicleType>): void {
+  private handleVehicleResponse(response: PaginationResult<VehicleType>): void {
     this.paginationService.updateState({totalItems: response.totalItemsCount});
     this.dataSource.data = response.items;
     this.animateTable();
@@ -89,9 +86,33 @@ export class VehicleListComponent implements OnInit, OnDestroy {
       width: '800px'
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
+    dialogRef.afterClosed().subscribe(() => {
       this.loadVehicles();
+    });
+  }
+
+  confirmDelete(vehicle: any): void {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: {
+        title: 'Potwierdzenie usunięcia',
+        message: `Czy na pewno chcesz usunąć pojazd ${vehicle.brand} ${vehicle.model}?`
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.deleteVehicle(vehicle.vehicleId);
+      }
+    });
+  }
+
+  private deleteVehicle(id: number): void {
+    this.vehicleService.deleteVehicle(id).subscribe({
+      next: this.loadVehicles.bind(this),
+      error: (error) => {
+        console.error(error);
+      }
     });
   }
 }

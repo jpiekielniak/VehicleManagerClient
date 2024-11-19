@@ -47,14 +47,33 @@
           </td>
         </ng-container>
 
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>
+          </th>
+          <td mat-cell *matCellDef="let row" class="actions-cell">
+            <i
+              title="Usuń pojazd"
+              class="bi-trash align-content-end action-icon"
+              (click)="confirmDelete(row)"
+              (mouseover)="hoveredAction = row.vehicleId"
+              (mouseleave)="hoveredAction = null"
+              [style.color]="hoveredAction === row.vehicleId ? 'red' : 'inherit'">
+            </i>
+          </td>
+        </ng-container>
+
+
         <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
         <tr
           mat-row
           *matRowDef="let vehicle; columns: displayedColumns;"
           [class.highlighted-row]="selectedVehicle === vehicle.vehicleId"
-          (click)="onRowClick(vehicle)">
+          >
         </tr>
+
+
       </table>
+
 
     </div>
 

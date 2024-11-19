@@ -9,6 +9,6 @@ export const VEHICLE_LIST_CONSTANTS = {
     SHOW_CLASS: 'show'
   },
   COLUMNS: {
-    DISPLAYED: ['brand', 'model', 'licensePlate'] as const
+    DISPLAYED: ['brand', 'model', 'licensePlate', 'actions'] as const
   }
 };
