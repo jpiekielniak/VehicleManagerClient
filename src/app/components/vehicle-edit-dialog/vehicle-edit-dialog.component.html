@@ -1,0 +1,124 @@
+<h2 mat-dialog-title>Edycja pojazdu</h2>
+
+<mat-dialog-content class="m-2 p-3">
+
+  <div *ngIf="isLoading()">
+  <mat-progress-spinner
+    mode="indeterminate"
+    diameter="48"
+    class="loading-spinner">
+  </mat-progress-spinner>
+  </div>
+
+  <form [formGroup]="vehicleForm">
+    <div class="form-grid">
+      <mat-form-field appearance="outline">
+        <mat-label>Marka</mat-label>
+        <input matInput formControlName="brand">
+        <mat-error *ngIf="vehicleForm.get('brand')?.hasError('required')">
+          Marka jest wymagana
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Model</mat-label>
+        <input matInput formControlName="model">
+        <mat-error *ngIf="vehicleForm.get('model')?.hasError('required')">
+          Model jest wymagany
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Rok produkcji</mat-label>
+        <input matInput type="number" formControlName="year">
+        <mat-error *ngIf="vehicleForm.get('year')?.hasError('required')">
+          Rok produkcji jest wymagany
+        </mat-error>
+        <mat-error *ngIf="vehicleForm.get('year')?.hasError('min') || vehicleForm.get('year')?.hasError('max')">
+          Nieprawidłowy rok produkcji
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Tablica rejestracyjna</mat-label>
+        <input matInput formControlName="licensePlate">
+        <mat-error *ngIf="vehicleForm.get('licensePlate')?.hasError('required')">
+          Tablica rejestracyjna jest wymagana
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Numer VIN</mat-label>
+        <input matInput formControlName="vin">
+        <mat-error *ngIf="vehicleForm.get('vin')?.hasError('required')">
+          Numer VIN jest wymagany
+        </mat-error>
+        <mat-error *ngIf="vehicleForm.get('vin')?.hasError('minlength') || vehicleForm.get('vin')?.hasError('maxlength')">
+          Numer VIN musi mieć 17 znaków
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Pojemność silnika</mat-label>
+        <input matInput type="number" formControlName="engineCapacity">
+        <mat-error *ngIf="vehicleForm.get('engineCapacity')?.hasError('required')">
+          Pojemność silnika jest wymagana
+        </mat-error>
+        <mat-error *ngIf="vehicleForm.get('engineCapacity')?.hasError('min')">
+          Pojemność silnika musi być dodatnia
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Moc silnika</mat-label>
+        <input matInput type="number" formControlName="enginePower">
+        <mat-error *ngIf="vehicleForm.get('enginePower')?.hasError('required')">
+          Moc silnika jest wymagana
+        </mat-error>
+        <mat-error *ngIf="vehicleForm.get('enginePower')?.hasError('min')">
+          Moc silnika musi być dodatnia
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Skrzynia biegów</mat-label>
+        <mat-select formControlName="gearboxType">
+          <mat-option *ngFor="let type of gearboxTypes" [value]="type.value" >
+            {{ type.value }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="vehicleForm.get('gearboxType')?.hasError('required')">
+          Skrzynia biegów jest wymagana
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Rodzaj paliwa</mat-label>
+        <mat-select formControlName="fuelType">
+          <mat-option *ngFor="let type of fuelTypes" [value]="type.value">
+            {{type.value}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="vehicleForm.get('fuelType')?.hasError('required')">
+          Rodzaj paliwa jest wymagany
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Typ pojazdu</mat-label>
+        <mat-select formControlName="vehicleType">
+          <mat-option *ngFor="let type of vehicleTypes" [value]="type.value">
+            {{type.value}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="vehicleForm.get('vehicleType')?.hasError('required')">
+          Typ pojazdu jest wymagany
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="cancelEdit()">Anuluj</button>
+  <button mat-raised-button color="primary" (click)="saveChanges()" [disabled]="vehicleForm.invalid">Zapisz</button>
+</mat-dialog-actions>

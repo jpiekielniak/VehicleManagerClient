@@ -1,0 +1,42 @@
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  padding: 20px;
+}
+
+.mat-dialog-content {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.mat-form-field {
+  width: 100%;
+  margin: 10px;
+}
+
+mat-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 16px;
+}
+
+mat-dialog-actions button {
+  margin-left: 10px;
+}
+
+.mat-raised-button.mat-primary {
+  background-color: #1976d2;
+  color: white;
+}
+
+.mat-raised-button.mat-primary:disabled {
+  background-color: #ccc;
+  color: rgba(0, 0, 0, 0.38);
+}
+
+@media (max-width: 600px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -16,6 +16,7 @@ import {MatButton, MatIconButton} from "@angular/material/button";
 import {MatInput} from "@angular/material/input";
 import {MatOption, MatSelect} from "@angular/material/select";
 import { MatDialogActions, MatDialogContent, MatDialogTitle} from "@angular/material/dialog";
+import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardTitle} from "@angular/material/card";
 
 export const MaterialImports = [
   MatPaginator,
@@ -27,7 +28,12 @@ export const MaterialImports = [
   MatIcon,
   MatButton,
   MatIconButton,
+  MatCardHeader,
+  MatCardTitle,
   MatInput,
+  MatCard,
+  MatCardActions,
+  MatCardContent,
   MatSelect,
   MatOption,
   MatDialogActions,

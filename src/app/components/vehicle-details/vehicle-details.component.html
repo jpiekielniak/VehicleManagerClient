@@ -1,0 +1,58 @@
+<div class="vehicle-details-container">
+  <mat-card *ngIf="vehicle" class="vehicle-card">
+    <mat-card-header>
+      <mat-card-title>Szczegóły pojazdu</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="form-grid">
+        <div class="detail-item">
+          <strong>Marka:</strong> {{ vehicle.brand }}
+        </div>
+        <div class="detail-item">
+          <strong>Model:</strong> {{ vehicle.model }}
+        </div>
+        <div class="detail-item">
+          <strong>Rok produkcji:</strong> {{ vehicle.year }}
+        </div>
+        <div class="detail-item">
+          <strong>Tablica rejestracyjna:</strong> {{ vehicle.licensePlate }}
+        </div>
+        <div class="detail-item">
+          <strong>Numer VIN:</strong> {{ vehicle.vin }}
+        </div>
+        <div class="detail-item">
+          <strong>Pojemność silnika:</strong> {{ vehicle.engineCapacity }}
+        </div>
+        <div class="detail-item">
+          <strong>Moc silnika:</strong> {{ vehicle.enginePower }} km
+        </div>
+        <div class="detail-item">
+          <strong>Skrzynia biegów:</strong> {{ vehicle.gearboxType }}
+        </div>
+        <div class="detail-item">
+          <strong>Rodzaj paliwa:</strong> {{ vehicle.fuelType }}
+        </div>
+        <div class="detail-item">
+          <strong>Typ pojazdu:</strong> {{ vehicle.vehicleType }}
+        </div>
+        <div class="detail-item">
+          <strong>Dodano do systemu:</strong> {{ vehicle.createdAt | date: 'dd.MM.yyyy HH:mm' }}
+        </div>
+      </div>
+    </mat-card-content>
+
+
+    <mat-card-actions>
+      <button mat-raised-button color="primary" (click)="openEditDialog()">Edytuj</button>
+      <button mat-raised-button color="warn">Usuń</button>
+    </mat-card-actions>
+  </mat-card>
+
+  <mat-card *ngIf="!vehicle" class="loading-card">
+    <mat-card-content>
+      <mat-spinner></mat-spinner>
+      <p>Ładuję informacje...</p>
+    </mat-card-content>
+  </mat-card>
+</div>

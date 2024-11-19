@@ -9,12 +9,7 @@ import {VehicleService} from "../../services/vehicle/vehicle.service";
 import {CreateVehicle} from "../../types/create-vehicle";
 import {forkJoin, Subject, takeUntil} from "rxjs";
 import {AlertComponent} from "@coreui/angular";
-
-interface EnumData {
-  fuelTypes: EnumType[];
-  gearboxTypes: EnumType[];
-  vehicleTypes: EnumType[];
-}
+import {EnumData} from "../../types/enum.data";
 
 @Component({
   selector: 'app-create-vehicle',
