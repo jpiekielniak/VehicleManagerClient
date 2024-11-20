@@ -49,15 +49,24 @@
 
         <ng-container matColumnDef="actions">
           <th mat-header-cell *matHeaderCellDef>
+
           </th>
           <td mat-cell *matCellDef="let row" class="actions-cell">
+            <i
+              title="Szczegóły pojazdu"
+              class="bi-arrow-right-circle align-content-end action-icon m-2"
+              (click)="navigateToDetails(row.vehicleId)"
+              (mouseover)="hoveredAction = 'details-' + row.vehicleId"
+              (mouseleave)="hoveredAction = null"
+              [style.color]="hoveredAction === 'details-' + row.vehicleId ? 'green' : 'inherit'">
+            </i>
             <i
               title="Usuń pojazd"
               class="bi-trash align-content-end action-icon"
               (click)="confirmDelete(row)"
-              (mouseover)="hoveredAction = row.vehicleId"
+              (mouseover)="hoveredAction = 'delete-' + row.vehicleId"
               (mouseleave)="hoveredAction = null"
-              [style.color]="hoveredAction === row.vehicleId ? 'red' : 'inherit'">
+              [style.color]="hoveredAction === 'delete-' + row.vehicleId ? 'red' : 'inherit'">
             </i>
           </td>
         </ng-container>

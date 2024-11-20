@@ -12,6 +12,7 @@ import {PaginationResult} from "../../types/pagination.result";
 import {MatDialog} from "@angular/material/dialog";
 import {CreateVehicleComponent} from "../create-vehicle/create-vehicle.component";
 import {ConfirmDialogComponent} from "../confirm-dialog/confirm-dialog.component";
+import {Router} from "@angular/router";
 
 
 @Component({
@@ -29,6 +30,7 @@ export class VehicleListComponent implements OnInit, OnDestroy {
   private readonly vehicleService = inject(VehicleService);
   protected readonly paginationService = inject(PaginationService);
   private readonly dialog = inject(MatDialog);
+  private readonly router = inject(Router);
 
   dataSource = new MatTableDataSource<VehicleType>();
   isLoading = true;
@@ -114,5 +116,9 @@ export class VehicleListComponent implements OnInit, OnDestroy {
         console.error(error);
       }
     });
+  }
+
+  navigateToDetails(vehicleId: string) {
+    this.router.navigate([`/moje-pojazdy/${vehicleId}`]);
   }
 }
