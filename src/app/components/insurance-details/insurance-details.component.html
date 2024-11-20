@@ -1,0 +1,33 @@
+<h2 mat-dialog-title>{{ insuranceDetails?.title }}</h2>
+<mat-dialog-content>
+  <div class="row">
+    <div class="col-12 mb-3">
+      <strong>Opis:</strong>
+      {{ insuranceDetails?.title  }}
+    </div>
+
+    <div class="col-12 mb-3">
+      <strong>Ubezpieczyciel</strong>
+      {{ insuranceDetails?.provider }}
+    </div>
+
+    <div class="col-12 mb-3">
+      <strong>Numer polisy:</strong>
+      {{ insuranceDetails?.policyNumber }}
+    </div>
+
+    <div class="col-12 mb-3">
+      <strong>Ważna od</strong>
+      {{ insuranceDetails?.validFrom | date:'dd.MM.yyyy' }}
+    </div>
+
+    <div class="col-12 mb-3">
+      <strong>Ważna do</strong>
+      {{ insuranceDetails?.validTo | date:'dd.MM.yyyy' }}
+    </div>
+
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="true">Zamknij</button>
+</mat-dialog-actions>

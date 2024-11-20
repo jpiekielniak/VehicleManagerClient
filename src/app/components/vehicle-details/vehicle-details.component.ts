@@ -22,6 +22,8 @@ import {Inspection} from "../../types/inspection.type";
 import {ConfirmDialogComponent} from "../confirm-dialog/confirm-dialog.component";
 import {ServiceDetailsComponent} from "../service-details/service-details.component";
 import {InspectionDetailsComponent} from "../inspection-details/inspection-details.component";
+import {Insurance} from "../../types/insurance.type";
+import {InsuranceDetailsComponent} from "../insurance-details/insurance-details.component";
 
 @Component({
   selector: 'app-vehicle-details',
@@ -51,6 +53,7 @@ export class VehicleDetailsComponent implements OnInit {
   vehicle: VehicleDetails | null = null;
   services: Service[] = [];
   inspections: Inspection[] = [];
+  insurances: Insurance[] = [];
   hoveredAction: string | null = null;
 
 
@@ -66,6 +69,7 @@ export class VehicleDetailsComponent implements OnInit {
         this.vehicle = response;
         this.loadServices();
         this.loadInspection();
+        this.loadInsurances();
       },
       error: (err) => {
         console.error('Failed to fetch vehicle details', err);
@@ -172,4 +176,46 @@ export class VehicleDetailsComponent implements OnInit {
     });
   }
 
+  loadInsurances() {
+    this.vehicleService.getInsurances(this.vehicleId).subscribe({
+      next: (response: any) => {
+        this.insurances = response.items || [];
+      },
+      error: (err) => {
+        console.error('Failed to fetch insurances', err);
+      }
+    })
+  }
+
+  confirmInsuranceDelete(insurance: any): void {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: {
+        title: 'Potwierdzenie usunięcia',
+        message: `Czy na pewno chcesz usunąć ubezpieczenie '${insurance.title}'?`
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.deleteInsurance(insurance.insuranceId);
+      }
+    });
+  }
+
+  deleteInsurance(insuranceId : string) {
+    this.vehicleService.deleteInsurance(insuranceId).subscribe({
+      next: this.loadInsurances.bind(this),
+      error: (error) => {
+        console.error(error);
+      }
+    })
+  }
+
+  openInsuranceDetails(insurance: Insurance) {
+    this.dialog.open(InsuranceDetailsComponent, {
+      width: '600px',
+      data: {insurance, vehicleId: this.vehicleId}
+    });
+  }
 }
