@@ -7,6 +7,7 @@ import {DOCUMENT} from '@angular/common';
 import {SignInResponse} from '../../types/token.type';
 import {API_CONSTANTS} from '../../constants/api.constants';
 import {JwtHelperService} from "@auth0/angular-jwt";
+import {UserDetails} from "../../types/user-details.type";
 
 @Injectable({
   providedIn: 'root',
@@ -33,6 +34,10 @@ export class AuthService {
       );
   }
 
+  getUserDetails(): Observable<UserDetails> {
+    return this.http.get<UserDetails>(API_CONSTANTS.USERS.BASE_PATH);
+  }
+
   isLoggedIn() {
     const localStorage = this.document.defaultView?.localStorage;
     const jwtHelper = new JwtHelperService();
@@ -41,5 +46,9 @@ export class AuthService {
       return false;
     }
     return !(jwtHelper.isTokenExpired(token));
+  }
+
+  completeUserData(updateUser: any) : Observable<void> {
+    return this.http.put<void>(`${API_CONSTANTS.USERS.BASE_PATH}/${updateUser.id}/complete`, updateUser);
   }
 }

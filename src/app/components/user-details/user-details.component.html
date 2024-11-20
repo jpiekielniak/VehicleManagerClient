@@ -1,0 +1,59 @@
+<div class="user-details-container">
+  <h2>Szczegóły użytkownika</h2>
+
+  <div *ngIf="!isEditing">
+    <table class="user-details-table">
+      <tbody>
+      <tr>
+        <th>ID</th>
+        <td>{{ userDetails?.id }}</td>
+      </tr>
+      <tr>
+        <th>Email</th>
+        <td>{{ userDetails?.email }}</td>
+      </tr>
+      <tr>
+        <th>Imię</th>
+        <td>{{ userDetails?.firstName || '-' }}</td>
+      </tr>
+      <tr>
+        <th>Nazwisko</th>
+        <td>{{ userDetails?.lastName || '-' }}</td>
+      </tr>
+      <tr>
+        <th>Numer telefonu</th>
+        <td>{{ userDetails?.phoneNumber || '-' }}</td>
+      </tr>
+      <tr>
+        <th>Rola</th>
+        <td>{{ userDetails?.role }}</td>
+      </tr>
+      <tr>
+        <th>Utworzono</th>
+        <td>{{ userDetails?.createdAt | date:'dd.MM.yyyy' }}</td>
+      </tr>
+      </tbody>
+    </table>
+    <button (click)="toggleEdit()">Edytuj</button>
+  </div>
+
+  <form *ngIf="isEditing" (ngSubmit)="onSubmit(editForm)" #editForm="ngForm">
+    <div class="form-group">
+      <label>Imię</label>
+      <input type="text" name="firstName" [(ngModel)]="editedUser.firstName" required class="form-control">
+    </div>
+    <div class="form-group">
+      <label>Nazwisko</label>
+      <input type="text" name="lastName" [(ngModel)]="editedUser.lastName" required class="form-control">
+    </div>
+    <div class="form-group">
+      <label>Numer telefonu</label>
+      <input type="text" name="phoneNumber" [(ngModel)]="editedUser.phoneNumber" required class="form-control">
+    </div>
+    <div class="form-actions">
+      <button type="submit" class="btn-save">Zapisz</button>
+      <button type="button" (click)="cancelEdit()" class="btn-cancel">Anuluj</button>
+    </div>
+  </form>
+
+</div>

@@ -4,6 +4,7 @@ export const API_CONSTANTS = {
     BASE_PATH: `${API_URL}/vehicles`,
   },
   USERS: {
+    BASE_PATH: `${API_URL}/users`,
     SIGN_IN: `${API_URL}/users/sign-in`,
     SIGN_UP: `${API_URL}/users/sign-up`,
   },
