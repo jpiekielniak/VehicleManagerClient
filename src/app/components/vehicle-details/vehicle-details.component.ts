@@ -1,26 +1,27 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { ActivatedRoute } from "@angular/router";
-import { switchMap } from "rxjs";
-import { ReactiveFormsModule } from '@angular/forms';
-import { VehicleService } from "../../services/vehicle/vehicle.service";
+import {Component, inject, OnInit} from '@angular/core';
+import {ActivatedRoute} from "@angular/router";
+import {switchMap} from "rxjs";
+import {ReactiveFormsModule} from '@angular/forms';
+import {VehicleService} from "../../services/vehicle/vehicle.service";
 import {VehicleDetails} from "../../types/vehicle-details.type";
-
-import { CommonModule } from '@angular/common';
-
+import {CommonModule} from '@angular/common';
 import {MaterialImports} from "../../imports/material.imports";
 import {MatDialog} from "@angular/material/dialog";
 import {VehicleEditDialogComponent} from "../vehicle-edit-dialog/vehicle-edit-dialog.component";
 import {
   MatAccordion,
-  MatExpansionPanel, MatExpansionPanelDescription,
+  MatExpansionPanel,
+  MatExpansionPanelDescription,
   MatExpansionPanelHeader,
   MatExpansionPanelTitle
 } from "@angular/material/expansion";
 import {MatList, MatListItem} from "@angular/material/list";
-import {MatLine} from "@angular/material/core";
 import {ServiceBookService} from "../../services/serviceBook/service-book.service";
 import {Service} from "../../types/service.type";
 import {Inspection} from "../../types/inspection.type";
+import {ConfirmDialogComponent} from "../confirm-dialog/confirm-dialog.component";
+import {ServiceDetailsComponent} from "../service-details/service-details.component";
+import {InspectionDetailsComponent} from "../inspection-details/inspection-details.component";
 
 @Component({
   selector: 'app-vehicle-details',
@@ -36,7 +37,6 @@ import {Inspection} from "../../types/inspection.type";
     MatExpansionPanelTitle,
     MatList,
     MatListItem,
-    MatLine
   ],
   templateUrl: './vehicle-details.component.html',
   styleUrl: './vehicle-details.component.css'
@@ -51,6 +51,8 @@ export class VehicleDetailsComponent implements OnInit {
   vehicle: VehicleDetails | null = null;
   services: Service[] = [];
   inspections: Inspection[] = [];
+  hoveredAction: string | null = null;
+
 
   ngOnInit() {
     this.route.paramMap.pipe(
@@ -77,7 +79,7 @@ export class VehicleDetailsComponent implements OnInit {
         this.services = response.items || [];
       },
       error: (err) => {
-        console.error('Failed to fetch repairs', err);
+        console.error('Failed to fetch services', err);
       }
     });
   }
@@ -96,7 +98,7 @@ export class VehicleDetailsComponent implements OnInit {
   openEditDialog() {
     const dialogRef = this.dialog.open(VehicleEditDialogComponent, {
       width: '1200px',
-      data: { vehicle: this.vehicle }
+      data: {vehicle: this.vehicle}
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -105,4 +107,69 @@ export class VehicleDetailsComponent implements OnInit {
       }
     });
   }
+
+  confirmInspectionDelete(inspection: any): void {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: {
+        title: 'Potwierdzenie usunięcia',
+        message: `Czy na pewno chcesz usunąć przegląd '${inspection.title}'?`
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.deleteInspection(inspection.id);
+      }
+    });
+  }
+
+  confirmServiceDelete(service: any): void {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: {
+        title: 'Potwierdzenie usunięcia',
+        message: `Czy na pewno chcesz usunąć przegląd '${service.title}'?`
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.deleteService(service.id);
+      }
+    });
+  }
+
+  deleteInspection(inspectionId: string) {
+    this.serviceBookService.deleteInspection(this.vehicle?.serviceBookId!, inspectionId).subscribe({
+      next: this.loadInspection.bind(this),
+      error: (error) => {
+        console.error(error);
+      }
+    });
+  }
+
+  deleteService(serviceId: string) {
+    this.serviceBookService.deleteService(this.vehicle?.serviceBookId!, serviceId).subscribe({
+      next: this.loadServices.bind(this),
+      error: (error) => {
+        console.error(error);
+      }
+    });
+  }
+
+  openServiceDetails(service : any) {
+    this.dialog.open(ServiceDetailsComponent, {
+      width: '600px',
+      data: {service, serviceBookId: this.vehicle?.serviceBookId}
+    });
+  }
+
+  openInspectionDetails(inspection : any) {
+    this.dialog.open(InspectionDetailsComponent, {
+      width: '600px',
+      data: {inspection, serviceBookId: this.vehicle?.serviceBookId}
+    });
+  }
+
 }

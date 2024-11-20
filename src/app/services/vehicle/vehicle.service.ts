@@ -3,7 +3,7 @@ import {inject, Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {API_CONSTANTS} from "../../constants/api.constants";
 import {Vehicle} from "../../types/vehicle.type";
-import {PaginationResult} from "../../types/pagination.result.type";
+import {PaginationResult} from "../../types/pagination-result.type";
 import {CreateVehicle} from "../../types/create-vehicle.type";
 import {VehicleDetails} from "../../types/vehicle-details.type";
 

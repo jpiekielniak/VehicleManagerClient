@@ -8,7 +8,7 @@ import {PaginationService} from '../../services/pagination/pagination.service';
 import {MaterialImports,} from '../../imports/material.imports';
 import {getPolishPaginatorIntl} from "../../shared/get-polish-paginator.intl";
 import {Vehicle} from "../../types/vehicle.type";
-import {PaginationResult} from "../../types/pagination.result.type";
+import {PaginationResult} from "../../types/pagination-result.type";
 import {MatDialog} from "@angular/material/dialog";
 import {CreateVehicleComponent} from "../create-vehicle/create-vehicle.component";
 import {ConfirmDialogComponent} from "../confirm-dialog/confirm-dialog.component";

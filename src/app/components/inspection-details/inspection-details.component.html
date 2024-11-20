@@ -1,0 +1,28 @@
+<h2 mat-dialog-title>{{ inspectionDetails?.title }}</h2>
+<mat-dialog-content>
+  <div class="row">
+    <div class="col-12 mb-3">
+      <strong>Opis:</strong>
+      {{ inspectionDetails?.title  }}
+    </div>
+
+    <div class="col-12 mb-3">
+      <strong>Planowana data:</strong>
+      {{ inspectionDetails?.scheduledDate | date:'dd.MM.yyyy' }}
+    </div>
+
+    <div class="col-12 mb-3">
+      <strong>Data wykonania:</strong>
+      {{ inspectionDetails?.performDate | date:'dd.MM.yyyy' }}
+    </div>
+
+    <div class="col-12 mb-3">
+      <strong>Typ przeglądu:</strong>
+      {{ inspectionDetails?.inspectionType }}
+    </div>
+
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="true">Zamknij</button>
+</mat-dialog-actions>
