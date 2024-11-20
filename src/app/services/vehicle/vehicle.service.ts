@@ -2,10 +2,10 @@ import {Observable} from "rxjs";
 import {inject, Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {API_CONSTANTS} from "../../constants/api.constants";
-import {PaginationResult} from "../../types/pagination.result";
-import {VehicleType} from "../../types/vehicle.type";
-import {CreateVehicle} from "../../types/create-vehicle";
-import {VehicleDetails} from "../../types/vehicle-details";
+import {Vehicle} from "../../types/vehicle.type";
+import {PaginationResult} from "../../types/pagination.result.type";
+import {CreateVehicle} from "../../types/create-vehicle.type";
+import {VehicleDetails} from "../../types/vehicle-details.type";
 
 @Injectable({
   providedIn: 'root'
@@ -17,8 +17,8 @@ export class VehicleService {
     return this.http.post<any>(API_CONSTANTS.VEHICLE.BASE_PATH, vehicle);
   }
 
-  getVehicles(page: number, pageSize: number): Observable<PaginationResult<VehicleType>> {
-    return this.http.get<PaginationResult<VehicleType>>(API_CONSTANTS.VEHICLE.BASE_PATH + `?page=${page}&pageSize=${pageSize}`)
+  getVehicles(page: number, pageSize: number): Observable<PaginationResult<Vehicle>> {
+    return this.http.get<PaginationResult<Vehicle>>(API_CONSTANTS.VEHICLE.BASE_PATH + `?page=${page}&pageSize=${pageSize}`)
   }
 
   deleteVehicle(id: number): Observable<void> {

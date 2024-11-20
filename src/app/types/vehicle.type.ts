@@ -1,4 +1,4 @@
-export type VehicleType = {
+export type Vehicle = {
   vehicleId: string;
   brand: string;
   model: string;

@@ -1,7 +1,7 @@
 import {Component, inject, OnInit, signal} from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth/auth.service';
-import { SignUpType } from '../../types/sign-up.type';
+import { SignUp } from '../../types/sign-up.type';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AlertComponent } from '@coreui/angular';
@@ -52,7 +52,7 @@ export class SignUpComponent implements OnInit {
       return;
     }
 
-    const signUpData: SignUpType = this.signUpForm.value;
+    const signUpData: SignUp = this.signUpForm.value;
     this.authService.signUp(signUpData).subscribe({
       next: () => this.onSignUpSuccess(),
       error: () => this.onSignUpError()

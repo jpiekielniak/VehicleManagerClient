@@ -42,6 +42,62 @@
       </div>
     </mat-card-content>
 
+      <mat-card class="service-book-card mt-4">
+        <mat-card-header>
+          <mat-card-title>Książka serwisowa</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-accordion>
+            <mat-expansion-panel>
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  Naprawy
+                </mat-panel-title>
+                <mat-panel-description>
+                  {{ services.length || 0 }} wpisów
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+
+              <ng-container *ngIf="services && services.length > 0; else noRepairs">
+                <mat-list>
+                  <mat-list-item *ngFor="let service of services">
+                    <div mat-line>{{ service.title }}</div>
+                  </mat-list-item>
+                </mat-list>
+              </ng-container>
+
+              <ng-template #noRepairs>
+                <p class="text-center">Brak wpisów napraw</p>
+              </ng-template>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel>
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  Przeglądy
+                </mat-panel-title>
+                <mat-panel-description>
+                  {{ inspections.length || 0 }} wpisów
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+
+              <ng-container *ngIf="inspections && inspections.length > 0; else noInspections">
+                <mat-list>
+                  <mat-list-item *ngFor="let inspection of inspections">
+                    <div mat-line>{{ inspection.title }}</div>
+                  </mat-list-item>
+                </mat-list>
+              </ng-container>
+
+              <ng-template #noInspections>
+                <p class="text-center">Brak wpisów przeglądów</p>
+              </ng-template>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </mat-card-content>
+
+
+      </mat-card>
 
     <mat-card-actions>
       <button mat-raised-button color="primary" (click)="openEditDialog()">Edytuj</button>

@@ -1,15 +1,16 @@
 import {Component, inject, OnDestroy, OnInit, signal} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {EnumService, EnumType} from "../../services/enum/enum.service";
+import {EnumService} from "../../services/enum/enum.service";
 import {MatDialogRef} from "@angular/material/dialog";
 import {MaterialImports} from "../../imports/material.imports";
 import {NgForOf} from "@angular/common";
 import {API_CONSTANTS} from "../../constants/api.constants";
 import {VehicleService} from "../../services/vehicle/vehicle.service";
-import {CreateVehicle} from "../../types/create-vehicle";
+import {CreateVehicle} from "../../types/create-vehicle.type";
 import {forkJoin, Subject, takeUntil} from "rxjs";
 import {AlertComponent} from "@coreui/angular";
-import {EnumData} from "../../types/enum.data";
+import {EnumData} from "../../types/enum-data.type";
+import {Enum} from "../../types/enum.type";
 
 @Component({
   selector: 'app-create-vehicle',
@@ -28,9 +29,9 @@ export class CreateVehicleComponent implements OnInit, OnDestroy {
   isError = signal(false);
   createVehicleForm!: FormGroup;
   currentYear = new Date().getFullYear();
-  fuelTypes: EnumType[] = [];
-  gearboxTypes: EnumType[] = [];
-  vehicleTypes: EnumType[] = [];
+  fuelTypes: Enum[] = [];
+  gearboxTypes: Enum[] = [];
+  vehicleTypes: Enum[] = [];
 
   ngOnInit(): void {
     this.initializeForm();

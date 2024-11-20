@@ -7,8 +7,8 @@ import {VehicleService} from '../../services/vehicle/vehicle.service';
 import {PaginationService} from '../../services/pagination/pagination.service';
 import {MaterialImports,} from '../../imports/material.imports';
 import {getPolishPaginatorIntl} from "../../shared/get-polish-paginator.intl";
-import {VehicleType} from "../../types/vehicle.type";
-import {PaginationResult} from "../../types/pagination.result";
+import {Vehicle} from "../../types/vehicle.type";
+import {PaginationResult} from "../../types/pagination.result.type";
 import {MatDialog} from "@angular/material/dialog";
 import {CreateVehicleComponent} from "../create-vehicle/create-vehicle.component";
 import {ConfirmDialogComponent} from "../confirm-dialog/confirm-dialog.component";
@@ -32,7 +32,7 @@ export class VehicleListComponent implements OnInit, OnDestroy {
   private readonly dialog = inject(MatDialog);
   private readonly router = inject(Router);
 
-  dataSource = new MatTableDataSource<VehicleType>();
+  dataSource = new MatTableDataSource<Vehicle>();
   isLoading = true;
   selectedVehicle: string | null = null;
   hoveredAction: string | null = null;
@@ -70,7 +70,7 @@ export class VehicleListComponent implements OnInit, OnDestroy {
       });
   }
 
-  private handleVehicleResponse(response: PaginationResult<VehicleType>): void {
+  private handleVehicleResponse(response: PaginationResult<Vehicle>): void {
     this.paginationService.updateState({totalItems: response.totalItemsCount});
     this.dataSource.data = response.items;
     this.animateTable();

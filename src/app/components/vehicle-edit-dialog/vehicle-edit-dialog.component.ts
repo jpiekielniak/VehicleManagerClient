@@ -2,13 +2,14 @@ import {Component, inject, OnDestroy, OnInit, signal} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {VehicleService} from "../../services/vehicle/vehicle.service";
-import {VehicleDetails} from "../../types/vehicle-details";
+import {VehicleDetails} from "../../types/vehicle-details.type";
 import {CommonModule} from '@angular/common';
 import {MaterialImports} from "../../imports/material.imports";
-import {EnumService, EnumType} from "../../services/enum/enum.service";
+import {EnumService} from "../../services/enum/enum.service";
 import {finalize, forkJoin, Subject, takeUntil} from "rxjs";
 import {API_CONSTANTS} from "../../constants/api.constants";
-import {EnumData} from "../../types/enum.data";
+import {Enum} from "../../types/enum.type";
+import {EnumData} from "../../types/enum-data.type";
 
 
 @Component({
@@ -30,9 +31,9 @@ export class VehicleEditDialogComponent implements OnInit, OnDestroy {
   private readonly data = inject(MAT_DIALOG_DATA) as { vehicle: VehicleDetails };
   private readonly destroy$ = new Subject<void>();
   vehicleForm!: FormGroup;
-  fuelTypes: EnumType[] = [];
-  gearboxTypes: EnumType[] = [];
-  vehicleTypes: EnumType[] = [];
+  fuelTypes: Enum[] = [];
+  gearboxTypes: Enum[] = [];
+  vehicleTypes: Enum[] = [];
   isLoading = signal(false);
 
   ngOnInit() {

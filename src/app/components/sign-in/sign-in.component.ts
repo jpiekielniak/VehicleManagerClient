@@ -1,7 +1,7 @@
 import {Component, inject, OnInit, signal} from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { SignInType } from "../../types/sign-in.type";
+import { SignIn } from "../../types/sign-in.type";
 import { AuthService } from "../../services/auth/auth.service";
 import {AlertComponent} from "@coreui/angular";
 import {MaterialImports} from "../../imports/material.imports";
@@ -58,7 +58,7 @@ export class SignInComponent implements OnInit {
 
   onSubmit() : void {
     if (this.signInForm.valid) {
-      const signInData: SignInType = this.signInForm.value;
+      const signInData: SignIn = this.signInForm.value;
 
       this.authService.signIn(signInData).subscribe({
         next: () => this.handleLoginSuccess(),

@@ -1,8 +1,8 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {map, Observable} from 'rxjs';
-import {SignUpType} from '../../types/sign-up.type';
-import {SignInType} from '../../types/sign-in.type';
+import {SignUp} from '../../types/sign-up.type';
+import {SignIn} from '../../types/sign-in.type';
 import {DOCUMENT} from '@angular/common';
 import {SignInResponse} from '../../types/token.type';
 import {API_CONSTANTS} from '../../constants/api.constants';
@@ -16,11 +16,11 @@ export class AuthService {
   private document = inject(DOCUMENT);
   localStorage = this.document.defaultView?.localStorage;
 
-  signUp(signUpData: SignUpType): Observable<any> {
+  signUp(signUpData: SignUp): Observable<any> {
     return this.http.post(API_CONSTANTS.USERS.SIGN_UP, signUpData);
   }
 
-  signIn(signInData: SignInType): Observable<any> {
+  signIn(signInData: SignIn): Observable<any> {
     return this.http
       .post<SignInResponse>(API_CONSTANTS.USERS.SIGN_IN, signInData)
       .pipe(map((result: SignInResponse) => {
