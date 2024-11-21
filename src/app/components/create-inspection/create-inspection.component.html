@@ -1,0 +1,63 @@
+<h2 mat-dialog-title>Dodaj nowy przegląd</h2>
+
+<form [formGroup]="createInspectionForm" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <div class="form-grid">
+      <mat-form-field>
+        <mat-label>Tytuł</mat-label>
+        <input matInput formControlName="title" required>
+        <mat-error *ngIf="createInspectionForm.get('title')?.errors?.['required']">
+          Pole wymagane
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Planowana data</mat-label>
+        <input matInput [matDatepicker]="scheduledDatePicker" formControlName="scheduledDate" required>
+        <mat-datepicker-toggle matSuffix [for]="scheduledDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #scheduledDatePicker></mat-datepicker>
+        <mat-error *ngIf="createInspectionForm.get('scheduledDate')?.errors?.['required']">
+          Pole wymagane
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Data wykonania</mat-label>
+        <input matInput [matDatepicker]="performDatePicker" formControlName="performDate" required>
+        <mat-datepicker-toggle matSuffix [for]="performDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #performDatePicker></mat-datepicker>
+        <mat-error *ngIf="createInspectionForm.get('performDate')?.errors?.['required']">
+          Pole wymagane
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Rodzaj przeglądu</mat-label>
+        <mat-select formControlName="inspectionType" required>
+          <mat-option *ngFor="let type of inspectionTypes" [value]="type.key">
+            {{type.value}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="createInspectionForm.get('inspectionType')?.errors?.['required']">
+          Pole wymagane
+        </mat-error>
+      </mat-form-field>
+
+    </div>
+  </mat-dialog-content>
+
+
+
+  <c-alert *ngIf="isError()" color="warning" class="d-flex align-items-center m-auto w-50">
+    <i class="bi-exclamation-triangle-fill me-2"></i>
+    <div>Wystąpił błąd podczas przetwarzania danych</div>
+  </c-alert>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="dialogRef.close()">Anuluj</button>
+    <button mat-button type="reset" (click)="createInspectionForm.reset()">Wyczyść</button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="!createInspectionForm.valid">
+      Dodaj nowe ubezpieczenie
+    </button>
+  </mat-dialog-actions>
+</form>

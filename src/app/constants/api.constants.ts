@@ -15,5 +15,6 @@ export const API_CONSTANTS = {
     FUEL_TYPES: `${API_URL}/fuel-types`,
     GEARBOX_TYPES: `${API_URL}/gearbox-types`,
     VEHICLE_TYPES: `${API_URL}/vehicle-types`,
+    INSPECTION_TYPES: `${API_URL}/inspection-types`,
   }
 } as const;

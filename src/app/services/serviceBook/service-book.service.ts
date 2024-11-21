@@ -8,6 +8,7 @@ import {Inspection} from "../../types/inspection.type";
 import {ServiceDetails} from "../../types/service-details.type";
 import {InspectionDetails} from "../../types/inspection-details.type";
 import {CreateService} from "../../types/create-service.type";
+import {CreateInspection} from "../../types/create-inspection.type";
 
 @Injectable({
   providedIn: 'root'
@@ -41,5 +42,9 @@ export class ServiceBookService {
 
   createService(serviceBookId: string, createServiceData: CreateService):Observable<any> {
     return this.http.post<any>(API_CONSTANTS.SERVICE_BOOKS.BASE_PATH + `/${serviceBookId}/services`, createServiceData);
+  }
+
+  createInspection(serviceBookId: string, createInspectionData : CreateInspection): Observable<any> {
+    return this.http.post<any>(API_CONSTANTS.SERVICE_BOOKS.BASE_PATH + `/${serviceBookId}/inspections`, createInspectionData);
   }
 }

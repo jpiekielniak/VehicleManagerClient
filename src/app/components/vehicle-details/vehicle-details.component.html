@@ -126,6 +126,16 @@
               </mat-list>
             </ng-container>
 
+            <button
+              mat-fab
+              color="primary"
+              class="add-insurance-btn"
+              (click)="showAddInspectionForm()"
+              title="Dodaj przegląd">
+              <i class="bi-plus"></i>
+            </button>
+
+
             <ng-template #noInspections>
               <p class="text-center">Brak wpisów przeglądów</p>
             </ng-template>
@@ -134,7 +144,7 @@
       </mat-card-content>
     </mat-card>
 
-    <mat-card class="mt-4">
+    <mat-card class=" mt-4">
       <mat-card-header>
         <mat-card-title>Ubezpieczenia</mat-card-title>
       </mat-card-header>

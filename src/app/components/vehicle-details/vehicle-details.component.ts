@@ -27,6 +27,7 @@ import {InsuranceDetailsComponent} from "../insurance-details/insurance-details.
 import {CreateInsuranceComponent} from "../create-insurance/create-insurance.component";
 import {MatFabButton} from "@angular/material/button";
 import {CreateServiceComponent} from "../create-service/create-service.component";
+import {CreateInspectionComponent} from "../create-inspection/create-inspection.component";
 
 
 @Component({
@@ -233,6 +234,13 @@ export class VehicleDetailsComponent implements OnInit {
 
   showAddServiceForm() {
     this.dialog.open(CreateServiceComponent, {
+      width: '600px',
+      data: { serviceBookId: this.vehicle?.serviceBookId }
+    });
+  }
+
+  showAddInspectionForm() {
+    this.dialog.open(CreateInspectionComponent, {
       width: '600px',
       data: { serviceBookId: this.vehicle?.serviceBookId }
     });
