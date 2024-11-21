@@ -1,0 +1,64 @@
+<h2 mat-dialog-title>Dodaj nowy pojazd</h2>
+
+<form [formGroup]="createInsuranceForm" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <div class="form-grid">
+      <mat-form-field>
+        <mat-label>Tytuł</mat-label>
+        <input matInput formControlName="title" required>
+        <mat-error *ngIf="createInsuranceForm.get('title')?.errors?.['required']">
+          Pole wymagane
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Ubezpieczyciel</mat-label>
+        <input matInput formControlName="provider" required>
+        <mat-error *ngIf="createInsuranceForm.get('provider')?.errors?.['required']">
+          Pole wymagane
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Numer polisy</mat-label>
+        <input matInput formControlName="policyNumber" required>
+        <mat-error *ngIf="createInsuranceForm.get('policyNumber')?.errors?.['required']">
+          Pole wymagane
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Data rozpoczęcia</mat-label>
+        <input matInput [matDatepicker]="validFromPicker" formControlName="validFrom" required>
+        <mat-datepicker-toggle matSuffix [for]="validFromPicker"></mat-datepicker-toggle>
+        <mat-datepicker #validFromPicker></mat-datepicker>
+        <mat-error *ngIf="createInsuranceForm.get('validFrom')?.errors?.['required']">
+          Pole wymagane
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Data zakończenia</mat-label>
+        <input matInput [matDatepicker]="validToPicker" formControlName="validTo" required>
+        <mat-datepicker-toggle matSuffix [for]="validToPicker"></mat-datepicker-toggle>
+        <mat-datepicker #validToPicker></mat-datepicker>
+        <mat-error *ngIf="createInsuranceForm.get('validTo')?.errors?.['required']">
+          Pole wymagane
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </mat-dialog-content>
+
+  <c-alert *ngIf="isError()" color="warning" class="d-flex align-items-center m-auto w-50">
+    <i class="bi-exclamation-triangle-fill me-2"></i>
+    <div>Wystąpił błąd podczas przetwarzania danych</div>
+  </c-alert>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="dialogRef.close()">Anuluj</button>
+    <button mat-button type="reset" (click)="createInsuranceForm.reset()">Wyczyść</button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="!createInsuranceForm.valid">
+      Dodaj nowe ubezpieczenie
+    </button>
+  </mat-dialog-actions>
+</form>

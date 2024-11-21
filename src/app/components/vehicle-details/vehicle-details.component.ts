@@ -24,6 +24,9 @@ import {ServiceDetailsComponent} from "../service-details/service-details.compon
 import {InspectionDetailsComponent} from "../inspection-details/inspection-details.component";
 import {Insurance} from "../../types/insurance.type";
 import {InsuranceDetailsComponent} from "../insurance-details/insurance-details.component";
+import {CreateInsuranceComponent} from "../create-insurance/create-insurance.component";
+import {MatFabButton} from "@angular/material/button";
+
 
 @Component({
   selector: 'app-vehicle-details',
@@ -39,6 +42,7 @@ import {InsuranceDetailsComponent} from "../insurance-details/insurance-details.
     MatExpansionPanelTitle,
     MatList,
     MatListItem,
+    MatFabButton,
   ],
   templateUrl: './vehicle-details.component.html',
   styleUrl: './vehicle-details.component.css'
@@ -204,7 +208,7 @@ export class VehicleDetailsComponent implements OnInit {
   }
 
   deleteInsurance(insuranceId : string) {
-    this.vehicleService.deleteInsurance(insuranceId).subscribe({
+    this.vehicleService.deleteInsurance(this.vehicleId,insuranceId).subscribe({
       next: this.loadInsurances.bind(this),
       error: (error) => {
         console.error(error);
@@ -216,6 +220,13 @@ export class VehicleDetailsComponent implements OnInit {
     this.dialog.open(InsuranceDetailsComponent, {
       width: '600px',
       data: {insurance, vehicleId: this.vehicleId}
+    });
+  }
+
+  showAddInsuranceForm() {
+    this.dialog.open(CreateInsuranceComponent, {
+      width: '600px',
+      data: this.vehicleId
     });
   }
 }

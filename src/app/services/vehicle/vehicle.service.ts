@@ -8,6 +8,7 @@ import {CreateVehicle} from "../../types/create-vehicle.type";
 import {VehicleDetails} from "../../types/vehicle-details.type";
 import {Insurance} from "../../types/insurance.type";
 import {InsuranceDetails} from "../../types/insurance-details.type";
+import {CreateInsurance} from "../../types/create-insurance.type";
 
 @Injectable({
   providedIn: 'root'
@@ -43,7 +44,11 @@ export class VehicleService {
     return this.http.get<InsuranceDetails>(API_CONSTANTS.VEHICLE.BASE_PATH + `/${vehicleId}/insurances/${insuranceId}`);
   }
 
-  deleteInsurance(insuranceId: string): Observable<void> {
-    return this.http.delete<void>(API_CONSTANTS.VEHICLE.BASE_PATH + `/insurances/${insuranceId}`);
+  deleteInsurance(vehicleId: string, insuranceId: string): Observable<void> {
+    return this.http.delete<void>(API_CONSTANTS.VEHICLE.BASE_PATH + `/${vehicleId}/insurances/${insuranceId}`);
+  }
+
+  createInsurance(createInsuranceData: CreateInsurance) : Observable<any> {
+    return this.http.post<any>(API_CONSTANTS.VEHICLE.BASE_PATH + `/${createInsuranceData.vehicleId}` + `/insurances`, createInsuranceData);
   }
 }

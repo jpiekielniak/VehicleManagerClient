@@ -155,6 +155,16 @@
                     </mat-accordion>
                   </mat-list-item>
                 </mat-list>
+
+                <button
+                  mat-fab
+                  color="primary"
+                  class="add-insurance-btn"
+                  (click)="showAddInsuranceForm()"
+                  title="Dodaj ubezpieczenie">
+                  <i class="bi-plus"></i>
+                </button>
+
               </ng-container>
 
               <ng-template #noInsurances>
