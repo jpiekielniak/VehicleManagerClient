@@ -1,0 +1,10 @@
+.form-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.costs-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}

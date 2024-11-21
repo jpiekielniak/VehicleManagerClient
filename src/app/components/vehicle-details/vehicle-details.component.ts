@@ -26,6 +26,7 @@ import {Insurance} from "../../types/insurance.type";
 import {InsuranceDetailsComponent} from "../insurance-details/insurance-details.component";
 import {CreateInsuranceComponent} from "../create-insurance/create-insurance.component";
 import {MatFabButton} from "@angular/material/button";
+import {CreateServiceComponent} from "../create-service/create-service.component";
 
 
 @Component({
@@ -137,7 +138,7 @@ export class VehicleDetailsComponent implements OnInit {
       width: '400px',
       data: {
         title: 'Potwierdzenie usunięcia',
-        message: `Czy na pewno chcesz usunąć przegląd '${service.title}'?`
+        message: `Czy na pewno chcesz usunąć serwis '${service.title}'?`
       }
     });
 
@@ -227,6 +228,13 @@ export class VehicleDetailsComponent implements OnInit {
     this.dialog.open(CreateInsuranceComponent, {
       width: '600px',
       data: this.vehicleId
+    });
+  }
+
+  showAddServiceForm() {
+    this.dialog.open(CreateServiceComponent, {
+      width: '600px',
+      data: { serviceBookId: this.vehicle?.serviceBookId }
     });
   }
 }

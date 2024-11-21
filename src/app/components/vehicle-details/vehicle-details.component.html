@@ -80,6 +80,15 @@
               </mat-list>
             </ng-container>
 
+            <button
+              mat-fab
+              color="primary"
+              class="add-insurance-btn"
+              (click)="showAddServiceForm()"
+              title="Dodaj serwis">
+              <i class="bi-plus"></i>
+            </button>
+
             <ng-template #noRepairs>
               <p class="text-center">Brak wpisów napraw</p>
             </ng-template>

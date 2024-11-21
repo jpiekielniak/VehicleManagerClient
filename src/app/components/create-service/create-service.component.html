@@ -1,0 +1,94 @@
+<h2 mat-dialog-title>Dodaj nowy serwis</h2>
+
+<form [formGroup]="createServiceForm" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <div class="form-grid">
+      <mat-form-field>
+        <mat-label>Tytuł</mat-label>
+        <input matInput formControlName="title" required>
+        <mat-error *ngIf="validateControl('title', 'required')">
+          Pole wymagane
+        </mat-error>
+        <mat-error *ngIf="validateControl('title', 'maxlength')">
+          Maksymalna długość to 50 znaków
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Opis</mat-label>
+        <textarea matInput formControlName="description" rows="3"></textarea>
+        <mat-error *ngIf="validateControl('description', 'maxlength')">
+          Maksymalna długość to 500 znaków
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Data wykonania</mat-label>
+        <input matInput [matDatepicker]="datePicker" formControlName="date" required>
+        <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+        <mat-datepicker #datePicker></mat-datepicker>
+        <mat-error *ngIf="validateControl('date', 'required')">
+          Pole wymagane
+        </mat-error>
+      </mat-form-field>
+
+      <div formArrayName="costs" class="w-full">
+        <h3>Koszty (Suma: {{ totalCost | currency:'PLN':'symbol':'1.2-2' }})</h3>
+
+        <div *ngFor="let cost of costs.controls; let i = index"
+             [formGroupName]="i"
+             class="flex gap-2 mb-2">
+
+          <mat-form-field class="flex-grow">
+            <mat-label>Tytuł kosztu</mat-label>
+            <input matInput formControlName="title" required>
+            <mat-error *ngIf="validateCostControl(i, 'title', 'required')">
+              Pole wymagane
+            </mat-error>
+            <mat-error *ngIf="validateCostControl(i, 'title', 'maxlength')">
+              Maksymalna długość to 100 znaków
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Kwota</mat-label>
+            <input matInput type="number" formControlName="amount" required>
+            <mat-error *ngIf="validateCostControl(i, 'amount', 'required')">
+              Pole wymagane
+            </mat-error>
+            <mat-error *ngIf="validateCostControl(i, 'amount', 'min')">
+              Kwota musi być większa lub równa 0
+            </mat-error>
+            <mat-error *ngIf="validateCostControl(i, 'amount', 'max')">
+              Maksymalna kwota to 1,000,000
+            </mat-error>
+          </mat-form-field>
+
+          <button mat-icon-button color="warn" type="button" (click)="removeCost(i)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+
+        <button mat-raised-button color="primary" type="button" (click)="addCost()">
+          Dodaj koszt
+        </button>
+      </div>
+    </div>
+  </mat-dialog-content>
+
+  <c-alert *ngIf="isError()" color="warning" class="d-flex align-items-center m-auto w-50">
+    <i class="bi-exclamation-triangle-fill me-2"></i>
+    <div>Wystąpił błąd podczas przetwarzania danych</div>
+  </c-alert>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="dialogRef.close()">Anuluj</button>
+    <button mat-button type="reset" (click)="createServiceForm.reset()">Wyczyść</button>
+    <button mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="!createServiceForm.valid">
+      Dodaj nowy serwis
+    </button>
+  </mat-dialog-actions>
+</form>

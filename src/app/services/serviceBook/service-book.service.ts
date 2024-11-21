@@ -7,6 +7,7 @@ import {Service} from "../../types/service.type";
 import {Inspection} from "../../types/inspection.type";
 import {ServiceDetails} from "../../types/service-details.type";
 import {InspectionDetails} from "../../types/inspection-details.type";
+import {CreateService} from "../../types/create-service.type";
 
 @Injectable({
   providedIn: 'root'
@@ -38,4 +39,7 @@ export class ServiceBookService {
     return this.http.delete<void>(API_CONSTANTS.SERVICE_BOOKS.BASE_PATH + `/${serviceBookId}/services/${serviceId}`);
   }
 
+  createService(serviceBookId: string, createServiceData: CreateService):Observable<any> {
+    return this.http.post<any>(API_CONSTANTS.SERVICE_BOOKS.BASE_PATH + `/${serviceBookId}/services`, createServiceData);
+  }
 }
