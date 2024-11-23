@@ -1,11 +1,18 @@
-import {Component, inject, OnInit, signal} from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { SignIn } from "../../types/sign-in.type";
-import { AuthService } from "../../services/auth/auth.service";
-import {AlertComponent} from "@coreui/angular";
-import {MaterialImports} from "../../imports/material.imports";
-import {Router} from "@angular/router";
+import { SignIn } from '../../types/sign-in.type';
+import { AuthService } from '../../services/auth/auth.service';
+import { FormModule } from '@coreui/angular';
+import { MaterialImports } from '../../imports/material.imports';
+import { Router, RouterLink } from '@angular/router';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'sign-in',
@@ -15,19 +22,21 @@ import {Router} from "@angular/router";
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    FormModule,
+    RouterLink,
+    ToastModule,
     ...MaterialImports,
-    AlertComponent,
-  ]
+  ],
+  providers: [MessageService],
 })
-
-export class SignInComponent implements OnInit {
+export class SignInComponent implements OnInit, OnDestroy {
   private formBuilder = inject(FormBuilder);
   private authService = inject(AuthService);
+  private messageService = inject(MessageService);
   private router = inject(Router);
 
   signInForm!: FormGroup;
-  hidePassword = signal(true);
-  isError = signal(false);
+  isLoading = signal(false);
 
   ngOnInit() {
     this.initializeForm();
@@ -36,34 +45,46 @@ export class SignInComponent implements OnInit {
   private initializeForm(): void {
     this.signInForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(16)]]
+      password: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(8),
+          Validators.maxLength(16),
+        ],
+      ],
     });
   }
 
-  clickEvent(event: MouseEvent) : void {
-    this.hidePassword.set(!this.hidePassword());
-    event.stopPropagation();
-  }
-
-  handleLoginError() : void {
-    this.isError.set(true);
-    setTimeout(() => {
-      this.isError.set(false);
-    }, 3000);
-  }
-
-  handleLoginSuccess() : void {
-    this.router.navigate(['/moje-pojazdy']);
-  }
-
-  onSubmit() : void {
+  onSubmit(): void {
     if (this.signInForm.valid) {
-      const signInData: SignIn = this.signInForm.value;
+      this.isLoading.set(true);
 
-      this.authService.signIn(signInData).subscribe({
-        next: () => this.handleLoginSuccess(),
-        error: () => this.handleLoginError()
+      this.authService.signIn(this.signInForm.value as SignIn)
+      .subscribe({
+        next: () => this.handleSignInSuccess(),
+        error: () => this.showError(),
       });
     }
+  }
+
+  handleSignInSuccess() {
+    this.router.navigate(['/moje-pojazdy']);
+    this.isLoading.set(false);
+  }
+
+  showError() {
+    this.isLoading.set(false);
+    this.messageService.add({
+      severity: 'warn',
+      summary: 'Błąd',
+      detail: 'Nieprawidłowe dane logowania',
+      life: 3000,
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.signInForm.reset();
+    this.signInForm.markAsPristine();
   }
 }

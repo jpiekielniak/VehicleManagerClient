@@ -9,11 +9,11 @@ export const routes: Routes = [
   },
   {
     path: 'logowanie',
-    loadComponent: () => import('./components/auth/auth.component').then(m => m.AuthComponent)
+    loadComponent: () => import('./components/sign-in/sign-in.component').then(m => m.SignInComponent)
   },
   {
     path: 'rejestracja',
-    loadComponent: () => import('./components/auth/auth.component').then(m => m.AuthComponent)
+    loadComponent: () => import('./components/sign-up/sign-up.component').then(m => m.SignUpComponent)
   },
   {
     path: 'moje-pojazdy',
@@ -29,5 +29,5 @@ export const routes: Routes = [
     path: 'moje-konto',
     loadComponent: () => import('./components/user-details/user-details.component').then(m => m.UserDetailsComponent),
     canActivate: [authGuard]
-  }
+  },
 ];

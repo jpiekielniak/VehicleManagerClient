@@ -11,7 +11,7 @@ import {MatProgressSpinner} from "@angular/material/progress-spinner";
 import {NgIf} from "@angular/common";
 import {MatSort} from "@angular/material/sort";
 import {MatError, MatFormField, MatLabel} from "@angular/material/form-field";
-import {MatIcon} from "@angular/material/icon";
+import {MatIcon, MatIconModule} from "@angular/material/icon";
 import {MatButton, MatIconButton} from "@angular/material/button";
 import {MatInput} from "@angular/material/input";
 import {MatOption, MatSelect} from "@angular/material/select";
@@ -40,6 +40,7 @@ export const MaterialImports = [
   MatDialogContent,
   MatDialogTitle,
   MatCell,
+  MatIconModule,
   MatHeaderCell,
   MatHeaderCellDef,
   MatCellDef,

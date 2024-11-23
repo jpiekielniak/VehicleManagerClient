@@ -1,48 +1,52 @@
-<div class="sign-in-container">
-  <ng-container>
-    <form [formGroup]="signInForm" (ngSubmit)="onSubmit()">
-      <mat-form-field appearance="outline">
-        <mat-label>Email</mat-label>
-        <input
-          matInput
-          formControlName="email"
-          required
-        >
-        <mat-error *ngIf="this.signInForm.get('email')?.dirty && !this.signInForm.get('email')?.valid">
-          Nieprawidłowy adres e-mail
-        </mat-error>
-      </mat-form-field>
+<p-toast></p-toast>
+<div class="animated-background">
+  <div class="main-container">
+    <div class="rectangle"></div>
+    <div class="flex-column-d">
+      <span class="welcome">Witaj</span>
+      <span class="glad-to-see">Miło cię widzieć w menadżerze pojazdów!</span>
+      <h2>Logowanie! 👋</h2>
+      <form [formGroup]="signInForm" (ngSubmit)="onSubmit()" class="login-form">
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" type="email" required />
+          <mat-error
+            *ngIf="
+              signInForm.get('email')?.invalid &&
+              signInForm.get('email')?.touched
+            "
+          >
+            Nieprawidłowy adres e-mail
+          </mat-error>
+        </mat-form-field>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Hasło</mat-label>
-        <input matInput formControlName="password" [type]="hidePassword() ? 'password' : 'text'" required>
-        <mat-error *ngIf="!this.signInForm.get('password')?.valid">
-          Hasło musi zawierać 8 - 16 znaków
-        </mat-error>
+        <mat-form-field appearance="outline">
+          <mat-label>Hasło</mat-label>
+          <input matInput formControlName="password" type="password" required />
+          <mat-error *ngIf="!this.signInForm.get('password')?.valid">
+            Hasło musi zawierać 8 - 16 znaków
+          </mat-error>
+        </mat-form-field>
+
         <button
-          mat-icon-button
-          matSuffix
-          (click)="clickEvent($event)"
+          class="login-button"
+          mat-raised-button
+          type="submit"
+          [disabled]="signInForm.invalid || isLoading()"
         >
-          <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+          <mat-spinner
+            *ngIf="isLoading()"
+            diameter="20"
+            class="spinner"
+          ></mat-spinner>
+          <span *ngIf="!isLoading()">Zaloguj się</span>
         </button>
-      </mat-form-field>
+      </form>
 
-      <button
-        mat-raised-button
-        color="primary"
-        type="submit"
-        [disabled]="signInForm.invalid"
-      >
-        Zaloguj się
-      </button>
-
-      <div *ngIf="isError()" [ngClass]="isError() ? 'fade-in' : 'fade-out'">
-        <c-alert color="warning" class="d-flex align-items-center">
-          <i class="bi-exclamation-triangle-fill me-2"></i>
-          <div>Nieprawidłowe dane do logowania</div>
-        </c-alert>
+      <div class="register-option">
+        <span>Jesteś nowy?</span>
+        <a routerLink="/rejestracja" class="register-link">Zarejestruj się</a>
       </div>
-    </form>
-  </ng-container>
+    </div>
+  </div>
 </div>

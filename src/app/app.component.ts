@@ -10,5 +10,5 @@ import {AlertModule} from "@coreui/angular";
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'VehicleManagerClient';
+  title = 'Menadżer pojazdów';
 }
