@@ -1,11 +1,15 @@
 import {Component} from '@angular/core';
-import {RouterOutlet} from '@angular/router';
+import {RouterModule, RouterOutlet} from '@angular/router';
 import {AlertModule} from "@coreui/angular";
+import {ToastModule} from "primeng/toast";
+import {MessageService} from "primeng/api";
+import {CommonModule} from "@angular/common";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [AlertModule, RouterOutlet],
+  imports: [CommonModule, AlertModule, RouterOutlet, RouterModule, ToastModule],
+  providers: [MessageService],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

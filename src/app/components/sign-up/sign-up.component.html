@@ -1,50 +1,52 @@
-<div class="sign-up-container">
-  <form [formGroup]="signUpForm" (ngSubmit)="onSubmit()">
-    <mat-form-field appearance="outline">
-      <mat-label>Email</mat-label>
-      <input
-        matInput
-        formControlName="email"
-        required
-      >
-      <mat-error *ngIf="this.signUpForm.get('email')?.dirty && !this.signUpForm.get('email')?.valid">Nieprawidłowy adres e-mail</mat-error>
-    </mat-form-field>
+<p-toast></p-toast>
+<div class="animated-background">
+  <div class="main-container">
+    <div class="rectangle"></div>
+    <div class="flex-column">
+      <span class="join-to-us">Dołącz do menadżera pojazdów!</span>
+      <h2>Rejestracja! 👋</h2>
+      <form [formGroup]="signUpForm" (ngSubmit)="onSubmit()" class="sign-up-form">
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" type="email" required />
+          <mat-error
+            *ngIf="
+              signUpForm.get('email')?.invalid &&
+              signUpForm.get('email')?.touched
+            "
+          >
+            Nieprawidłowy adres e-mail
+          </mat-error>
+        </mat-form-field>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Hasło</mat-label>
-      <input
-        matInput
-        formControlName="password"
-        [type]="hidePassword() ? 'password' : 'text'"
-        required
-      >
-      <mat-error *ngIf="!this.signUpForm.get('password')?.valid">Hasło musi zawierać 8 - 16 znaków</mat-error>
-      <button
-        mat-icon-button
-        matSuffix
-        (click)="togglePasswordVisibility($event)"
-      >
-        <mat-icon>{{hidePassword() ? 'visibility_off' : 'visibility'}}</mat-icon>
-      </button>
-    </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Hasło</mat-label>
+          <input matInput formControlName="password" type="password" required />
+          <mat-error *ngIf="!this.signUpForm.get('password')?.valid">
+            Hasło musi zawierać 8 - 16 znaków
+          </mat-error>
+        </mat-form-field>
 
-    <button mat-raised-button color="primary" type="submit" [disabled]="signUpForm.invalid">
-      Zarejestruj się
-    </button>
+        <button
+          class="sign-up-button"
+          mat-raised-button
+          type="submit"
+          [disabled]="this.signUpForm.invalid || isLoading()"
+        >
+          <mat-spinner
+            *ngIf="isLoading()"
+            diameter="20"
+            class="spinner"
+          ></mat-spinner>
+          <span *ngIf="!isLoading()">Zarejestruj się</span>
+        </button>
+      </form>
 
-    <div *ngIf="registerCompleted()" class="fade-in">
-      <c-alert color="success" class="d-flex align-items-center">
-        <i class="bi-check-circle-fill me-2"></i>
-        <div>Pomyślne zarejestrowano w systemie</div>
-      </c-alert>
+      <div class="sign-in-option">
+        <span>Masz już konto?</span>
+        <a (click)="navigateToSignIn()" class="sign-in-link">Zaloguj się</a>
+      </div>
     </div>
 
-    <div *ngIf="isError()" [ngClass]="isError() ? 'fade-in' : 'fade-out'">
-      <c-alert color="danger" class="d-flex align-items-center">
-        <i class="bi-exclamation-triangle-fill me-2"></i>
-        <div>Konto o podanym adresie e-mail już istnieje</div>
-      </c-alert>
-    </div>
-
-  </form>
+  </div>
 </div>

@@ -1,18 +1,15 @@
-import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { SignIn } from '../../types/sign-in.type';
-import { AuthService } from '../../services/auth/auth.service';
-import { FormModule } from '@coreui/angular';
-import { MaterialImports } from '../../imports/material.imports';
-import { Router, RouterLink } from '@angular/router';
-import { ToastModule } from 'primeng/toast';
-import { MessageService } from 'primeng/api';
+import {AfterViewInit, Component, inject, OnDestroy, OnInit, signal} from '@angular/core';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators,} from '@angular/forms';
+import {CommonModule} from '@angular/common';
+import {SignIn} from '../../types/sign-in.type';
+import {AuthService} from '../../services/auth/auth.service';
+import {FormModule} from '@coreui/angular';
+import {MaterialImports} from '../../imports/material.imports';
+import {Router, RouterLink} from '@angular/router';
+import {ToastModule} from 'primeng/toast';
+import {MessageService} from 'primeng/api';
+import {Subject} from "rxjs";
+import {ToastService} from "../../services/toast/toast.service";
 
 @Component({
   selector: 'sign-in',
@@ -27,19 +24,31 @@ import { MessageService } from 'primeng/api';
     ToastModule,
     ...MaterialImports,
   ],
-  providers: [MessageService],
+  providers: [MessageService, ToastService],
 })
-export class SignInComponent implements OnInit, OnDestroy {
-  private formBuilder = inject(FormBuilder);
-  private authService = inject(AuthService);
-  private messageService = inject(MessageService);
-  private router = inject(Router);
+export class SignInComponent implements OnInit, OnDestroy, AfterViewInit {
+  private readonly formBuilder = inject(FormBuilder);
+  private readonly authService = inject(AuthService);
+  private readonly messageService = inject(MessageService);
+  private readonly router = inject(Router);
+  private readonly route = inject(Router).routerState.root;
+  private readonly toastService = inject(ToastService);
+  private destroy$ = new Subject<void>();
+
 
   signInForm!: FormGroup;
   isLoading = signal(false);
 
+
   ngOnInit() {
     this.initializeForm();
+
+  }
+
+  ngAfterViewInit() {
+    if (this.route.snapshot.queryParams['registration'] === 'success') {
+      this.toastService.showSuccess('Rejestracja zakończona pomyślnie');
+    }
   }
 
   private initializeForm(): void {
@@ -61,10 +70,10 @@ export class SignInComponent implements OnInit, OnDestroy {
       this.isLoading.set(true);
 
       this.authService.signIn(this.signInForm.value as SignIn)
-      .subscribe({
-        next: () => this.handleSignInSuccess(),
-        error: () => this.showError(),
-      });
+        .subscribe({
+          next: () => this.handleSignInSuccess(),
+          error: () => this.showError(),
+        });
     }
   }
 
@@ -84,7 +93,7 @@ export class SignInComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.signInForm.reset();
-    this.signInForm.markAsPristine();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

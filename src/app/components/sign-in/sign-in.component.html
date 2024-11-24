@@ -2,11 +2,10 @@
 <div class="animated-background">
   <div class="main-container">
     <div class="rectangle"></div>
-    <div class="flex-column-d">
-      <span class="welcome">Witaj</span>
-      <span class="glad-to-see">Miło cię widzieć w menadżerze pojazdów!</span>
+    <div class="flex-column">
+      <span class="waiting-for-you">Czekamy na Ciebie!</span>
       <h2>Logowanie! 👋</h2>
-      <form [formGroup]="signInForm" (ngSubmit)="onSubmit()" class="login-form">
+      <form [formGroup]="signInForm" (ngSubmit)="onSubmit()" class="sign-in-form">
         <mat-form-field appearance="outline">
           <mat-label>Email</mat-label>
           <input matInput formControlName="email" type="email" required />
@@ -28,11 +27,12 @@
           </mat-error>
         </mat-form-field>
 
+
         <button
-          class="login-button"
+          class="sign-in-button"
           mat-raised-button
           type="submit"
-          [disabled]="signInForm.invalid || isLoading()"
+          [disabled]="this.signInForm.invalid || isLoading()"
         >
           <mat-spinner
             *ngIf="isLoading()"
@@ -43,9 +43,9 @@
         </button>
       </form>
 
-      <div class="register-option">
+      <div class="sign-up-option">
         <span>Jesteś nowy?</span>
-        <a routerLink="/rejestracja" class="register-link">Zarejestruj się</a>
+        <a [routerLink]="'/rejestracja'" class="sign-up-link">Zarejestruj się</a>
       </div>
     </div>
   </div>

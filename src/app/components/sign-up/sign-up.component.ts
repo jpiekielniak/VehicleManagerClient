@@ -1,75 +1,84 @@
-import {Component, inject, OnInit, signal} from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { AuthService } from '../../services/auth/auth.service';
-import { SignUp } from '../../types/sign-up.type';
-import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { AlertComponent } from '@coreui/angular';
+import {Component, inject, OnDestroy, OnInit, signal} from '@angular/core';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {AuthService} from '../../services/auth/auth.service';
+import {SignUp} from '../../types/sign-up.type';
+import {Router} from '@angular/router';
+import {AlertComponent} from '@coreui/angular';
 import {MaterialImports} from "../../imports/material.imports";
+import {ToastModule} from "primeng/toast";
+import {MessageService} from "primeng/api";
+import {ToastService} from "../../services/toast/toast.service";
 
 @Component({
   selector: 'sign-up',
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
-    ...MaterialImports,
     AlertComponent,
+    ToastModule,
+    ...MaterialImports,
   ],
+  providers: [MessageService, ToastService],
   templateUrl: './sign-up.component.html',
   styleUrls: ['./sign-up.component.css']
 })
-export class SignUpComponent implements OnInit {
-  private formBuilder = inject(FormBuilder);
-  private authService = inject(AuthService);
-  private router = inject(Router);
+export class SignUpComponent implements OnInit, OnDestroy {
+  private readonly formBuilder = inject(FormBuilder);
+  private readonly authService = inject(AuthService);
+  private readonly toastService = inject(ToastService);
+  protected router = inject(Router);
 
   signUpForm!: FormGroup;
-  hidePassword = signal(true);
-  registerCompleted = signal(false);
-  isError = signal(false);
+  isLoading = signal(false);
 
-
-  ngOnInit(): void {
+  ngOnInit() {
     this.initializeForm();
   }
 
   private initializeForm(): void {
     this.signUpForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(16)]]
+      password: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(8),
+          Validators.maxLength(16),
+        ],
+      ],
     });
-  }
-
-  togglePasswordVisibility(event: MouseEvent): void {
-    this.hidePassword.update(value => !value);
-    event.stopPropagation();
   }
 
   onSubmit(): void {
-    if (this.signUpForm.invalid) {
-      this.signUpForm.markAllAsTouched();
-      return;
-    }
+    if (this.signUpForm.valid) {
+      this.isLoading.set(true);
 
-    const signUpData: SignUp = this.signUpForm.value;
-    this.authService.signUp(signUpData).subscribe({
-      next: () => this.onSignUpSuccess(),
-      error: () => this.onSignUpError()
+      this.authService.signUp(this.signUpForm.value as SignUp)
+        .subscribe({
+          next: () => this.handleSignUpSuccess(),
+          error: () => this.handleError(),
+        });
+    }
+  }
+
+  handleSignUpSuccess() {
+    this.isLoading.set(false);
+    this.router.navigate(['/logowanie'], {
+      queryParams: {registration: 'success'}
     });
   }
 
-  private onSignUpSuccess(): void {
-    this.registerCompleted.set(true);
-    setTimeout(() => {
-      this.router.navigate(['/logowanie']);
-    }, 2000);
+  handleError() {
+    this.toastService.showError('Rejestracja nie powiodła się');
+    this.isLoading.set(false);
   }
 
-  private onSignUpError(): void {
-    this.isError.set(true);
-    setTimeout(() => {
-      this.isError.set(false);
-    }, 3000);
+  navigateToSignIn() {
+    this.router.navigate(['/logowanie']);
+  }
+
+  ngOnDestroy(): void {
+    this.signUpForm.reset();
+    this.isLoading.set(false);
   }
 }

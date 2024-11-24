@@ -1,114 +1,30 @@
-.animated-background {
-  min-height: 100vh;
-  width: 100%;
-  background: #97c5f6;
-  background-size: 400% 400%;
-  animation: gradient 15s ease infinite;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.rectangle-1 {
-  position: relative;
-  width: 364px;
-  height: 52px;
-  margin: 24px 0 0 0;
-  background: #f2f2f2;
-  z-index: 14;
-  border-radius: 13px;
-}
-.group-input {
-  position: absolute;
-  width: 364px;
-  height: 52px;
-  top: 0;
-  left: 0;
-  background: transparent;
-  border: none;
-  z-index: 18;
-  outline: none;
-}
-
-.main-container {
-  position: relative;
-  width: 1366px;
-  height: 768px;
-  margin: 0 auto;
-  background: #ffffff;
-  overflow: hidden;
-  border-radius: 54px;
-  box-shadow: rgba(17, 12, 46, 0.15) 0 48px 100px 0;
-}
-
-.rectangle {
-  position: absolute;
-  width: 683px;
-  height: 700px;
-  top: 50%;
-  left: 50%;
-  background-image: url('/assets/img/VehicleManager.webp');
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-  transform: translate(-4.98%, -50%);
-  border-radius: 40px;
-  box-shadow: rgba(0, 0, 0, 0.1) 0 10px 15px -3px;
-}
-.flex-column-d {
-  position: absolute;
-  width: 384px;
+.waiting-for-you {
+  display: block;
+  text-align: center;
+  font-weight: bold;
+  font-size: 24px;
   height: auto;
-  top: 122px;
-  left: 160px;
-  padding: 2.5rem;
-  border-radius: 24px;
-  box-shadow:
-    -10px 0 20px -5px rgba(0, 0, 0, 0.2),
-    10px 0 20px -5px rgba(0, 0, 0, 0.2),
-
-    5px -10px 20px -5px rgba(0, 0, 0, 0.1),
-    5px 10px 20px -5px rgba(0, 0, 0, 0.2);
-
-  background: white;
-  transition: box-shadow 0.3s ease;
-}
-
-.welcome {
-  display: block;
-  position: relative;
-  height: 60px;
-  margin: 0 0 0 9px;
-  color: #1c1c1c;
-  font-size: 60px;
-  font-weight: 700;
-  line-height: 60px;
-  text-align: left;
-  white-space: nowrap;
-}
-
-.glad-to-see {
-  display: block;
-  height: 21px;
-  margin: 20px 0 0 8px;
+  margin-top: 40px;
+  margin-bottom: 45px;
   color: #1c1c1c;
 }
 
 h2 {
-  margin: 35px 0 25px 8px;
-  font-size: 24px;
+  margin: 25px 0 0 8px;
+  text-align: center;
   font-weight: 600;
-  color: #1c1c1c;
+  font-size: 40px;
+  color: #02150a;
 }
 
-.login-form {
+.sign-in-form {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  margin-top: 2rem;
+  gap: 1rem;
+  padding: 45px;
 }
 
-.login-button {
+.sign-in-button {
   width: 100%;
   height: 52px;
   background: #1c1c1c;
@@ -118,18 +34,23 @@ h2 {
   font-weight: 600;
   letter-spacing: 1px;
   position: relative;
-  margin-top: 1rem;
   box-shadow: rgba(0, 0, 0, 0.2) 0 3px 8px;
   transition: all 0.3s ease;
 }
 
-.login-button:hover {
+.sign-in-button:disabled {
+  background: #d3d3d3;
+  color: #a1a1a1;
+  cursor: not-allowed;
+}
+
+.sign-in-button:hover {
   transform: translateY(-2px);
   box-shadow: rgb(2, 19, 11) 0 5px 12px;
   background: rgb(46, 234, 100);
 }
 
-.login-button:active {
+.sign-in-button:active {
   transform: translateY(0);
   box-shadow: rgba(0, 0, 0, 0.2) 0 3px 8px;
 }
@@ -141,26 +62,54 @@ h2 {
   transform: translate(-50%, -50%);
 }
 
-.register-option {
-  margin-top: 20px;
+.sign-up-option {
+  margin-top: -20px;
+  margin-bottom: 40px;
   text-align: center;
+  font-size: 16px;
   color: #1c1c1c;
 }
 
-.register-option span {
+.sign-up-option span {
   margin-right: 8px;
 }
 
-.register-link {
+.sign-up-link {
   color: black;
   text-decoration: none;
   font-weight: bold;
   transition: all 0.3s ease;
 }
 
-.register-link:hover {
+.sign-up-link:hover {
   color: #2c2c2c;
   text-decoration: none;
   cursor: pointer;
+}
+
+
+@media (min-width: 1669px) and (min-height: 992px) {
+  .sign-in-form {
+    padding: 45px;
+  }
+
+  .sign-in-button {
+    font-size: 22px;
+  }
+
+  h2 {
+    font-size: 40px;
+  }
+
+  .waiting-for-you {
+    margin-top: 50px;
+    margin-bottom: 60px;
+  }
+
+  .sign-up-option {
+    margin-top: -20px;
+    margin-bottom: 60px;
+  }
+
 }
 
