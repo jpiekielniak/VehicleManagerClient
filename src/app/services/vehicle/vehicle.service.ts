@@ -24,7 +24,7 @@ export class VehicleService {
     return this.http.get<PaginationResult<Vehicle>>(API_CONSTANTS.VEHICLE.BASE_PATH + `?page=${page}&pageSize=${pageSize}`)
   }
 
-  deleteVehicle(id: number): Observable<void> {
+  deleteVehicle(id: string): Observable<void> {
     return this.http.delete<void>(API_CONSTANTS.VEHICLE.BASE_PATH + `/${id}`);
   }
 

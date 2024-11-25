@@ -1,5 +1,10 @@
 body {
-  background: #97c5f6;
+  background: linear-gradient(90deg,
+  white,
+  rgba(240, 240, 250, 0.8),
+  rgba(230, 240, 255, 0.8),
+  white
+  );
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, sans-serif;
 }
@@ -7,7 +12,6 @@ body {
 .animated-background {
   min-height: 100vh;
   width: 100%;
-  background: #97c5f6;
   background-size: 400% 400%;
   animation: gradient 15s ease infinite;
   display: flex;
@@ -34,7 +38,6 @@ body {
   5px -10px 20px -5px rgba(0, 0, 0, 0.1),
   5px 10px 20px -5px rgba(0, 0, 0, 0.2);
   background: linear-gradient(to right, #97c5f6 20%, #f8fbff 50%, #97c5f6 100%);
-
 }
 
 .rectangle {

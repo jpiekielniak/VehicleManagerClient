@@ -2,25 +2,31 @@ import {Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginatorIntl, PageEvent} from '@angular/material/paginator';
 import {finalize, Subject, takeUntil} from 'rxjs';
-import {VEHICLE_LIST_CONSTANTS} from '../../constants/vehicle.constants';
 import {VehicleService} from '../../services/vehicle/vehicle.service';
 import {PaginationService} from '../../services/pagination/pagination.service';
-import {MaterialImports,} from '../../imports/material.imports';
 import {getPolishPaginatorIntl} from "../../shared/get-polish-paginator.intl";
 import {Vehicle} from "../../types/vehicle.type";
+import {CreateVehicleComponent} from "../create-vehicle/create-vehicle.component";
+import {Router} from "@angular/router";
+import {ConfirmationService, MessageService, } from "primeng/api";
+import {TableModule} from "primeng/table";
+import {DialogService} from "primeng/dynamicdialog";
+import {ToolbarModule} from "primeng/toolbar";
+import {ConfirmDialogModule} from "primeng/confirmdialog";
+import {ConfirmDialogComponent} from "../confirm-dialog/confirm-dialog.component";
 import {PaginationResult} from "../../types/pagination-result.type";
 import {MatDialog} from "@angular/material/dialog";
-import {CreateVehicleComponent} from "../create-vehicle/create-vehicle.component";
-import {ConfirmDialogComponent} from "../confirm-dialog/confirm-dialog.component";
-import {Router} from "@angular/router";
+import {NgForOf} from "@angular/common";
+import {PaginatorModule, PaginatorState} from "primeng/paginator";
 
 
 @Component({
   selector: 'app-vehicle-list',
   templateUrl: './vehicle-list.component.html',
   standalone: true,
-  imports: [...MaterialImports],
+  imports: [TableModule, ToolbarModule, ConfirmDialogModule, NgForOf, PaginatorModule],
   providers: [
+    DialogService, ConfirmationService, MessageService,
     {provide: MatPaginatorIntl, useValue: getPolishPaginatorIntl()}
   ],
   styleUrls: ['./vehicle-list.component.css']
@@ -34,9 +40,8 @@ export class VehicleListComponent implements OnInit, OnDestroy {
 
   dataSource = new MatTableDataSource<Vehicle>();
   isLoading = true;
-  selectedVehicle: string | null = null;
-  hoveredAction: string | null = null;
-  displayedColumns =  VEHICLE_LIST_CONSTANTS.COLUMNS.DISPLAYED;
+  first =0;
+  rows = 5;
 
   ngOnInit(): void {
     this.loadVehicles();
@@ -47,10 +52,12 @@ export class VehicleListComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  onPageChange(event: PageEvent): void {
+  onPageChange(event: PaginatorState): void {
+    this.first = event.first!;
+    this.rows = event.rows!;
     this.paginationService.updateState({
-      pageSize: event.pageSize,
-      pageIndex: event.pageIndex
+      pageSize: event.rows,
+      pageIndex: event.page
     });
 
     this.loadVehicles();
@@ -66,21 +73,16 @@ export class VehicleListComponent implements OnInit, OnDestroy {
         finalize(() => this.isLoading = false)
       )
       .subscribe({
-        next: this.handleVehicleResponse.bind(this)
+        next: this.handleVehicleResponse.bind(this),
+        error: (error) => {
+          console.error('Błąd podczas ładowania pojazdów:', error);
+        }
       });
   }
 
   private handleVehicleResponse(response: PaginationResult<Vehicle>): void {
     this.paginationService.updateState({totalItems: response.totalItemsCount});
     this.dataSource.data = response.items;
-    this.animateTable();
-  }
-
-  private animateTable(): void {
-    setTimeout(() => {
-      const table = document.querySelector(`.${VEHICLE_LIST_CONSTANTS.ANIMATION.TABLE_CLASS}`);
-      table?.classList.add(VEHICLE_LIST_CONSTANTS.ANIMATION.SHOW_CLASS);
-    }, VEHICLE_LIST_CONSTANTS.ANIMATION.DELAY);
   }
 
   openVehicleDialog() {
@@ -88,32 +90,20 @@ export class VehicleListComponent implements OnInit, OnDestroy {
       width: '800px'
     });
 
-    dialogRef.afterClosed().subscribe(() => {
-      this.loadVehicles();
-    });
-  }
-
-  confirmDelete(vehicle: any): void {
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      width: '400px',
-      data: {
-        title: 'Potwierdzenie usunięcia',
-        message: `Czy na pewno chcesz usunąć pojazd ${vehicle.brand} ${vehicle.model}?`
-      }
-    });
-
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.deleteVehicle(vehicle.vehicleId);
+        this.loadVehicles();
       }
     });
   }
 
-  private deleteVehicle(id: number): void {
+  private deleteVehicle(id: string): void {
     this.vehicleService.deleteVehicle(id).subscribe({
-      next: this.loadVehicles.bind(this),
+      next: () => {
+        this.loadVehicles();
+      },
       error: (error) => {
-        console.error(error);
+        console.error('Błąd podczas usuwania pojazdu:', error);
       }
     });
   }

@@ -1,103 +1,45 @@
-<div class="vehicle-list">
-  <div class="loading-overlay" *ngIf="isLoading">
-    <mat-progress-spinner
-      mode="indeterminate"
-      diameter="48"
-      class="loading-spinner">
-    </mat-progress-spinner>
+<div class="page-container">
+  <div class="header">
+    <h2 class="header-title">Moje pojazdy</h2>
+    <button class="button add-button" (click)="openVehicleDialog()">
+      <span class="span-view-product">Dodaj pojazd</span>
+    </button>
   </div>
 
-  <div class="content-container" [class.loading]="isLoading">
-    <div class="table-container mat-elevation-z8">
-      <div *ngIf="!dataSource.data.length && !isLoading" class="empty-state">
-        <p>Brak pojazdów do wyświetlenia</p>
+  <div class="container">
+    <div class="product-default" *ngFor="let vehicle of dataSource.data; let i = index">
+      <div class="frame-1">
+        <div class="frame-2">
+          <div class="frame-3">
+            <div class="product-position">
+              <span class="span-01">{{i + 1}}</span>
+            </div>
+            <span class="span-brand">{{vehicle.brand}}</span>
+            <span class="span-gigabyte-aero">
+                  {{vehicle.model}}
+                </span>
+          </div>
+          <button class="button" (click)="navigateToDetails(vehicle.vehicleId)">
+            <span class="span-view-product">Zobacz więcej</span>
+          </button>
+        </div>
+        <div class="image"
+             [style.backgroundImage]="'url(/assets/default-vehicle.png)'">
+        </div>
       </div>
-
-      <table
-        mat-table
-        [dataSource]="dataSource"
-        matSort
-        class="vehicle-table"
-        *ngIf="dataSource.data.length">
-
-        <ng-container matColumnDef="brand">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>
-            <span class="header-cell">Marka</span>
-          </th>
-          <td mat-cell *matCellDef="let vehicle">
-            {{ vehicle.brand }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="model">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>
-            <span class="header-cell">Model</span>
-          </th>
-          <td mat-cell *matCellDef="let vehicle">
-            {{ vehicle.model }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="licensePlate">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>
-            <span class="header-cell">Numer rejestracyjny</span>
-          </th>
-          <td mat-cell *matCellDef="let vehicle">
-            {{ vehicle.licensePlate }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef>
-
-          </th>
-          <td mat-cell *matCellDef="let row" class="actions-cell">
-            <i
-              title="Szczegóły pojazdu"
-              class="bi-arrow-right-circle align-content-end action-icon m-2"
-              (click)="navigateToDetails(row.vehicleId)"
-              (mouseover)="hoveredAction = 'details-' + row.vehicleId"
-              (mouseleave)="hoveredAction = null"
-              [style.color]="hoveredAction === 'details-' + row.vehicleId ? 'green' : 'inherit'">
-            </i>
-            <i
-              title="Usuń pojazd"
-              class="bi-trash align-content-end action-icon"
-              (click)="confirmDelete(row)"
-              (mouseover)="hoveredAction = 'delete-' + row.vehicleId"
-              (mouseleave)="hoveredAction = null"
-              [style.color]="hoveredAction === 'delete-' + row.vehicleId ? 'red' : 'inherit'">
-            </i>
-          </td>
-        </ng-container>
-
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-        <tr
-          mat-row
-          *matRowDef="let vehicle; columns: displayedColumns;"
-          [class.highlighted-row]="selectedVehicle === vehicle.vehicleId"
-          >
-        </tr>
-
-
-      </table>
-
-
     </div>
 
-    <mat-paginator
-      *ngIf="dataSource.data.length"
-      [length]="paginationService.getCurrentState().totalItems"
-      [pageSize]="paginationService.getCurrentState().pageSize"
-      [pageIndex]="paginationService.getCurrentState().pageIndex"
-      [pageSizeOptions]="[5, 10, 15]"
-      (page)="onPageChange($event)"
-      class="paginator">
-    </mat-paginator>
-
+    <div class="paginator-container">
+      <p-paginator
+        [first]="first"
+        [rows]="rows"
+        [totalRecords]="paginationService.getCurrentState().totalItems"
+        [rowsPerPageOptions]="[5, 10, 12]"
+        (onPageChange)="onPageChange($event)"
+        [showCurrentPageReport]="true"
+        [showPageLinks]="true"
+        currentPageReportTemplate="Pokazuję od {first} do {last} z {totalRecords} pojazdów">
+      </p-paginator>
+    </div>
   </div>
-  <button mat-raised-button color="primary" (click)="openVehicleDialog()">
-    Dodaj pojazd
-  </button>
 </div>
