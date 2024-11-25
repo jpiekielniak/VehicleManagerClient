@@ -1,6 +1,6 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {map, Observable} from 'rxjs';
+import {BehaviorSubject, map, Observable} from 'rxjs';
 import {SignUp} from '../../types/sign-up.type';
 import {SignIn} from '../../types/sign-in.type';
 import {DOCUMENT} from '@angular/common';
@@ -15,6 +15,8 @@ import {UserDetails} from "../../types/user-details.type";
 export class AuthService {
   private http = inject(HttpClient);
   private document = inject(DOCUMENT);
+  private authStateSubject = new BehaviorSubject<boolean>(false);
+
   localStorage = this.document.defaultView?.localStorage;
 
   signUp(signUpData: SignUp): Observable<any> {
@@ -27,11 +29,16 @@ export class AuthService {
       .pipe(map((result: SignInResponse) => {
           if (result && result.token) {
             this.localStorage?.setItem('token', String(result.token));
+            this.authStateSubject.next(true);
             return true;
           }
           return false;
         })
       );
+  }
+
+  authStateChanged(): Observable<boolean> {
+    return this.authStateSubject.asObservable();
   }
 
   getUserDetails(): Observable<UserDetails> {
@@ -43,12 +50,20 @@ export class AuthService {
     const jwtHelper = new JwtHelperService();
     const token = localStorage?.getItem('token');
     if (!token) {
+      this.authStateSubject.next(false);
       return false;
     }
-    return !(jwtHelper.isTokenExpired(token));
+    const isExpired = !jwtHelper.isTokenExpired(token);
+    this.authStateSubject.next(isExpired);
+    return isExpired;
   }
 
   completeUserData(updateUser: any) : Observable<void> {
     return this.http.put<void>(`${API_CONSTANTS.USERS.BASE_PATH}/${updateUser.id}/complete`, updateUser);
+  }
+
+  async signOut() : Promise<void> {
+     this.localStorage?.removeItem('token');
+     this.authStateSubject.next(false);
   }
 }

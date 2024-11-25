@@ -37,7 +37,6 @@ body {
   10px 0 20px -5px rgba(0, 0, 0, 0.2),
   5px -10px 20px -5px rgba(0, 0, 0, 0.1),
   5px 10px 20px -5px rgba(0, 0, 0, 0.2);
-  background: linear-gradient(to right, #97c5f6 20%, #f8fbff 50%, #97c5f6 100%);
 }
 
 .rectangle {

@@ -64,7 +64,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
   handleSignUpSuccess() {
     this.isLoading.set(false);
     this.router.navigate(['/logowanie'], {
-      queryParams: {registration: 'success'}
+      queryParams: {rejestracja: 'sukces'}
     });
   }
 

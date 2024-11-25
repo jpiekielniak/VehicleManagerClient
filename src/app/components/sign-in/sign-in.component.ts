@@ -35,10 +35,8 @@ export class SignInComponent implements OnInit, OnDestroy, AfterViewInit {
   private readonly toastService = inject(ToastService);
   private destroy$ = new Subject<void>();
 
-
   signInForm!: FormGroup;
   isLoading = signal(false);
-
 
   ngOnInit() {
     this.initializeForm();
@@ -46,7 +44,7 @@ export class SignInComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    if (this.route.snapshot.queryParams['registration'] === 'success') {
+    if (this.route.snapshot.queryParams['rejestracja'] === 'sukces') {
       this.toastService.showSuccess('Rejestracja zakończona pomyślnie');
     }
   }

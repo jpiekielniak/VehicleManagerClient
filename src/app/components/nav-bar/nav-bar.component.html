@@ -1,0 +1,15 @@
+<div class="navbar-container">
+  <div class="card main-menu">
+    <p-tabMenu [model]="items" [activeItem]="activeItem" styleClass="centered-menu"></p-tabMenu>
+  </div>
+
+  <div class="user-menu">
+    <p-button
+      icon="pi pi-user"
+      (click)="menu.toggle($event)"
+      styleClass="p-button-rounded p-button-text"
+    ></p-button>
+
+    <p-menu #menu [popup]="true" [model]="userMenuItems"></p-menu>
+  </div>
+</div>

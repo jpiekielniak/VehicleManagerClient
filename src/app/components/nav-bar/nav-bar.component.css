@@ -1,0 +1,32 @@
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffffff;
+  padding: 0.5rem 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.main-menu {
+  flex-grow: 1;
+  background: none;
+  box-shadow: none;
+}
+
+.user-menu {
+  margin-left: 1rem;
+}
+
+::ng-deep .centered-menu {
+  display: flex;
+  justify-content: center;
+}
+
+::ng-deep .centered-menu .p-tabmenu-nav {
+  justify-content: center;
+  width: 100%;
+}
+
+::ng-deep .centered-menu .p-tabmenu-nav .p-tabmenuitem {
+  float: none;
+}
