@@ -1,0 +1,47 @@
+<div class="page-container">
+
+  <div *ngIf="isLoading" class="spinner-container">
+  <app-spinner/>
+  </div>
+
+  <ng-container *ngIf="!isLoading">
+  <div class="card flex justify-content-center">
+    <app-filter
+      *ngIf="uniqueBrands.length > 0"
+      [filterOptions]="uniqueBrands"
+      (filterChange)="applyFilter($event)"
+    />
+
+    <app-sorting
+      *ngIf="sortOptions.length > 0"
+      [sortOptions]="sortOptions"
+      (sortChange)="applySorting($event)"
+    />
+  </div>
+
+  <app-vehicle-list
+    [vehicles]="vehicles"
+    (navigateToDetails)="navigateToDetails($event)"
+  />
+
+  <div class="paginator-container">
+    <app-paginator
+      [first]="0"
+      [totalRecords]="totalItems"
+      (pageChange)="onPaginatorChange($event)"
+    />
+  </div>
+
+  <button
+    *ngIf="isComponentLoaded"
+    pButton
+    pRipple
+    class="p-button-success"
+    [ngClass]="{'slide-in-right': isComponentLoaded}"
+    (click)="openVehicleDialog()"
+  >
+    <span>Dodaj pojazd </span>
+  </button>
+  </ng-container>
+
+</div>

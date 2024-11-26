@@ -20,8 +20,23 @@ export class VehicleService {
     return this.http.post<any>(API_CONSTANTS.VEHICLE.BASE_PATH, vehicle);
   }
 
-  getVehicles(page: number, pageSize: number): Observable<PaginationResult<Vehicle>> {
-    return this.http.get<PaginationResult<Vehicle>>(API_CONSTANTS.VEHICLE.BASE_PATH + `?page=${page}&pageSize=${pageSize}`)
+  getVehicles(
+    page: number = 1,
+    pageSize: number = 10,
+    filter: any = null,
+    sort?: string
+  ): Observable<PaginationResult<Vehicle>> {
+    let url = `${API_CONSTANTS.VEHICLE.BASE_PATH}?page=${page}&pageSize=${pageSize}`;
+
+    if (filter) {
+      url += `&Filters=brand@=${encodeURIComponent(filter)}`;
+    }
+
+    if (sort) {
+      url += `&Sorts=${encodeURIComponent(sort)}`;
+    }
+
+    return this.http.get<PaginationResult<Vehicle>>(url);
   }
 
   deleteVehicle(id: string): Observable<void> {

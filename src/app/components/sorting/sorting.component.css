@@ -1,0 +1,43 @@
+.sort-direction-btn {
+  background-color: #ffffff;
+  border: 2px solid #2196f3;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.5rem;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin-left:10px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  outline: none;
+}
+
+.sort-direction-btn:hover {
+  background-color: #2196f3;
+  border-color: #1976d2;
+  transform: scale(1.1);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.pi-sort-up-fill {
+  color: #4caf50;
+
+}
+
+.pi-sort-down-fill {
+  color: #f44336;
+}
+
+.sort-direction-btn:hover i.pi {
+  color: #ffffff;
+}
+
+.sort-direction-btn i.pi {
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.sort-direction-btn:hover i.pi {
+  transform: scale(1.2);
+}

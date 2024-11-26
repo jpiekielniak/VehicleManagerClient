@@ -1,0 +1,8 @@
+<button
+  *ngIf="showScrollToTop"
+  class="scroll-to-top-btn slide-in-left"
+  [ngClass]="{'visible': showScrollToTop, 'hidden': !showScrollToTop}"
+  (click)="scrollToTop()"
+>
+  <i class="pi pi-chevron-up"></i>
+</button>

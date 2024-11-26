@@ -17,7 +17,7 @@ export const routes: Routes = [
   },
   {
     path: 'moje-pojazdy',
-    loadComponent: () => import('./components/vehicle-list/vehicle-list.component').then(m => m.VehicleListComponent),
+    loadComponent: () => import('./components/vehicles/vehicles.component').then(m => m.VehiclesComponent),
     canActivate: [authGuard]
   },
   {

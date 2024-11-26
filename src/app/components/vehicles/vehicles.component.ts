@@ -1,0 +1,175 @@
+import {Component, CUSTOM_ELEMENTS_SCHEMA, OnDestroy, OnInit} from '@angular/core';
+import {FilterComponent} from "../filter/filter.component";
+import {NgClass, NgIf} from "@angular/common";
+import {SortConfig, SortingComponent} from "../sorting/sorting.component";
+import {PageChangeEvent, VehicleListComponent} from "../vehicle-list/vehicle-list.component";
+import {catchError, EMPTY, finalize, Subject, takeUntil} from "rxjs";
+import {Vehicle} from "../../types/vehicle.type";
+import {PaginatorComponent} from "../paginator/paginator.component";
+import {ButtonDirective} from "primeng/button";
+import {Ripple} from "primeng/ripple";
+import {Router} from "@angular/router";
+import {VehicleDataService} from "../../services/vehicle/vehicle-data.service";
+import {VehicleDialogService} from "../../services/vehicle/vehicle-dialog.service";
+import {PaginationService} from "../../services/pagination/pagination.service";
+import {PaginationResult} from "../../types/pagination-result.type";
+import {ProgressSpinnerModule} from "primeng/progressspinner";
+import {LoadingService} from "../../services/loading/loading.service";
+import {SpinnerComponent} from "../spinner/spinner.component";
+
+const VEHICLE_SORT_OPTIONS: { label: string, value: keyof Vehicle }[] = [
+  {label: 'Marka', value: 'brand'},
+  {label: 'Model', value: 'model'}
+];
+
+@Component({
+  selector: 'app-vehicles',
+  standalone: true,
+  imports: [
+    FilterComponent,
+    NgIf,
+    SortingComponent,
+    VehicleListComponent,
+    PaginatorComponent,
+    ButtonDirective,
+    Ripple,
+    NgClass,
+    ProgressSpinnerModule,
+    SpinnerComponent
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  templateUrl: './vehicles.component.html',
+  styleUrl: './vehicles.component.css'
+})
+export class VehiclesComponent implements OnInit, OnDestroy {
+  private readonly destroy$ = new Subject<void>();
+
+  constructor(
+    private vehicleDataService: VehicleDataService,
+    private dialogService: VehicleDialogService,
+    private paginationService: PaginationService,
+    private loadingService: LoadingService,
+    private router: Router
+  ) {
+  }
+
+  vehicles: Vehicle[] = [];
+  totalItems = 0;
+  uniqueBrands: string[] = [];
+  sortOptions = VEHICLE_SORT_OPTIONS;
+  isComponentLoaded = false;
+  isLoading = true;
+
+  ngOnInit(): void {
+    this.loadVehicles();
+    this.setupComponentLoadedFlag();
+    this.loadingService.loading$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(loading => {
+        this.isLoading = loading;
+      });
+  }
+
+  private loadVehicles(): void {
+    this.vehicleDataService.loadVehicles()
+      .pipe(
+        takeUntil(this.destroy$),
+        finalize(() => {
+          this.loadingService.setLoading(false);
+        }),
+        catchError(error => {
+          console.error('Błąd ładowania pojazdów', error);
+          return EMPTY;
+        })
+      )
+      .subscribe(result => {
+        this.handleVehiclesResult(result);
+      });
+  }
+
+  private handleVehiclesResult(result: PaginationResult<Vehicle>) {
+    this.vehicles = result.items;
+    this.uniqueBrands = this.extractUniqueBrands(result.items);
+
+    this.updatePaginationState(result.totalItemsCount);
+  }
+
+  private updatePaginationState(totalItemsCount: number) {
+    this.totalItems = totalItemsCount;
+    this.paginationService.updateState({
+      totalItems: totalItemsCount,
+      pageIndex: this.paginationService.getCurrentState().pageIndex,
+      pageSize: this.paginationService.getCurrentState().pageSize
+    });
+  }
+
+  applySorting(sortConfig: SortConfig<Vehicle>): void {
+    this.vehicleDataService.applySorting(sortConfig)
+      .pipe(
+        takeUntil(this.destroy$),
+        finalize(() => this.loadingService.setLoading(false)),
+        catchError(error => {
+          console.error('Błąd sortowania', error);
+          return EMPTY;
+        })
+      )
+      .subscribe(result => {
+        this.handleVehiclesResult(result);
+      });
+  }
+
+  applyFilter(selectedBrand: string): void {
+    this.vehicleDataService.applyFilter(selectedBrand)
+      .pipe(
+        takeUntil(this.destroy$),
+        finalize(() => this.loadingService.setLoading(false)),
+
+        catchError(error => {
+          console.error('Błąd filtrowania', error);
+          return EMPTY;
+        })
+      )
+      .subscribe(result => {
+        this.handleVehiclesResult(result);
+      });
+  }
+
+  onPaginatorChange(event: PageChangeEvent): void {
+    this.vehicleDataService.changePage(event)
+      .pipe(
+        takeUntil(this.destroy$),
+        catchError(error => {
+          console.error('Błąd zmiany strony', error);
+          return EMPTY;
+        })
+      )
+      .subscribe(result => {
+        this.handleVehiclesResult(result);
+      });
+  }
+
+  openVehicleDialog(): void {
+    this.dialogService.openCreateVehicleDialog()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(shouldReload => {
+        if (shouldReload) this.loadVehicles();
+      });
+  }
+
+  navigateToDetails(vehicleId: string): void {
+    this.router.navigate([`/moje-pojazdy/${vehicleId}`]);
+  }
+
+  private extractUniqueBrands(data: Vehicle[]): string[] {
+    return [...new Set(data.map(vehicle => vehicle.brand))];
+  }
+
+  private setupComponentLoadedFlag(): void {
+    setTimeout(() => this.isComponentLoaded = true, 2000);
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+}

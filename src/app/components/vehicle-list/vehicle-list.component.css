@@ -9,7 +9,7 @@
   padding: 0 20px;
 }
 
-.product-default {
+.vehicle {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -24,7 +24,7 @@
   transition: transform 0.2s ease-in-out;
 }
 
-.product-default:hover {
+.vehicle:hover {
   transform: translateY(-5px);
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
@@ -69,12 +69,12 @@
   z-index: 3;
 }
 
-.product-position {
+.vehicle-position {
   flex-shrink: 0;
   position: relative;
   width: 40px;
   height: 48px;
-  background: #f4a403;
+  background: linear-gradient(135deg, #2196f3, #1976d2);
   z-index: 4;
   overflow: hidden;
   border-radius: 0 0 200px 200px;
@@ -110,11 +110,11 @@
   line-height: 16px;
   text-align: left;
   white-space: nowrap;
-  letter-spacing: 0.8px;
+  letter-spacing: 1px;
   z-index: 6;
 }
 
-.span-gigabyte-aero {
+.span-area {
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
@@ -129,7 +129,7 @@
   line-height: 27px;
   text-align: left;
   text-overflow: ellipsis;
-  letter-spacing: 0.6px;
+  letter-spacing: 1px;
   z-index: 7;
   overflow: hidden;
 }
@@ -145,7 +145,7 @@
   width: 142px;
   padding: 12px 20px;
   cursor: pointer;
-  background: #f4a403;
+  background: linear-gradient(135deg, #2196f3, #1976d2);
   border: none;
   z-index: 21;
   overflow: hidden;
@@ -153,11 +153,7 @@
   transition: background-color 0.2s ease-in-out;
 }
 
-.button:hover {
-  background: #e09503;
-}
-
-.span-view-product {
+.span-view-vehicle {
   display: flex;
   align-items: flex-start;
   justify-content: center;
@@ -189,50 +185,6 @@
   border-radius: 12px;
 }
 
-.page-container {
-  width: 100%;
-  max-width: 1550px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 30px;
-  padding: 0 20px;
-}
-
-.header-title {
-  font-size: 24px;
-  font-weight: 600;
-  color: #333;
-  margin: 0;
-}
-
-.add-button {
-  background: #f4a403;
-}
-
-.add-button:hover {
-  background: #e09503;
-}
-
-
-.paginator-container {
-  grid-column: 1 / -1;
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-.add-button-container {
-  grid-column: 1 / -1;
-  display: flex;
-  justify-content: center;
-  margin: 20px 0;
-}
 
 @media (max-width: 1600px) {
   .container {

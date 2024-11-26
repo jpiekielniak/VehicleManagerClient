@@ -1,45 +1,23 @@
-<div class="page-container">
-  <div class="header">
-    <h2 class="header-title">Moje pojazdy</h2>
-    <button class="button add-button" (click)="openVehicleDialog()">
-      <span class="span-view-product">Dodaj pojazd</span>
-    </button>
-  </div>
-
-  <div class="container">
-    <div class="product-default" *ngFor="let vehicle of dataSource.data; let i = index">
-      <div class="frame-1">
-        <div class="frame-2">
-          <div class="frame-3">
-            <div class="product-position">
-              <span class="span-01">{{i + 1}}</span>
-            </div>
-            <span class="span-brand">{{vehicle.brand}}</span>
-            <span class="span-gigabyte-aero">
-                  {{vehicle.model}}
-                </span>
+<div class="container">
+  <div class="vehicle" *ngFor="let vehicle of vehicles; let i = index">
+    <div class="frame-1">
+      <div class="frame-2">
+        <div class="frame-3">
+          <div class="vehicle-position">
+            <span class="span-01">{{ i + 1 }}</span>
           </div>
-          <button class="button" (click)="navigateToDetails(vehicle.vehicleId)">
-            <span class="span-view-product">Zobacz więcej</span>
-          </button>
+          <span class="span-brand">{{ vehicle.brand }}</span>
+          <span class="span-area">
+            {{ vehicle.model }}
+          </span>
         </div>
-        <div class="image"
-             [style.backgroundImage]="'url(/assets/default-vehicle.png)'">
-        </div>
+        <button class="button" (click)="onNavigateToDetails(vehicle.vehicleId)">
+          <span class="span-view-vehicle">Zobacz więcej</span>
+        </button>
       </div>
-    </div>
-
-    <div class="paginator-container">
-      <p-paginator
-        [first]="first"
-        [rows]="rows"
-        [totalRecords]="paginationService.getCurrentState().totalItems"
-        [rowsPerPageOptions]="[5, 10, 12]"
-        (onPageChange)="onPageChange($event)"
-        [showCurrentPageReport]="true"
-        [showPageLinks]="true"
-        currentPageReportTemplate="Pokazuję od {first} do {last} z {totalRecords} pojazdów">
-      </p-paginator>
+      <div class="image"
+           [style.backgroundImage]="'url(/assets/default-vehicle.png)'">
+      </div>
     </div>
   </div>
 </div>
