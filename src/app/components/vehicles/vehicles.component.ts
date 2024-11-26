@@ -44,21 +44,21 @@ const VEHICLE_SORT_OPTIONS: { label: string, value: keyof Vehicle }[] = [
 export class VehiclesComponent implements OnInit, OnDestroy {
   private readonly destroy$ = new Subject<void>();
 
-  constructor(
-    private vehicleDataService: VehicleDataService,
-    private dialogService: VehicleDialogService,
-    private paginationService: PaginationService,
-    private loadingService: LoadingService,
-    private router: Router
-  ) {
-  }
-
   vehicles: Vehicle[] = [];
   totalItems = 0;
   uniqueBrands: string[] = [];
   sortOptions = VEHICLE_SORT_OPTIONS;
   isComponentLoaded = false;
   isLoading = true;
+
+  constructor(
+    private vehicleDataService: VehicleDataService,
+    private dialogService: VehicleDialogService,
+    protected paginationService: PaginationService,
+    private loadingService: LoadingService,
+    private router: Router
+  ) {
+  }
 
   ngOnInit(): void {
     this.loadVehicles();
@@ -71,12 +71,11 @@ export class VehiclesComponent implements OnInit, OnDestroy {
   }
 
   private loadVehicles(): void {
+    this.loadingService.setLoading(true);
     this.vehicleDataService.loadVehicles()
       .pipe(
         takeUntil(this.destroy$),
-        finalize(() => {
-          this.loadingService.setLoading(false);
-        }),
+        finalize(() => this.loadingService.setLoading(false)),
         catchError(error => {
           console.error('Błąd ładowania pojazdów', error);
           return EMPTY;
@@ -94,12 +93,14 @@ export class VehiclesComponent implements OnInit, OnDestroy {
     this.updatePaginationState(result.totalItemsCount);
   }
 
-  private updatePaginationState(totalItemsCount: number) {
+  private updatePaginationState(totalItemsCount: number): void {
     this.totalItems = totalItemsCount;
+    const currentState = this.paginationService.getCurrentState();
+
     this.paginationService.updateState({
       totalItems: totalItemsCount,
-      pageIndex: this.paginationService.getCurrentState().pageIndex,
-      pageSize: this.paginationService.getCurrentState().pageSize
+      pageIndex: currentState.pageIndex,
+      pageSize: currentState.pageSize
     });
   }
 
@@ -123,7 +124,6 @@ export class VehiclesComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroy$),
         finalize(() => this.loadingService.setLoading(false)),
-
         catchError(error => {
           console.error('Błąd filtrowania', error);
           return EMPTY;
@@ -135,6 +135,11 @@ export class VehiclesComponent implements OnInit, OnDestroy {
   }
 
   onPaginatorChange(event: PageChangeEvent): void {
+    this.paginationService.updateState({
+      pageIndex: event.pageIndex,
+      pageSize: event.pageSize
+    });
+
     this.vehicleDataService.changePage(event)
       .pipe(
         takeUntil(this.destroy$),
@@ -147,6 +152,7 @@ export class VehiclesComponent implements OnInit, OnDestroy {
         this.handleVehiclesResult(result);
       });
   }
+
 
   openVehicleDialog(): void {
     this.dialogService.openCreateVehicleDialog()
