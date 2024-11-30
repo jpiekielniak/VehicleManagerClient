@@ -27,6 +27,11 @@
           </mat-error>
         </mat-form-field>
 
+        <div class="link-div">
+          <span>Zapomniałeś hasła?</span>
+          <a [routerLink]="''" class="link">Przypomnij hasło</a>
+        </div>
+
 
         <button
           class="sign-in-button"
@@ -43,9 +48,9 @@
         </button>
       </form>
 
-      <div class="sign-up-option">
+      <div class="link-div">
         <span>Jesteś nowy?</span>
-        <a [routerLink]="'/rejestracja'" class="sign-up-link">Zarejestruj się</a>
+        <a [routerLink]="'/rejestracja'" class="link">Zarejestruj się</a>
       </div>
     </div>
   </div>

@@ -120,6 +120,11 @@ export class VehiclesComponent implements OnInit, OnDestroy {
   }
 
   applyFilter(selectedBrand: string): void {
+    if(selectedBrand === 'Wszystkie marki') {
+      this.loadVehicles();
+      return;
+    }
+
     this.vehicleDataService.applyFilter(selectedBrand)
       .pipe(
         takeUntil(this.destroy$),

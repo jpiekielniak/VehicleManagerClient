@@ -24,8 +24,6 @@ export class PaginatorComponent {
   @Output() pageChange = new EventEmitter<PageChangeEvent>();
 
   onPageChange(event: PaginatorState): void {
-    this.rows = event.rows!;
-
     this.pageChange.emit({
       pageSize: event.rows!,
       pageIndex: event.page!

@@ -27,6 +27,7 @@
   <div class="paginator-container">
     <app-paginator
       [first]="paginationService.getCurrentState().pageIndex * paginationService.getCurrentState().pageSize"
+      [rows]="paginationService.getCurrentState().pageSize"
       [totalRecords]="totalItems"
       (pageChange)="onPaginatorChange($event)"
     />

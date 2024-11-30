@@ -1,210 +1,176 @@
 <div class="vehicle-details-container">
-  <mat-card *ngIf="vehicle" class="vehicle-card">
-    <mat-card-header>
-      <mat-card-title>Szczegóły pojazdu</mat-card-title>
-    </mat-card-header>
-
-    <mat-card-content>
-      <div class="form-grid">
-        <div class="detail-item">
-          <strong>Marka:</strong> {{ vehicle.brand }}
-        </div>
-        <div class="detail-item">
-          <strong>Model:</strong> {{ vehicle.model }}
-        </div>
-        <div class="detail-item">
-          <strong>Rok produkcji:</strong> {{ vehicle.year }}
-        </div>
-        <div class="detail-item">
-          <strong>Tablica rejestracyjna:</strong> {{ vehicle.licensePlate }}
-        </div>
-        <div class="detail-item">
-          <strong>Numer VIN:</strong> {{ vehicle.vin }}
-        </div>
-        <div class="detail-item">
-          <strong>Pojemność silnika:</strong> {{ vehicle.engineCapacity }}
-        </div>
-        <div class="detail-item">
-          <strong>Moc silnika:</strong> {{ vehicle.enginePower }} km
-        </div>
-        <div class="detail-item">
-          <strong>Skrzynia biegów:</strong> {{ vehicle.gearboxType }}
-        </div>
-        <div class="detail-item">
-          <strong>Rodzaj paliwa:</strong> {{ vehicle.fuelType }}
-        </div>
-        <div class="detail-item">
-          <strong>Typ pojazdu:</strong> {{ vehicle.vehicleType }}
-        </div>
-        <div class="detail-item">
-          <strong>Dodano do systemu:</strong> {{ vehicle.createdAt | date: 'dd.MM.yyyy HH:mm' }}
+  <p-card *ngIf="vehicle" styleClass="vehicle-card">
+    <ng-template pTemplate="header">
+      <div class="card-header">
+        <h2>Szczegóły pojazdu</h2>
+        <div class="header-actions">
+          <p-button icon="pi pi-cog" (onClick)="menu.toggle($event)"></p-button>
+          <p-menu #menu [model]="items" [popup]="true" ></p-menu>
         </div>
       </div>
-    </mat-card-content>
+    </ng-template>
 
-    <mat-card class="service-book-card mt-4">
-      <mat-card-header>
-        <mat-card-title>Książka serwisowa</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <mat-accordion>
-          <mat-expansion-panel>
-            <mat-expansion-panel-header>
-              <mat-panel-title>Naprawy</mat-panel-title>
-              <mat-panel-description>
-                {{ services.length || 0 }} wpisów
-              </mat-panel-description>
-            </mat-expansion-panel-header>
+    <div class="content-wrapper">
+      <div class="vehicle-image">
+        <img src="/assets/default-vehicle.png" alt="Zdjęcie pojazdu" class="vehicle-photo" />
+      </div>
 
-            <ng-container *ngIf="services.length > 0; else noRepairs">
-              <mat-list>
-                <mat-list-item *ngFor="let service of services">
-                  <mat-accordion>
-                    <mat-expansion-panel>
-                      <mat-expansion-panel-header (click)="openServiceDetails(service)">
-                        <mat-panel-title>
-                          {{ service.title }}
-                          <i
-                            title="Usuń naprawę"
-                            class="bi-trash align-content-end action-icon"
-                            (click)="$event.stopPropagation(); confirmServiceDelete(service)"
-                            (mouseover)="hoveredAction = 'details-' + service.id"
-                            (mouseleave)="hoveredAction = null"
-                            [style.color]="hoveredAction === 'details-' + service.id ? 'red' : 'inherit'">
-                          </i>
-                        </mat-panel-title>
-                      </mat-expansion-panel-header>
-                    </mat-expansion-panel>
-                  </mat-accordion>
-                </mat-list-item>
-              </mat-list>
-            </ng-container>
+      <div class="form-grid">
+        <div class="detail-item">
+          <span class="detail-label">Marka:</span>
+          <span class="detail-value">{{ vehicle.brand }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Model:</span>
+          <span class="detail-value">{{ vehicle.model }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Rok produkcji:</span>
+          <span class="detail-value">{{ vehicle.year }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Rejestracja:</span>
+          <span class="detail-value">{{ vehicle.licensePlate }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Numer VIN:</span>
+          <span class="detail-value">{{ vehicle.vin }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Poj. silnika:</span>
+          <span class="detail-value">{{ vehicle.engineCapacity }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Moc silnika:</span>
+          <span class="detail-value">{{ vehicle.enginePower }} km</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Skrzynia biegów:</span>
+          <span class="detail-value">{{ vehicle.gearboxType }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Rodzaj paliwa:</span>
+          <span class="detail-value">{{ vehicle.fuelType }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Typ pojazdu:</span>
+          <span class="detail-value">{{ vehicle.vehicleType }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Dodano do systemu:</span>
+          <span class="detail-value">{{ vehicle.createdAt | date: 'dd.MM.yyyy HH:mm' }}</span>
+        </div>
+      </div>
+    </div>
+  </p-card>
 
-            <button
-              mat-fab
-              color="primary"
-              class="add-insurance-btn"
-              (click)="showAddServiceForm()"
-              title="Dodaj serwis">
-              <i class="bi-plus"></i>
-            </button>
-
-            <ng-template #noRepairs>
-              <p class="text-center">Brak wpisów napraw</p>
-            </ng-template>
-          </mat-expansion-panel>
-
-          <mat-expansion-panel>
-            <mat-expansion-panel-header>
-              <mat-panel-title>Przeglądy</mat-panel-title>
-              <mat-panel-description>
-                {{ inspections.length || 0 }} wpisów
-              </mat-panel-description>
-            </mat-expansion-panel-header>
-
-            <ng-container *ngIf="services.length > 0; else noInspections">
-              <mat-list>
-                <mat-list-item *ngFor="let inspection of inspections">
-                  <mat-accordion>
-                    <mat-expansion-panel>
-                      <mat-expansion-panel-header (click)="openInspectionDetails(inspection)">
-                        <mat-panel-title>
-                          {{ inspection.title }}
-                          <i
-                            title="Usuń przegląd"
-                            class="bi-trash align-content-end action-icon"
-                            (click)="confirmInspectionDelete(inspection)"
-                            (mouseover)="hoveredAction = 'details-' + inspection.id"
-                            (mouseleave)="hoveredAction = null"
-                            [style.color]="hoveredAction === 'details-' + inspection.id ? 'red' : 'inherit'">
-                          </i>
-                        </mat-panel-title>
-                      </mat-expansion-panel-header>
-                    </mat-expansion-panel>
-                  </mat-accordion>
-                </mat-list-item>
-              </mat-list>
-            </ng-container>
-
-            <button
-              mat-fab
-              color="primary"
-              class="add-insurance-btn"
-              (click)="showAddInspectionForm()"
-              title="Dodaj przegląd">
-              <i class="bi-plus"></i>
-            </button>
-
-
-            <ng-template #noInspections>
-              <p class="text-center">Brak wpisów przeglądów</p>
-            </ng-template>
-          </mat-expansion-panel>
-        </mat-accordion>
-      </mat-card-content>
-    </mat-card>
-
-    <mat-card class=" mt-4">
-      <mat-card-header>
-        <mat-card-title>Ubezpieczenia</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <mat-accordion>
-
-
-              <ng-container *ngIf="insurances.length > 0; else noInsurances">
-                <mat-list>
-                  <mat-list-item *ngFor="let insurance of insurances">
-                    <mat-accordion>
-                      <mat-expansion-panel>
-                        <mat-expansion-panel-header (click)="openInsuranceDetails(insurance)">
-                          <mat-panel-title>
-                            {{ insurance.title }}
-                            <i
-                              title="Usuń ubezpieczenie"
-                              class="bi-trash align-content-end action-icon"
-                              (click)="$event.stopPropagation(); confirmInsuranceDelete(insurance)"
-                              (mouseover)="hoveredAction = 'details-' + insurance.insuranceId"
-                              (mouseleave)="hoveredAction = null"
-                              [style.color]="hoveredAction === 'details-' + insurance.insuranceId ? 'red' : 'inherit'">
-                            </i>
-                          </mat-panel-title>
-                        </mat-expansion-panel-header>
-                      </mat-expansion-panel>
-                    </mat-accordion>
-                  </mat-list-item>
-                </mat-list>
-
-                <button
-                  mat-fab
-                  color="primary"
-                  class="add-insurance-btn"
-                  (click)="showAddInsuranceForm()"
-                  title="Dodaj ubezpieczenie">
-                  <i class="bi-plus"></i>
-                </button>
-
+  <div *ngIf="vehicle" class="records-container">
+    <p-tabView>
+      <p-tabPanel header="Książka serwisowa">
+        <div class="service-book-container">
+          <p-accordion [multiple]="true" [activeIndex]="[]" styleClass="service-accordion">
+            <p-accordionTab header="Serwisy">
+              <ng-container *ngIf="!isLoadingServices">
+                <div class="record-list">
+                  <div *ngFor="let service of services" class="record-item">
+                    <span class="record-title">{{ service.title }}</span>
+                    <div class="record-actions">
+                      <p-button icon="pi pi-eye" styleClass="p-button-rounded p-button-text" (onClick)="openServiceDetails(service.id)"
+                                pTooltip="Zobacz szczegóły">
+                      </p-button>
+                      <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-text p-button-danger"
+                                (onClick)="confirmServiceDelete(service.id)" pTooltip="Usuń serwis">
+                      </p-button>
+                    </div>
+                  </div>
+                </div>
+                <ng-container *ngIf="services.length === 0">
+                  <p class="no-data">Brak wpisów serwisowych</p>
+                </ng-container>
+                <div class="button-container">
+                  <p-button label="Dodaj serwis" icon="pi pi-plus" styleClass="p-button-primary add-button"
+                            (onClick)="addService()">
+                  </p-button>
+                </div>
               </ng-container>
+              <div *ngIf="isLoadingServices" class="loading-state">
+                <div class="spinner-container">
+                  <p-progressSpinner></p-progressSpinner>
+                </div>
+              </div>
+            </p-accordionTab>
 
-              <ng-template #noInsurances>
-                <p class="text-center">Brak wpisów ubezpieczeń</p>
-              </ng-template>
+            <p-accordionTab header="Przeglądy">
+              <ng-container *ngIf="!isLoadingInspections">
+                <div class="record-list">
+                  <div *ngFor="let inspection of inspections" class="record-item">
+                    <span class="record-title">{{ inspection.title }}</span>
+                    <div class="record-actions">
+                      <p-button icon="pi pi-eye" styleClass="p-button-rounded p-button-text" (onClick)="openInspectionDetails(inspection.id)"
+                                pTooltip="Zobacz szczegóły">
+                      </p-button>
+                      <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-text p-button-danger"
+                                (onClick)="confirmInspectionDelete(inspection.id)" pTooltip="Usuń przegląd">
+                      </p-button>
+                    </div>
+                  </div>
+                </div>
+                <ng-container *ngIf="inspections.length === 0">
+                  <p class="no-data">Brak wpisów przeglądów</p>
+                </ng-container>
+                <div class="button-container">
+                  <p-button label="Dodaj przegląd" icon="pi pi-plus" styleClass="p-button-primary add-button"
+                            (onClick)="addInspection()">
+                  </p-button>
+                </div>
+              </ng-container>
+              <div *ngIf="isLoadingInspections" class="loading-state">
+                <div class="spinner-container">
+                  <p-progressSpinner></p-progressSpinner>
+                </div>
+              </div>
+            </p-accordionTab>
+          </p-accordion>
+        </div>
+      </p-tabPanel>
 
+      <p-tabPanel header="Ubezpieczenia">
+        <ng-container *ngIf="!isLoadingInsurances">
+          <div class="record-list" *ngIf="insurances.length > 0; else noInsurances">
+            <div *ngFor="let insurance of insurances" class="record-item">
+              <span class="record-title">{{ insurance.title }}</span>
+              <div class="record-actions">
+                <p-button icon="pi pi-eye" styleClass="p-button-rounded p-button-text"
+                          (onClick)="openInsuranceDetails(insurance.insuranceId)" pTooltip="Zobacz szczegóły">
+                </p-button>
+                <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-text p-button-danger"
+                          (onClick)="confirmInsuranceDelete(insurance.insuranceId)" pTooltip="Usuń ubezpieczenie">
+                </p-button>
+              </div>
+            </div>
+          </div>
+          <ng-template #noInsurances>
+            <p class="no-data">Brak aktywnych ubezpieczeń</p>
+          </ng-template>
+          <div class="button-container">
+            <p-button label="Dodaj ubezpieczenie" icon="pi pi-plus" styleClass="p-button-primary add-button"
+                      (onClick)="addInsurance()">
+            </p-button>
+          </div>
+        </ng-container>
+        <div *ngIf="isLoadingInsurances" class="loading-state">
+          <div class="spinner-container">
+            <p-progressSpinner></p-progressSpinner>
+          </div>
+        </div>
+      </p-tabPanel>
+    </p-tabView>
+  </div>
 
-        </mat-accordion>
-      </mat-card-content>
-    </mat-card>
-
-    <mat-card-actions>
-      <button mat-raised-button color="primary" (click)="openEditDialog()">Edytuj</button>
-      <button mat-raised-button color="warn">Usuń</button>
-    </mat-card-actions>
-  </mat-card>
-
-  <mat-card *ngIf="!vehicle" class="loading-card">
-    <mat-card-content>
-      <mat-spinner></mat-spinner>
-      <p>Ładuję informacje...</p>
-    </mat-card-content>
-  </mat-card>
+  <div *ngIf="!vehicle" class="loading-container">
+    <div class="spinner-container">
+      <p-progressSpinner></p-progressSpinner>
+    </div>
+    <p>Ładuję informacje...</p>
+  </div>
 </div>

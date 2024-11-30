@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {VehicleService} from "./vehicle.service";
 import {SortConfig} from "../../components/sorting/sorting.component";
 import {Vehicle} from "../../types/vehicle.type";
@@ -7,8 +7,8 @@ import {Vehicle} from "../../types/vehicle.type";
   providedIn: 'root'
 })
 export class VehicleSortService {
-  applySorting(vehicleService: VehicleService, sortConfig: SortConfig<Vehicle>) {
+  applySorting(vehicleService: VehicleService, page: number, pageSize: number, sortConfig: SortConfig<Vehicle>) {
     const direction = sortConfig.direction === 'desc' ? '-' : '';
-    return vehicleService.getVehicles(1, 10, null, `${direction}${sortConfig.field}`);
+    return vehicleService.getVehicles(page + 1, pageSize, null, `${direction}${sortConfig.field}`);
   }
 }

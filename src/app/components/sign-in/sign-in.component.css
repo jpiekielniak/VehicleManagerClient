@@ -62,7 +62,7 @@ h2 {
   transform: translate(-50%, -50%);
 }
 
-.sign-up-option {
+.link-div {
   margin-top: -20px;
   margin-bottom: 40px;
   text-align: center;
@@ -70,18 +70,18 @@ h2 {
   color: #1c1c1c;
 }
 
-.sign-up-option span {
+.link-div span {
   margin-right: 8px;
 }
 
-.sign-up-link {
+.link {
   color: black;
   text-decoration: none;
   font-weight: bold;
   transition: all 0.3s ease;
 }
 
-.sign-up-link:hover {
+.link:hover {
   color: #2c2c2c;
   text-decoration: none;
   cursor: pointer;

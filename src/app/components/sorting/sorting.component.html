@@ -6,7 +6,7 @@
 >
   <ng-template pTemplate="selectedItem">
     <i [class]="iconClass" style="margin-right: 0.5rem;"></i>
-    {{ getSortOptionLabel(selectedSortOption) || placeholder }}
+    {{ !selectedSortOption ? getSortOptionLabel(selectedSortOption) : placeholder }}
   </ng-template>
 </p-dropdown>
 

@@ -49,10 +49,12 @@ export class AuthService {
     const localStorage = this.document.defaultView?.localStorage;
     const jwtHelper = new JwtHelperService();
     const token = localStorage?.getItem('token');
+
     if (!token) {
       this.authStateSubject.next(false);
       return false;
     }
+
     const isExpired = !jwtHelper.isTokenExpired(token);
     this.authStateSubject.next(isExpired);
     return isExpired;
