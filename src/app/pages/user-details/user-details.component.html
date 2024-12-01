@@ -37,7 +37,7 @@
     <button (click)="toggleEdit()">Edytuj</button>
   </div>
 
-  <form *ngIf="isEditing" (ngSubmit)="onSubmit(editForm)" #editForm="ngForm">
+  <form *ngIf="isEditing" (ngSubmit)="onSubmit()" #editForm="ngForm">
     <div class="form-group">
       <label>Imię</label>
       <input type="text" name="firstName" [(ngModel)]="editedUser.firstName" required class="form-control">
