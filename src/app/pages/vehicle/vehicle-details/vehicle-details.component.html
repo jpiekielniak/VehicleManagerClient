@@ -1,0 +1,30 @@
+<div class="vehicle-details-container">
+  <p-card *ngIf="vehicle" styleClass="vehicle-card">
+    <app-vehicle-header [items]="items"></app-vehicle-header>
+
+    <div class="content-wrapper">
+      <app-vehicle-image></app-vehicle-image>
+      <app-vehicle-info-grid [vehicle]="vehicle"></app-vehicle-info-grid>
+    </div>
+  </p-card>
+
+  <div *ngIf="vehicle" class="records-container">
+    <p-tabView (onChange)="onTabChange($event)">
+      <p-tabPanel header="Książka serwisowa">
+        <app-service-book-tab
+          [serviceBookId]="vehicle.serviceBookId">
+        </app-service-book-tab>
+      </p-tabPanel>
+
+      <p-tabPanel header="Ubezpieczenia">
+        <app-insurance-list
+          #insuranceList
+          [vehicleId]="vehicle.id"
+          >
+        </app-insurance-list>
+      </p-tabPanel>
+    </p-tabView>
+  </div>
+
+  <app-loading-spinner *ngIf="!vehicle"></app-loading-spinner>
+</div>

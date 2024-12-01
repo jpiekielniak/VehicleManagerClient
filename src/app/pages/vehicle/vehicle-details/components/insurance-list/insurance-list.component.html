@@ -1,0 +1,37 @@
+<ng-container (click)="loadInsurances()">
+  <div class="record-list" *ngIf="!isLoading && insurances.length > 0; else noInsurances">
+    <div *ngFor="let insurance of insurances" class="record-item">
+      <span class="record-title">{{ insurance.title }}</span>
+      <div class="record-actions">
+        <p-button
+          icon="pi pi-eye"
+          styleClass="p-button-rounded p-button-text"
+          (onClick)="openInsuranceDetails(insurance.insuranceId)"
+          pTooltip="Zobacz szczegóły">
+        </p-button>
+        <p-button
+          icon="pi pi-trash"
+          styleClass="p-button-rounded p-button-text p-button-danger"
+          (onClick)="confirmInsuranceDelete(insurance.insuranceId)"
+          pTooltip="Usuń ubezpieczenie">
+        </p-button>
+      </div>
+    </div>
+  </div>
+  <ng-template #noInsurances>
+    <p class="no-data">Brak aktywnych ubezpieczeń</p>
+  </ng-template>
+  <div class="button-container">
+    <p-button
+      label="Dodaj ubezpieczenie"
+      icon="pi pi-plus"
+      styleClass="p-button-primary add-button"
+      (onClick)="addInsurance()">
+    </p-button>
+  </div>
+</ng-container>
+<div *ngIf="isLoading" class="loading-state">
+  <div class="spinner-container">
+    <p-progressSpinner></p-progressSpinner>
+  </div>
+</div>

@@ -1,0 +1,15 @@
+<ng-container *ngIf="!isLoading">
+  <app-record-list
+    [records]="records"
+    [emptyMessage]="emptyMessage"
+    [viewTooltip]="viewTooltip"
+    [deleteTooltip]="deleteTooltip"
+    [addButtonLabel]="addButtonLabel"
+    (onView)="onView.emit($event)"
+    (onDelete)="onDelete.emit($event)"
+    (onAdd)="onAdd.emit()">
+  </app-record-list>
+</ng-container>
+<div *ngIf="isLoading">
+  <p-progressSpinner></p-progressSpinner>
+</div>

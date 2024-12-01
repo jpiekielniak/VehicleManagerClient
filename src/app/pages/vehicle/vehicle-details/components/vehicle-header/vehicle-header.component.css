@@ -1,0 +1,23 @@
+h2 {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  padding-top: 10px;
+  color: white;
+  font-weight: bold;
+  font-size: 32px;
+}
+
+.card-header {
+  background: linear-gradient(135deg, #2196f3, #1976d2);
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}

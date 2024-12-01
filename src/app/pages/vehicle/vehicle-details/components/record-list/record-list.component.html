@@ -1,0 +1,30 @@
+<div class="record-list">
+  <div *ngFor="let record of records" class="record-item">
+    <span class="record-title">{{ record.title }}</span>
+    <div class="record-actions">
+      <p-button
+        icon="pi pi-eye"
+        styleClass="p-button-rounded p-button-text"
+        (onClick)="onView.emit(record.id)"
+        [pTooltip]="viewTooltip">
+      </p-button>
+      <p-button
+        icon="pi pi-trash"
+        styleClass="p-button-rounded p-button-text p-button-danger"
+        (onClick)="onDelete.emit(record.id)"
+        [pTooltip]="deleteTooltip">
+      </p-button>
+    </div>
+  </div>
+</div>
+<ng-container *ngIf="records.length === 0">
+  <p class="no-data">{{ emptyMessage }}</p>
+</ng-container>
+<div class="button-container">
+  <p-button
+    [label]="addButtonLabel"
+    icon="pi pi-plus"
+    styleClass="p-button-primary add-button"
+    (onClick)="onAdd.emit()">
+  </p-button>
+</div>

@@ -4,8 +4,8 @@ import {AlertModule} from "@coreui/angular";
 import {ToastModule} from "primeng/toast";
 import {MessageService} from "primeng/api";
 import {CommonModule} from "@angular/common";
-import {NavbarComponent} from "./components/nav-bar/nav-bar.component";
-import {ScrollToTopComponent} from "./components/scroll-to-top/scroll-to-top.component";
+import {NavbarComponent} from "./shared/components/nav-bar/nav-bar.component";
+import {ScrollToTopComponent} from "./shared/components/scroll-to-top/scroll-to-top.component";
 
 @Component({
   selector: 'app-root',
