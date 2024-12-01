@@ -24,7 +24,7 @@ export class VehicleService {
     page: number = 1,
     pageSize: number = 10,
     filter: any = null,
-    sort?: string
+    sort: string = 'brand'
   ): Observable<PaginationResult<Vehicle>> {
     let url = `${API_CONSTANTS.VEHICLE.BASE_PATH}?page=${page}&pageSize=${pageSize}`;
 

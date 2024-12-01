@@ -136,6 +136,7 @@ export class VehiclesComponent implements OnInit, OnDestroy {
       )
       .subscribe(result => {
         this.handleVehiclesResult(result);
+
       });
   }
 
