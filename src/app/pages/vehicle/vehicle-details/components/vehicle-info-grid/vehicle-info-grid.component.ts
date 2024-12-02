@@ -21,8 +21,8 @@ export class VehicleInfoGridComponent {
       { label: 'Rok produkcji', value: this.vehicle.year },
       { label: 'Rejestracja', value: this.vehicle.licensePlate },
       { label: 'Numer VIN', value: this.vehicle.vin },
-      { label: 'Poj. silnika', value: this.vehicle.engineCapacity },
-      { label: 'Moc silnika', value: `${this.vehicle.enginePower} km` },
+      { label: 'Poj. silnika', value: `${this.vehicle.engineCapacity} cm3` },
+      { label: 'Moc silnika', value: `${this.vehicle.enginePower} KM` },
       { label: 'Skrzynia biegów', value: this.vehicle.gearboxType },
       { label: 'Rodzaj paliwa', value: this.vehicle.fuelType },
       { label: 'Typ pojazdu', value: this.vehicle.vehicleType }

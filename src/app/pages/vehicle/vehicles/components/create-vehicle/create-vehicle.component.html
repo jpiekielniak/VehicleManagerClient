@@ -58,7 +58,7 @@
       </span>
 
     <span class="p-float-label">
-        <p-inputNumber id="enginePower" formControlName="enginePower" [required]="true" suffix=" km" >
+        <p-inputNumber id="enginePower" formControlName="enginePower" [required]="true" suffix=" KM" >
         </p-inputNumber>
         <label for="enginePower">Moc silnika</label>
         <small class="p-error" *ngIf="createVehicleForm.get('enginePower')?.errors?.['required'] && createVehicleForm.get('enginePower')?.dirty">
