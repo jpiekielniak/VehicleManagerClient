@@ -1,37 +1,53 @@
-import {Component, inject, OnDestroy, OnInit, signal} from '@angular/core';
+import {Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {EnumService} from "../../../../../shared/services/enum/enum.service";
-import {MatDialogRef} from "@angular/material/dialog";
-import {MaterialImports} from "../../../../../imports/material.imports";
-import {NgForOf} from "@angular/common";
 import {API_CONSTANTS} from "../../../../../constants/api.constants";
 import {VehicleService} from "../../../services/vehicle/vehicle.service";
 import {CreateVehicle} from "../../types/create-vehicle.type";
-import {forkJoin, Subject, takeUntil} from "rxjs";
-import {AlertComponent} from "@coreui/angular";
-import {EnumData} from "../../../../../shared/types/enum-data.type";
+import {finalize, forkJoin, Subject, takeUntil} from "rxjs";
 import {Enum} from "../../../../../shared/types/enum.type";
+import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
+import {InputTextModule} from "primeng/inputtext";
+import {InputNumberModule} from "primeng/inputnumber";
+import {DropdownModule} from "primeng/dropdown";
+import {ButtonModule} from "primeng/button";
+import {ToastService} from "../../../../../shared/services/toast/toast.service";
+import {EnumData} from "../../../../../shared/types/enum-data.type";
+import {DialogModule} from "primeng/dialog";
+import {NgIf} from "@angular/common";
+import {MessageService} from "primeng/api";
 
 @Component({
   selector: 'app-create-vehicle',
   standalone: true,
-  imports: [...MaterialImports, NgForOf, ReactiveFormsModule, AlertComponent],
+  imports: [
+    ReactiveFormsModule,
+    InputTextModule,
+    InputNumberModule,
+    DropdownModule,
+    ButtonModule,
+    DialogModule,
+    NgIf
+  ],
+  providers: [ToastService, MessageService, DynamicDialogRef],
   templateUrl: './create-vehicle.component.html',
-  styleUrl: './create-vehicle.component.css'
+  styleUrls: ['./create-vehicle.component.scss']
 })
 export class CreateVehicleComponent implements OnInit, OnDestroy {
   private readonly destroy$ = new Subject<void>();
   private formBuilder = inject(FormBuilder);
   private enumService = inject(EnumService);
   private vehicleService = inject(VehicleService);
-  protected dialogRef = inject(MatDialogRef<CreateVehicleComponent>);
+  private toastService = inject(ToastService);
+  private ref = inject(DynamicDialogRef);
 
-  isError = signal(false);
   createVehicleForm!: FormGroup;
   currentYear = new Date().getFullYear();
   fuelTypes: Enum[] = [];
   gearboxTypes: Enum[] = [];
   vehicleTypes: Enum[] = [];
+  isSubmitting = false;
+
 
   ngOnInit(): void {
     this.initializeForm();
@@ -77,20 +93,26 @@ export class CreateVehicleComponent implements OnInit, OnDestroy {
   }
 
   handleError(): void {
-    this.isError.set(true);
-    setTimeout(() => {
-      this.isError.set(false);
-    }, 3000);
+    this.toastService.showWarning('Błąd', 'Dodanie pojazdu nie powiodło się. Spróbuj ponownie.');
+    this.ref.close(false);
   }
 
   onSubmit() {
     if (this.createVehicleForm.valid) {
+      this.isSubmitting = true;
       this.vehicleService.createVehicle(this.createVehicleForm.value as CreateVehicle)
-        .pipe(takeUntil(this.destroy$))
+        .pipe(
+          takeUntil(this.destroy$),
+          finalize(() => this.isSubmitting = false)
+        )
         .subscribe({
-          next: this.dialogRef.close.bind(this.dialogRef),
+          next: () => {
+            this.toastService.showSuccess('Sukces', 'Pojazd został dodany.');
+            this.ref.close(true);
+          },
           error: this.handleError.bind(this)
         });
     }
   }
 }
+

@@ -1,20 +1,104 @@
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
-  padding: 1rem;
+.vehicle-form {
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    padding: 2rem;
+    background: #fafafa;
+    border-radius: 8px;
+  }
+
+  .p-float-label {
+    width: 100%;
+    position: relative;
+    margin-bottom: 1.25rem;
+
+    label {
+      background-color: white;
+      padding: 0 0.5rem;
+      font-weight: 500;
+      color: #455a64;
+    }
+
+    .p-error {
+      position: absolute;
+      left: 0;
+      bottom: -1.5rem;
+      color: #ef5350;
+      font-size: 0.75rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+  }
+
+  :host ::ng-deep {
+    .p-inputtext, .p-dropdown, .p-inputnumber {
+      width: 100%;
+      min-width: 100%;
+      transition: all 0.2s ease;
+      border: 1.5px solid #e0e0e0;
+      border-radius: 6px;
+
+      &:hover {
+        border-color: #90caf9;
+      }
+    }
+
+    .p-inputnumber-input {
+      width: 100%;
+      border-radius: 6px;
+    }
+
+    .p-button {
+      &.p-button-primary {
+        background: linear-gradient(135deg, #2196f3, #1976d2);
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 6px;
+        font-weight: 500;
+        box-shadow: 0 2px 4px rgba(33, 150, 243, 0.2);
+
+        &:hover {
+          background: linear-gradient(135deg, #1976d2, #1565c0);
+          box-shadow: 0 4px 8px rgba(33, 150, 243, 0.3);
+        }
+
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+      }
+
+      &.p-button-text {
+        color: #455a64;
+
+        &:hover {
+          background: rgba(69, 90, 100, 0.1);
+        }
+      }
+    }
+
+    .p-float-label label {
+      margin-top: -0.5rem;
+    }
+
+    .p-dropdown {
+      display: flex;
+      background: white;
+    }
+
+    .p-inputtext:focus, .p-dropdown:focus {
+      border-color: #2196f3;
+      box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+    }
+  }
+
+  .button-container-form {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1.5rem;
+    padding: 1rem;
+    border-top: 1px solid #e0e0e0;
+  }
 }
 
-mat-form-field {
-  width: 100%;
-}
-
-mat-dialog-content {
-  max-height: 80vh;
-  overflow-y: auto;
-}
-
-mat-dialog-actions {
-  padding: 1rem;
-  gap: 1rem;
-}

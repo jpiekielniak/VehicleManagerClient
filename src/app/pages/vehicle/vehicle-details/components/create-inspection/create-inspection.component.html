@@ -46,13 +46,6 @@
     </div>
   </mat-dialog-content>
 
-
-
-  <c-alert *ngIf="isError()" color="warning" class="d-flex align-items-center m-auto w-50">
-    <i class="bi-exclamation-triangle-fill me-2"></i>
-    <div>Wystąpił błąd podczas przetwarzania danych</div>
-  </c-alert>
-
   <mat-dialog-actions align="end">
     <button mat-button type="button" (click)="dialogRef.close()">Anuluj</button>
     <button mat-button type="reset" (click)="createInspectionForm.reset()">Wyczyść</button>

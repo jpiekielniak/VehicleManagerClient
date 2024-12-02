@@ -3,7 +3,6 @@ import {FormBuilder, FormGroup, ReactiveFormsModule, Validators,} from '@angular
 import {CommonModule} from '@angular/common';
 import {SignIn} from './types/sign-in.type';
 import {AuthService} from '../shared/services/auth.service';
-import {FormModule} from '@coreui/angular';
 import {MaterialImports} from '../../../imports/material.imports';
 import {Router, RouterLink} from '@angular/router';
 import {ToastModule} from 'primeng/toast';
@@ -19,7 +18,6 @@ import {ToastService} from "../../../shared/services/toast/toast.service";
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    FormModule,
     RouterLink,
     ToastModule,
     ...MaterialImports,

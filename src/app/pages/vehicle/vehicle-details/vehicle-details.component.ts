@@ -21,6 +21,7 @@ import {VehicleHeaderComponent} from "./components/vehicle-header/vehicle-header
 import {InsuranceListComponent} from "./components/insurance-list/insurance-list.component";
 import {VehicleDialogService} from "../services/dialogs/vehicle/vehicle-dialog.service";
 import {LoadingSpinnerComponent} from "../../../shared/components/loading-spinner/loading-spinner.component";
+import {DialogService} from "primeng/dynamicdialog";
 
 @Component({
   selector: 'app-vehicle-details',
@@ -42,6 +43,7 @@ import {LoadingSpinnerComponent} from "../../../shared/components/loading-spinne
     InsuranceListComponent,
     LoadingSpinnerComponent,
   ],
+  providers: [DialogService, VehicleDialogService],
   templateUrl: './vehicle-details.component.html',
   styleUrl: './vehicle-details.component.css'
 })

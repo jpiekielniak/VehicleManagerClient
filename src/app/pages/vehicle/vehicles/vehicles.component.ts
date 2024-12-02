@@ -16,6 +16,7 @@ import {ProgressSpinnerModule} from "primeng/progressspinner";
 import {LoadingService} from "../../../shared/services/loading/loading.service";
 import {LoadingSpinnerComponent} from "../../../shared/components/loading-spinner/loading-spinner.component";
 import {VehicleDialogService} from "../services/dialogs/vehicle/vehicle-dialog.service";
+import {DialogService} from "primeng/dynamicdialog";
 
 const VEHICLE_SORT_OPTIONS: { label: string, value: keyof Vehicle }[] = [
   {label: 'Marka', value: 'brand'},
@@ -37,6 +38,7 @@ const VEHICLE_SORT_OPTIONS: { label: string, value: keyof Vehicle }[] = [
     ProgressSpinnerModule,
     LoadingSpinnerComponent,
   ],
+  providers: [VehicleDialogService, DialogService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './vehicles.component.html',
   styleUrl: './vehicles.component.css'
@@ -68,6 +70,8 @@ export class VehiclesComponent implements OnInit, OnDestroy {
       .subscribe(loading => {
         this.isLoading = loading;
       });
+
+    this.extractUniqueBrands(this.vehicles);
   }
 
   private loadVehicles(): void {
@@ -185,3 +189,4 @@ export class VehiclesComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 }
+

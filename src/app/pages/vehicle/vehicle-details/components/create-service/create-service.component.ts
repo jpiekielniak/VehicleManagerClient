@@ -4,7 +4,6 @@ import {FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Val
 import {MAT_DIALOG_DATA, MatDialogRef,} from "@angular/material/dialog";
 import {ServiceBookService} from "../../services/serviceBook/service-book.service";
 import {CreateService} from "../../types/create-service.type";
-import {AlertComponent} from "@coreui/angular";
 import {MaterialImports} from "../../../../../imports/material.imports";
 import {CurrencyPipe, NgForOf, NgIf} from "@angular/common";
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from "@angular/material/datepicker";
@@ -18,7 +17,6 @@ export type Cost = {
   selector: 'app-create-service',
   standalone: true,
   imports: [
-    AlertComponent,
     FormsModule,
     ReactiveFormsModule,
     NgIf,

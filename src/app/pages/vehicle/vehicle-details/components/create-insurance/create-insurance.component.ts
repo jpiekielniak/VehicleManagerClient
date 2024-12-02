@@ -1,5 +1,4 @@
 import {Component, inject, OnDestroy, OnInit, signal} from '@angular/core';
-import {AlertComponent} from "@coreui/angular";
 import {MatButton} from "@angular/material/button";
 import {
   MAT_DIALOG_DATA,
@@ -25,7 +24,6 @@ import {MaterialImports} from "../../../../../imports/material.imports";
   selector: 'app-create-insurance',
   standalone: true,
   imports: [
-    AlertComponent,
     MatButton,
     MatDialogActions,
     MatDialogContent,

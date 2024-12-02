@@ -1,118 +1,106 @@
-<h2 mat-dialog-title>Dodaj nowy pojazd</h2>
-
-<form [formGroup]="createVehicleForm" (ngSubmit)="onSubmit()">
-  <mat-dialog-content>
-    <div class="form-grid">
-      <mat-form-field>
-        <mat-label>Marka</mat-label>
-        <input matInput formControlName="brand" required>
-        <mat-error *ngIf="createVehicleForm.get('brand')?.errors?.['required']">
+<form [formGroup]="createVehicleForm" (ngSubmit)="onSubmit()" class="vehicle-form">
+  <div class="form-grid">
+      <span class="p-float-label">
+        <input pInputText id="brand" formControlName="brand" [required]="true">
+        <label for="brand">Marka</label>
+        <small class="p-error" *ngIf="createVehicleForm.get('brand')?.errors?.['required'] && createVehicleForm.get('brand')?.dirty ">
           Pole wymagane
-        </mat-error>
-      </mat-form-field>
+        </small>
+      </span>
 
-      <mat-form-field>
-        <mat-label>Model</mat-label>
-        <input matInput formControlName="model" required>
-        <mat-error *ngIf="createVehicleForm.get('model')?.errors?.['required']">
+    <span class="p-float-label">
+        <input pInputText id="model" formControlName="model" [required]="true">
+        <label for="model">Model</label>
+        <small class="p-error" *ngIf="createVehicleForm.get('model')?.errors?.['required'] && createVehicleForm.get('model')?.dirty">
           Pole wymagane
-        </mat-error>
-      </mat-form-field>
+        </small>
+      </span>
 
-      <mat-form-field>
-        <mat-label>Rok produkcji</mat-label>
-        <input matInput type="number" formControlName="year" required>
-        <mat-error *ngIf="createVehicleForm.get('year')?.errors?.['required']">
+    <span class="p-float-label">
+        <p-inputNumber id="year" formControlName="year" [required]="true"
+                       [min]="1900" [max]="currentYear" [useGrouping]="false">
+        </p-inputNumber>
+        <label for="year">Rok produkcji</label>
+        <small class="p-error" *ngIf="createVehicleForm.get('year')?.errors?.['required'] && createVehicleForm.get('year')?.dirty">
           Pole wymagane
-        </mat-error>
-        <mat-error *ngIf="createVehicleForm.get('year')?.errors?.['min'] || createVehicleForm.get('year')?.errors?.['max']">
+        </small>
+        <small class="p-error" *ngIf="createVehicleForm.get('year')?.errors?.['min'] || createVehicleForm.get('year')?.errors?.['max'] && createVehicleForm.get('year')?.dirty">
           Rok musi być między 1900 a {{ currentYear }}
-        </mat-error>
-      </mat-form-field>
+        </small>
+      </span>
 
-      <mat-form-field>
-        <mat-label>Numer rejestracyjny</mat-label>
-        <input matInput formControlName="licensePlate" required>
-        <mat-error *ngIf="createVehicleForm.get('licensePlate')?.errors?.['required']">
+    <span class="p-float-label">
+        <input pInputText id="licensePlate" formControlName="licensePlate" [required]="true">
+        <label for="licensePlate">Numer rejestracyjny</label>
+        <small class="p-error" *ngIf="createVehicleForm.get('licensePlate')?.errors?.['required'] && createVehicleForm.get('licensePlate')?.dirty">
           Pole wymagane
-        </mat-error>
-      </mat-form-field>
+        </small>
+      </span>
 
-      <mat-form-field>
-        <mat-label>VIN</mat-label>
-        <input matInput formControlName="vin" required>
-        <mat-error *ngIf="createVehicleForm.get('vin')?.errors?.['required']">
+    <span class="p-float-label">
+        <input pInputText id="vin" formControlName="vin" [required]="true">
+        <label for="vin">VIN</label>
+        <small class="p-error" *ngIf="createVehicleForm.get('vin')?.errors?.['required']  && createVehicleForm.get('vin')?.dirty">
           Pole wymagane
-        </mat-error>
-        <mat-error *ngIf="createVehicleForm.get('vin')?.errors?.['minlength'] || createVehicleForm.get('vin')?.errors?.['maxlength']">
+        </small>
+        <small class="p-error" *ngIf="createVehicleForm.get('vin')?.errors?.['minlength'] || createVehicleForm.get('vin')?.errors?.['maxlength']  && createVehicleForm.get('vin')?.dirty">
           VIN musi mieć dokładnie 17 znaków
-        </mat-error>
-      </mat-form-field>
+        </small>
+      </span>
 
-      <mat-form-field>
-        <mat-label>Pojemność silnika</mat-label>
-        <input matInput type="number" formControlName="engineCapacity" required>
-        <mat-error *ngIf="createVehicleForm.get('engineCapacity')?.errors?.['required']">
+    <span class="p-float-label">
+        <p-inputNumber id="engineCapacity" formControlName="engineCapacity" [required]="true">
+        </p-inputNumber>
+        <label for="engineCapacity">Poj. silnika (w cm3)</label>
+        <small class="p-error" *ngIf="createVehicleForm.get('engineCapacity')?.errors?.['required'] && createVehicleForm.get('engineCapacity')?.dirty">
           Pole wymagane
-        </mat-error>
-      </mat-form-field>
+        </small>
+      </span>
 
-      <mat-form-field>
-        <mat-label>Moc silnika</mat-label>
-        <input matInput type="number" formControlName="enginePower" required>
-        <mat-error *ngIf="createVehicleForm.get('enginePower')?.errors?.['required']">
+    <span class="p-float-label">
+        <p-inputNumber id="enginePower" formControlName="enginePower" [required]="true" suffix=" km" >
+        </p-inputNumber>
+        <label for="enginePower">Moc silnika</label>
+        <small class="p-error" *ngIf="createVehicleForm.get('enginePower')?.errors?.['required'] && createVehicleForm.get('enginePower')?.dirty">
           Pole wymagane
-        </mat-error>
-      </mat-form-field>
+        </small>
+      </span>
 
-      <mat-form-field>
-        <mat-label>Rodzaj paliwa</mat-label>
-        <mat-select formControlName="fuelType" required>
-          <mat-option *ngFor="let type of fuelTypes" [value]="type.key">
-            {{type.value}}
-          </mat-option>
-        </mat-select>
-        <mat-error *ngIf="createVehicleForm.get('fuelType')?.errors?.['required']">
+    <span class="p-float-label">
+        <p-dropdown id="fuelType" [options]="fuelTypes" formControlName="fuelType"
+                    optionLabel="value" optionValue="key" [required]="true">
+        </p-dropdown>
+        <label for="fuelType">Rodzaj paliwa</label>
+        <small class="p-error" *ngIf="createVehicleForm.get('fuelType')?.errors?.['required'] && createVehicleForm.get('fuelType')?.dirty ">
           Pole wymagane
-        </mat-error>
-      </mat-form-field>
+        </small>
+      </span>
 
-      <mat-form-field>
-        <mat-label>Typ skrzyni biegów</mat-label>
-        <mat-select formControlName="gearboxType" required>
-          <mat-option *ngFor="let type of gearboxTypes" [value]="type.key">
-            {{type.value}}
-          </mat-option>
-        </mat-select>
-        <mat-error *ngIf="createVehicleForm.get('gearboxType')?.errors?.['required']">
+    <span class="p-float-label">
+        <p-dropdown id="gearboxType" [options]="gearboxTypes" formControlName="gearboxType"
+                    optionLabel="value" optionValue="key" [required]="true">
+        </p-dropdown>
+        <label for="gearboxType">Typ skrzyni biegów</label>
+        <small class="p-error" *ngIf="createVehicleForm.get('gearboxType')?.errors?.['required'] && createVehicleForm.get('gearboxType')?.dirty ">
           Pole wymagane
-        </mat-error>
-      </mat-form-field>
+        </small>
+      </span>
 
-      <mat-form-field>
-        <mat-label>Typ pojazdu</mat-label>
-        <mat-select formControlName="vehicleType" required>
-          <mat-option *ngFor="let type of vehicleTypes" [value]="type.key">
-            {{type.value}}
-          </mat-option>
-        </mat-select>
-        <mat-error *ngIf="createVehicleForm.get('vehicleType')?.errors?.['required']">
+    <span class="p-float-label">
+        <p-dropdown id="vehicleType" [options]="vehicleTypes" formControlName="vehicleType"
+                    optionLabel="value" optionValue="key" [required]="true">
+        </p-dropdown>
+        <label for="vehicleType">Typ pojazdu</label>
+        <small class="p-error" *ngIf="createVehicleForm.get('vehicleType')?.errors?.['required'] && createVehicleForm.get('vehicleType')?.dirty ">
           Pole wymagane
-        </mat-error>
-      </mat-form-field>
-    </div>
-  </mat-dialog-content>
+        </small>
+      </span>
+  </div>
 
-  <c-alert *ngIf="isError()" color="warning" class="d-flex align-items-center m-auto w-50">
-    <i class="bi-exclamation-triangle-fill me-2"></i>
-    <div>Wystąpił błąd podczas przetwarzania danych</div>
-  </c-alert>
-
-  <mat-dialog-actions align="end">
-    <button mat-button type="button" (click)="dialogRef.close()">Anuluj</button>
-    <button mat-button type="reset" (click)="createVehicleForm.reset()">Wyczyść</button>
-    <button mat-raised-button color="primary" type="submit" [disabled]="!createVehicleForm.valid">
-      Dodaj nowy pojazd
-    </button>
-  </mat-dialog-actions>
+  <div class="button-container-form">
+    <p-button label="Wyczyść" (onClick)="createVehicleForm.reset()" styleClass="p-button-text" [disabled]="isSubmitting"></p-button>
+    <p-button label="Dodaj nowy pojazd" type="submit" [disabled]="!createVehicleForm.valid || isSubmitting"
+              styleClass="p-button-primary" [loading]="isSubmitting"></p-button>
+  </div>
 </form>
+

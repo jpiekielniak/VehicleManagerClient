@@ -3,7 +3,6 @@ import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/
 import {AuthService} from '../shared/services/auth.service';
 import {SignUp} from './types/sign-up.type';
 import {Router} from '@angular/router';
-import {AlertComponent} from '@coreui/angular';
 import {MaterialImports} from "../../../imports/material.imports";
 import {ToastModule} from "primeng/toast";
 import {MessageService} from "primeng/api";
@@ -14,7 +13,6 @@ import {ToastService} from "../../../shared/services/toast/toast.service";
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    AlertComponent,
     ToastModule,
     ...MaterialImports,
   ],

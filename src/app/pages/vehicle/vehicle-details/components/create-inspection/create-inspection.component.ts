@@ -1,5 +1,4 @@
 import {Component, inject, OnDestroy, OnInit, signal} from '@angular/core';
-import {AlertComponent} from "@coreui/angular";
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MatButton} from "@angular/material/button";
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from "@angular/material/datepicker";
@@ -28,7 +27,6 @@ import {MaterialImports} from "../../../../../imports/material.imports";
   standalone: true,
   imports: [
     ...MaterialImports,
-    AlertComponent,
     FormsModule,
     MatButton,
     MatDatepicker,
