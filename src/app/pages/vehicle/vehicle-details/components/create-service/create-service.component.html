@@ -1,89 +1,104 @@
-<h2 mat-dialog-title>Dodaj nowy serwis</h2>
-
-<form [formGroup]="createServiceForm" (ngSubmit)="onSubmit()">
-  <mat-dialog-content>
+<div class="create-service-container">
+  <form [formGroup]="createServiceForm" (ngSubmit)="onSubmit()" class="p-fluid">
     <div class="form-grid">
-      <mat-form-field>
-        <mat-label>Tytuł</mat-label>
-        <input matInput formControlName="title" required>
-        <mat-error *ngIf="validateControl('title', 'required')">
-          Pole wymagane
-        </mat-error>
-        <mat-error *ngIf="validateControl('title', 'maxlength')">
-          Maksymalna długość to 50 znaków
-        </mat-error>
-      </mat-form-field>
-
-      <mat-form-field>
-        <mat-label>Opis</mat-label>
-        <textarea matInput formControlName="description" rows="3"></textarea>
-        <mat-error *ngIf="validateControl('description', 'maxlength')">
-          Maksymalna długość to 500 znaków
-        </mat-error>
-      </mat-form-field>
-
-      <mat-form-field>
-        <mat-label>Data wykonania</mat-label>
-        <input matInput [matDatepicker]="datePicker" formControlName="date" required>
-        <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
-        <mat-datepicker #datePicker></mat-datepicker>
-        <mat-error *ngIf="validateControl('date', 'required')">
-          Pole wymagane
-        </mat-error>
-      </mat-form-field>
-
-      <div formArrayName="costs" class="w-full">
-        <h3>Koszty (Suma: {{ totalCost | currency:'PLN':'symbol':'1.2-2' }})</h3>
-
-        <div *ngFor="let cost of costs.controls; let i = index"
-             [formGroupName]="i"
-             class="flex gap-2 mb-2">
-
-          <mat-form-field class="flex-grow">
-            <mat-label>Tytuł kosztu</mat-label>
-            <input matInput formControlName="title" required>
-            <mat-error *ngIf="validateCostControl(i, 'title', 'required')">
-              Pole wymagane
-            </mat-error>
-            <mat-error *ngIf="validateCostControl(i, 'title', 'maxlength')">
-              Maksymalna długość to 100 znaków
-            </mat-error>
-          </mat-form-field>
-
-          <mat-form-field>
-            <mat-label>Kwota</mat-label>
-            <input matInput type="number" formControlName="amount" required>
-            <mat-error *ngIf="validateCostControl(i, 'amount', 'required')">
-              Pole wymagane
-            </mat-error>
-            <mat-error *ngIf="validateCostControl(i, 'amount', 'min')">
-              Kwota musi być większa lub równa 0
-            </mat-error>
-            <mat-error *ngIf="validateCostControl(i, 'amount', 'max')">
-              Maksymalna kwota to 1,000,000
-            </mat-error>
-          </mat-form-field>
-
-          <button mat-icon-button color="warn" type="button" (click)="removeCost(i)">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </div>
-
-        <button mat-raised-button color="primary" type="button" (click)="addCost()">
-          Dodaj koszt
-        </button>
+      <div class="field">
+       <span class="p-float-label">
+         <i class="pi pi-tag" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: #666;"></i>
+         <input pInputText id="title" formControlName="title"
+                [ngClass]="{'ng-invalid ng-dirty': validateControl('title', 'required')}"/>
+         <label for="title">📝 Tytuł</label>
+       </span>
+        <small class="p-error" *ngIf="validateControl('title', 'required')">Pole wymagane</small>
+        <small class="p-error" *ngIf="validateControl('title', 'maxlength')">Maksymalna długość to 50 znaków</small>
       </div>
-    </div>
-  </mat-dialog-content>
 
-  <mat-dialog-actions align="end">
-    <button mat-button type="button" (click)="dialogRef.close()">Anuluj</button>
-    <button mat-button type="reset" (click)="createServiceForm.reset()">Wyczyść</button>
-    <button mat-raised-button
-            color="primary"
-            type="submit"
-            [disabled]="!createServiceForm.valid">
-      Dodaj nowy serwis
-    </button>
-  </mat-dialog-actions>
-</form>
+      <div class="field">
+       <span class="p-float-label">
+         <i class="pi pi-info-circle" style="position: absolute; right: 10px; top: 25px; color: #666;"></i>
+         <textarea pInputTextarea id="description" formControlName="description" rows="3" autoResize="true"></textarea>
+         <label for="description">📄 Opis</label>
+       </span>
+        <small class="p-error" *ngIf="validateControl('description', 'maxlength')">Maksymalna długość to 500 znaków</small>
+      </div>
+
+      <div class="field">
+       <span class="p-float-label">
+           <p-calendar id="date"
+                       formControlName="date"
+                       [showIcon]="true"
+                       dateFormat="dd.mm.yy"
+                       [touchUI]="true"
+                       [readonlyInput]="true"
+                       [locale]="pl"
+                       [showButtonBar]="true"
+                       [style]="{'width': '100%'}"
+                       [panelStyle]="{'width': '90%', 'max-width': '300px', 'min-height': '300px', 'height': 'auto'}"
+           >
+          </p-calendar>
+         <label for="date">📅 Data wykonania</label>
+       </span>
+        <small class="p-error" *ngIf="validateControl('date', 'required')">Pole wymagane</small>
+      </div>
+
+      <p-card>
+        <ng-template pTemplate="header">
+          <div>
+            <h3 class="costs">💰 Koszty</h3>
+            <span class="total-cost costs mt-2">💵 Suma: {{ totalCost }} PLN</span>
+          </div>
+        </ng-template>
+
+        <div formArrayName="costs" class="costs-container">
+          <div *ngFor="let cost of costs.controls; let i = index" [formGroupName]="i" class="cost-item">
+            <div class="grid cols-gap-6">
+              <div class="col-5">
+               <span class="p-float-label">
+                 <i class="pi pi-bookmark" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: #666;"></i>
+                 <input pInputText formControlName="title"
+                        [ngClass]="{'ng-invalid ng-dirty': validateCostControl(i, 'title', 'required')}"/>
+                 <label>🏷️ Tytuł kosztu</label>
+               </span>
+                <small class="p-error" *ngIf="validateCostControl(i, 'title', 'required')">Pole wymagane</small>
+              </div>
+
+              <div class="col-5">
+               <span class="p-float-label">
+                 <p-inputNumber formControlName="amount" mode="decimal" [minFractionDigits]="2"
+                                [maxFractionDigits]="2"></p-inputNumber>
+                 <label>💲 Kwota</label>
+               </span>
+                <small class="p-error" *ngIf="validateCostControl(i, 'amount', 'required')">Pole wymagane</small>
+              </div>
+
+              <div class="col-2 flex align-items-center justify-content-center">
+                <button pButton type="button" icon="pi pi-trash" class="p-button-danger p-button-outlined"
+                        (click)="removeCost(i)"></button>
+              </div>
+            </div>
+          </div>
+
+          <button pButton type="button"
+                  label="➕ Dodaj koszt"
+                  (click)="addCost()"
+                  class="p-button-outlined mt-3"></button>
+        </div>
+      </p-card>
+    </div>
+
+    <p-divider></p-divider>
+
+    <div class="button-container">
+      <button pButton type="button"
+              label="❌ Anuluj"
+              class="p-button-outlined"
+              (click)="close()"></button>
+      <button pButton type="reset"
+              label="🔄 Wyczyść"
+              class="p-button-secondary"
+              (click)="createServiceForm.reset()"></button>
+      <button pButton type="submit"
+              label="✅ Dodaj nowy serwis"
+              [disabled]="!createServiceForm.valid"></button>
+    </div>
+  </form>
+</div>
