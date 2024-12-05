@@ -1,52 +1,80 @@
 .vehicle-form {
   .form-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 2rem;
     padding: 2rem;
     background: #fafafa;
     border-radius: 8px;
+    max-width: 1200px;
+    margin: 0 auto;
   }
 
   .p-float-label {
-    width: 100%;
     position: relative;
     margin-bottom: 1.25rem;
 
+    input,
+    .p-inputtext,
+    .p-inputnumber,
+    .p-dropdown {
+      font-weight: bold;
+      width: 250px !important;
+    }
+
+    ::ng-deep .p-dropdown {
+      width: 250px !important;
+
+      .p-dropdown-label {
+        width: 100% !important;
+      }
+    }
+
+    ::ng-deep .p-inputnumber {
+      width: 250px !important;
+
+      .p-inputnumber-input {
+        width: 100% !important;
+      }
+    }
+
     label {
       background-color: white;
+      font-weight: 600;
+      font-size: 1rem;
       padding: 0 0.5rem;
-      font-weight: 500;
       color: #455a64;
     }
 
     .p-error {
       position: absolute;
       left: 0;
+      font-weight: 600;
+      font-size: 1rem;
       bottom: -1.5rem;
       color: #ef5350;
-      font-size: 0.75rem;
-      font-weight: 500;
       transition: all 0.2s ease;
     }
   }
 
   :host ::ng-deep {
-    .p-inputtext, .p-dropdown, .p-inputnumber {
-      width: 100%;
-      min-width: 100%;
-      transition: all 0.2s ease;
-      border: 1.5px solid #e0e0e0;
+
+    .p-inputtext,
+    .p-inputnumber,
+    .p-dropdown {
+      border: 2px solid #e0e0e0;
       border-radius: 6px;
+      height: 37px;
+      transition: all 0.2s ease;
 
       &:hover {
         border-color: #90caf9;
       }
-    }
 
-    .p-inputnumber-input {
-      width: 100%;
-      border-radius: 6px;
+      &:focus {
+        border-color: #2196f3;
+        box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+      }
     }
 
     .p-button {
@@ -80,16 +108,7 @@
 
     .p-float-label label {
       margin-top: -0.5rem;
-    }
-
-    .p-dropdown {
-      display: flex;
-      background: white;
-    }
-
-    .p-inputtext:focus, .p-dropdown:focus {
-      border-color: #2196f3;
-      box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+      font-size: 1rem;
     }
   }
 
@@ -100,5 +119,11 @@
     padding: 1rem;
     border-top: 1px solid #e0e0e0;
   }
-}
 
+  @media screen and (max-width: 1200px) {
+    .form-grid {
+      grid-template-columns: 1fr;
+      max-width: 600px;
+    }
+  }
+}

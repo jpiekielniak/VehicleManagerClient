@@ -1,39 +1,47 @@
-import {Component, inject, OnInit} from '@angular/core';
-import {MaterialImports} from "../../../../../imports/material.imports";
-import {MAT_DIALOG_DATA, MatDialogClose} from "@angular/material/dialog";
-import {SumByPipe} from "./pipes/sum-by.pipe";
-import {CurrencyPipe, DatePipe, NgForOf} from "@angular/common";
-import {ServiceBookService} from "../../services/serviceBook/service-book.service";
-import {ServiceDetails} from "../../types/service-details.type";
+import { Component, inject, OnInit } from '@angular/core';
+import { SumByPipe } from "./pipes/sum-by.pipe";
+import {DatePipe, NgIf} from "@angular/common";
+import { CardModule } from "primeng/card";
+import { TableModule } from "primeng/table";
+import { MessageModule } from "primeng/message";
+import { ButtonModule } from "primeng/button";
+import { DynamicDialogRef, DynamicDialogConfig } from "primeng/dynamicdialog";
+import { ServiceBookService } from "../../services/serviceBook/service-book.service";
+import { ServiceDetails } from "../../types/service-details.type";
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-service-details',
   standalone: true,
   imports: [
-    MaterialImports,
-    MatDialogClose,
     SumByPipe,
-    CurrencyPipe,
     DatePipe,
-    NgForOf
+    CardModule,
+    TableModule,
+    MessageModule,
+    ButtonModule,
+    ProgressSpinnerModule,
+    NgIf
   ],
   templateUrl: './service-details.component.html',
   styleUrl: './service-details.component.css'
 })
 export class ServiceDetailsComponent implements OnInit {
-  protected readonly data = inject(MAT_DIALOG_DATA);
   private readonly serviceBookService = inject(ServiceBookService);
+  private readonly dialogRef = inject(DynamicDialogRef);
+  private readonly config = inject(DynamicDialogConfig);
+
   loadingServiceDetails = false;
   serviceDetails: any;
 
   ngOnInit() {
-    this.getServiceDetails(this.data.service.id);
+    this.getServiceDetails(this.config.data.service.id);
   }
 
   getServiceDetails(serviceId: string) {
     this.loadingServiceDetails = true;
 
-    this.serviceBookService.getService(this.data.serviceBookId, serviceId).subscribe({
+    this.serviceBookService.getService(this.config.data.serviceBookId, serviceId).subscribe({
       next: (response: ServiceDetails) => {
         this.serviceDetails = response;
         this.loadingServiceDetails = false;
@@ -43,5 +51,9 @@ export class ServiceDetailsComponent implements OnInit {
         this.loadingServiceDetails = false;
       }
     });
+  }
+
+  close() {
+    this.dialogRef.close();
   }
 }

@@ -1,48 +1,54 @@
-<h2 mat-dialog-title>{{ serviceDetails?.title }}</h2>
-<mat-dialog-content>
-  <div class="row">
-    <div class="col-12 mb-3">
-      <strong>Data:</strong>
-      {{ serviceDetails?.date | date:'dd.MM.yyyy' }}
+<div class="service-details">
+  <h2 class="dialog-title">{{ serviceDetails?.title }}</h2>
+
+  <div class="content-wrapper">
+    <div class="info-section">
+      <p-card styleClass="mb-3">
+        <div class="info-field">
+          <label>Data</label>
+          <div class="info-value">{{ serviceDetails?.date | date:'dd.MM.yyyy' }}</div>
+        </div>
+
+        <div class="info-field">
+          <label>Opis</label>
+          <div class="info-value description">{{ serviceDetails?.description || 'Brak szczegółowego opisu' }}</div>
+        </div>
+      </p-card>
     </div>
 
-    <div class="col-12 mb-3">
-      <strong>Opis:</strong>
-      {{ serviceDetails?.description || 'Brak szczegółowego opisu' }}
-    </div>
-
-    <div class="col-12">
+    <div class="costs-section">
       <h3>Koszty</h3>
-      <table class="table" *ngIf="serviceDetails?.costs?.length > 0; else noCosts">
-        <thead>
-        <tr>
-          <th>Tytuł</th>
-          <th class="text-right">Kwota</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let cost of serviceDetails?.costs">
-          <td>{{ cost?.title }}</td>
-          <td class="text-right">
-            {{ cost?.amount | currency:'PLN':'symbol':'1.2-2' }}
-          </td>
-        </tr>
-        <tr>
-          <td><strong>Suma kosztów</strong></td>
-          <td class="text-right">
-            <strong>
-              {{ serviceDetails?.costs | sumBy: 'amount' | currency:'PLN':'symbol':'1.2-2' }}
-            </strong>
-          </td>
-        </tr>
-        </tbody>
-      </table>
+      <p-table [value]="serviceDetails?.costs || []" class="costs-table" [showCurrentPageReport]="false"
+               *ngIf="serviceDetails?.costs?.length > 0; else noCosts">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Tytuł</th>
+            <th class="text-right">Kwota</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-cost>
+          <tr>
+            <td>{{ cost?.title }}</td>
+            <td class="text-right">{{ cost?.amount }} PLN</td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="footer">
+          <tr>
+            <td><strong>Suma kosztów</strong></td>
+            <td class="text-right">
+              <strong>{{ serviceDetails?.costs | sumBy: 'amount' }} PLN</strong>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+
       <ng-template #noCosts>
-        <p class="text-muted">Brak zarejestrowanych kosztów</p>
+        <p-message severity="info" text="Brak zarejestrowanych kosztów" class="w-full"></p-message>
       </ng-template>
     </div>
   </div>
-</mat-dialog-content>
-<mat-dialog-actions>
-  <button mat-button [mat-dialog-close]="true">Zamknij</button>
-</mat-dialog-actions>
+
+  <div class="dialog-footer">
+    <p-button label="Zamknij" (onClick)="close()" class="p-button-outlined"></p-button>
+  </div>
+</div>
