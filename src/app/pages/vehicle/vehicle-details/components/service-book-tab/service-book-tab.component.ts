@@ -9,6 +9,7 @@ import {ServiceBookService} from "../../services/serviceBook/service-book.servic
 import {ServiceDialogService} from "../../services/dialogs/service/service-dialog.service";
 import {InspectionDialogService} from "../../services/dialogs/inspection/inspection-dialog.service";
 import {ConfirmDialogService} from "../../../../../shared/services/dialogs/confirm/confirm-dialog.service";
+import {DialogService} from "primeng/dynamicdialog";
 
 @Component({
   selector: 'app-service-book-tab',
@@ -19,6 +20,7 @@ import {ConfirmDialogService} from "../../../../../shared/services/dialogs/confi
     TooltipModule,
     AccordionTabComponent
   ],
+  providers: [DialogService, ConfirmDialogService],
   templateUrl: './service-book-tab.component.html',
   styleUrl: './service-book-tab.component.css'
 })
@@ -115,8 +117,7 @@ export class ServiceBookTabComponent {
     if (service) {
       this.confirmDialog
         .openConfirmDialog(
-          'Potwierdzenie usunięcia',
-          `Czy na pewno chcesz usunąć serwis '${service.title}'?`
+          service.title
         )
         .subscribe(result => {
           if (result) {
@@ -144,8 +145,7 @@ export class ServiceBookTabComponent {
     if (inspection) {
       this.confirmDialog
         .openConfirmDialog(
-          'Potwierdzenie usunięcia',
-          `Czy na pewno chcesz usunąć przegląd '${inspection.title}'?`
+          inspection.title
         )
         .subscribe(result => {
           if (result) {

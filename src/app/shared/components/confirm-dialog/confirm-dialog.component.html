@@ -1,8 +1,25 @@
-<h1 mat-dialog-title>{{ data.title }}</h1>
-<div mat-dialog-content>
-  <p>{{ data.message }}</p>
-</div>
-<div mat-dialog-actions>
-  <button mat-button (click)="onCancel()">Anuluj</button>
-  <button mat-raised-button color="warn" (click)="onConfirm()">Usuń</button>
+<div class="dialog-container">
+  <div class="dialog-header">
+    <i class="pi pi-exclamation-triangle warning-icon"></i>
+    <h2 class="dialog-title">Potwierdzenie usunięcia</h2>
+  </div>
+
+  <div class="dialog-content">
+    <p class="dialog-message">{{ message }}</p>
+
+    <div class="dialog-footer">
+      <button pButton
+              class="p-button-outlined p-button-secondary"
+              icon="pi pi-times"
+              label="Anuluj"
+              (click)="onCancel()">
+      </button>
+      <button pButton
+              class="p-button-danger"
+              icon="pi pi-trash"
+              label="Usuń"
+              (click)="onConfirm()">
+      </button>
+    </div>
+  </div>
 </div>

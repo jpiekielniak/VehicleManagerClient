@@ -1,0 +1,76 @@
+.dialog-container {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.dialog-header {
+  background: linear-gradient(135deg, #2196f3, #1976d2);
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.warning-icon {
+  color: white;
+  font-size: 1.5rem;
+}
+
+.dialog-title {
+  color: white;
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.dialog-content {
+  padding: 2rem;
+  text-align: center;
+}
+
+.dialog-message {
+  color: #495057;
+  font-size: 1.1rem;
+  line-height: 1.5;
+  margin: 0 0 2rem 0;
+}
+
+.dialog-footer {
+  display: flex;
+  justify-content: center;
+  gap: 1.25rem;
+}
+
+:host ::ng-deep {
+  .p-button {
+    border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(33, 150, 243, 0.15);
+    }
+
+    &:active {
+      transform: translateY(1px);
+    }
+
+    &.p-button-outlined {
+      &:hover {
+        background: rgba(33, 150, 243, 0.08);
+        border-color: #2196f3;
+      }
+    }
+
+    &.p-button-danger {
+      background: linear-gradient(135deg, #2196f3, #1976d2);
+      border: none;
+
+      &:hover {
+        background: linear-gradient(135deg, #1e88e5, #1565c0);
+        box-shadow: 0 6px 15px rgba(33, 150, 243, 0.25);
+      }
+    }
+  }
+}

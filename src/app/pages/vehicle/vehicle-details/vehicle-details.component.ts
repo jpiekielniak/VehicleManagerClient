@@ -23,6 +23,7 @@ import {VehicleDialogService} from "../services/dialogs/vehicle/vehicle-dialog.s
 import {LoadingSpinnerComponent} from "../../../shared/components/loading-spinner/loading-spinner.component";
 import {DialogService} from "primeng/dynamicdialog";
 import {ServiceDialogService} from "./services/dialogs/service/service-dialog.service";
+import {ConfirmDialogService} from "../../../shared/services/dialogs/confirm/confirm-dialog.service";
 
 @Component({
   selector: 'app-vehicle-details',
@@ -44,7 +45,7 @@ import {ServiceDialogService} from "./services/dialogs/service/service-dialog.se
     InsuranceListComponent,
     LoadingSpinnerComponent,
   ],
-  providers: [DialogService, ServiceDialogService, VehicleDialogService],
+  providers: [ConfirmDialogService, DialogService, ServiceDialogService, VehicleDialogService],
   templateUrl: './vehicle-details.component.html',
   styleUrl: './vehicle-details.component.css'
 })

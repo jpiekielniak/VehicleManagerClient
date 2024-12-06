@@ -1,21 +1,39 @@
 import { Injectable } from '@angular/core';
-import {Observable} from "rxjs";
-import {MatDialog} from "@angular/material/dialog";
-import {ConfirmDialogComponent} from "../../../components/confirm-dialog/confirm-dialog.component";
+import { Observable } from "rxjs";
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { ConfirmDialogComponent } from "../../../components/confirm-dialog/confirm-dialog.component";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
+  deps: [DialogService, DynamicDialogRef]
 })
 export class ConfirmDialogService {
+  private dialogRef: DynamicDialogRef | undefined;
 
-  constructor(private dialog: MatDialog) {}
+  constructor(private dialogService: DialogService) {}
 
-  openConfirmDialog(title: string, message: string): Observable<boolean> {
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+  openConfirmDialog(itemName?: string): Observable<boolean> {
+    const message = `Czy na pewno chcesz usunąć wpis ${itemName}?`
+
+    this.dialogRef = this.dialogService.open(ConfirmDialogComponent, {
       width: '400px',
-      data: { title, message }
+      contentStyle: {
+        overflow: 'hidden',
+        padding: 0,
+        border: 'none',
+        background: 'white',
+        borderRadius: '12px'
+      },
+      baseZIndex: 10000,
+      dismissableMask: true,
+      showHeader: false,
+      style: {
+        border: 'none',
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)'
+      },
+      data: { message }
     });
 
-    return dialogRef.afterClosed();
+    return this.dialogRef.onClose;
   }
 }

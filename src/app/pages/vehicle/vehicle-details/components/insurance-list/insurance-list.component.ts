@@ -75,8 +75,7 @@ export class InsuranceListComponent  {
     if (insurance) {
       this.confirmDialog
         .openConfirmDialog(
-          'Potwierdzenie usunięcia',
-          `Czy na pewno chcesz usunąć ubezpieczenie '${insurance.title}'?`
+          insurance.title
         )
         .subscribe(result => {
           if (result) {
