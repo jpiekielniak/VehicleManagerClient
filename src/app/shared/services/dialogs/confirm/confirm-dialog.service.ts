@@ -13,7 +13,7 @@ export class ConfirmDialogService {
   constructor(private dialogService: DialogService) {}
 
   openConfirmDialog(itemName?: string): Observable<boolean> {
-    const message = `Czy na pewno chcesz usunąć wpis ${itemName}?`
+    const message = `Czy na pewno chcesz usunąć ${itemName}?`
 
     this.dialogRef = this.dialogService.open(ConfirmDialogComponent, {
       width: '400px',

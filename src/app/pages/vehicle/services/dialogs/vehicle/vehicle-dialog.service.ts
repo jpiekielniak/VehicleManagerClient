@@ -1,18 +1,21 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {VehicleDetails} from "../../../vehicle-details/types/vehicle-details.type";
 import {Observable} from "rxjs";
-import {VehicleEditDialogComponent} from "../../../vehicle-details/components/vehicle-edit-dialog/vehicle-edit-dialog.component";
+import {
+  VehicleEditDialogComponent
+} from "../../../vehicle-details/components/vehicle-edit-dialog/vehicle-edit-dialog.component";
 import {CreateVehicleComponent} from "../../../vehicles/components/create-vehicle/create-vehicle.component";
 import {DialogService} from "primeng/dynamicdialog";
+import {ConfirmDialogComponent} from "../../../../../shared/components/confirm-dialog/confirm-dialog.component";
 
 @Injectable({
   providedIn: 'root'
 })
 export class VehicleDialogService {
-  constructor(private dialogService: DialogService) {}
+  constructor(private dialogService: DialogService) {
+  }
 
   openVehicleEdit(vehicle: VehicleDetails): Observable<VehicleDetails | undefined> {
-    console.log('Opening dialog with vehicle:', vehicle); // dla debugowania
 
     const dialogRef = this.dialogService.open(VehicleEditDialogComponent, {
       header: 'Edycja pojazdu',
@@ -24,14 +27,14 @@ export class VehicleDialogService {
       },
       contentStyle: {
         overflow: 'auto',
-        padding: '0' // dodaj to
+        padding: '0'
       },
       baseZIndex: 10000,
       modal: true,
       dismissableMask: true,
       closeOnEscape: true,
-      data: { vehicle },
-      maximizable: true // opcjonalnie, pozwala na maksymalizację okna
+      data: {vehicle},
+      maximizable: true
     });
 
     return dialogRef.onClose;

@@ -1,17 +1,11 @@
-import {Component, inject, OnInit, ViewChild} from '@angular/core';
-import { ActivatedRoute } from "@angular/router";
-import { switchMap } from "rxjs";
-import { ReactiveFormsModule } from '@angular/forms';
-import { VehicleService } from "../services/vehicle/vehicle.service";
-import { VehicleDetails } from "./types/vehicle-details.type";
-import { CommonModule } from '@angular/common';
-import { MaterialImports } from "../../../imports/material.imports";
-import { Service } from "./types/service.type";
-import { ProgressSpinnerModule } from "primeng/progressspinner";
-import {MenuItem} from "primeng/api";
-import { CardModule } from "primeng/card";
-import { MenuModule } from "primeng/menu";
-import { AccordionModule } from "primeng/accordion";
+import {BehaviorSubject, catchError, EMPTY, filter, firstValueFrom, map, switchMap, tap} from "rxjs";
+import {Component, inject, OnInit, ViewChild} from "@angular/core";
+import {CommonModule} from "@angular/common";
+import {ReactiveFormsModule} from "@angular/forms";
+import {ProgressSpinnerModule} from "primeng/progressspinner";
+import {CardModule} from "primeng/card";
+import {MenuModule} from "primeng/menu";
+import {AccordionModule} from "primeng/accordion";
 import {TabViewModule} from "primeng/tabview";
 import {ToastModule} from "primeng/toast";
 import {ServiceBookTabComponent} from "./components/service-book-tab/service-book-tab.component";
@@ -19,11 +13,16 @@ import {VehicleInfoGridComponent} from "./components/vehicle-info-grid/vehicle-i
 import {VehicleImageComponent} from "./components/vehicle-image/vehicle-image.component";
 import {VehicleHeaderComponent} from "./components/vehicle-header/vehicle-header.component";
 import {InsuranceListComponent} from "./components/insurance-list/insurance-list.component";
-import {VehicleDialogService} from "../services/dialogs/vehicle/vehicle-dialog.service";
 import {LoadingSpinnerComponent} from "../../../shared/components/loading-spinner/loading-spinner.component";
+import {ConfirmDialogService} from "../../../shared/services/dialogs/confirm/confirm-dialog.service";
 import {DialogService} from "primeng/dynamicdialog";
 import {ServiceDialogService} from "./services/dialogs/service/service-dialog.service";
-import {ConfirmDialogService} from "../../../shared/services/dialogs/confirm/confirm-dialog.service";
+import {VehicleDialogService} from "../services/dialogs/vehicle/vehicle-dialog.service";
+import {ActivatedRoute, Router} from "@angular/router";
+import {VehicleService} from "../services/vehicle/vehicle.service";
+import {MenuItem} from "primeng/api";
+import {VehicleDetails} from "./types/vehicle-details.type";
+import {Service} from "./types/service.type";
 
 @Component({
   selector: 'app-vehicle-details',
@@ -31,7 +30,6 @@ import {ConfirmDialogService} from "../../../shared/services/dialogs/confirm/con
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    ...MaterialImports,
     ProgressSpinnerModule,
     CardModule,
     MenuModule,
@@ -50,58 +48,82 @@ import {ConfirmDialogService} from "../../../shared/services/dialogs/confirm/con
   styleUrl: './vehicle-details.component.css'
 })
 export class VehicleDetailsComponent implements OnInit {
-  private route = inject(ActivatedRoute);
-  private vehicleService = inject(VehicleService);
-  private vehicleDialog = inject(VehicleDialogService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly vehicleService = inject(VehicleService);
+  private readonly vehicleDialog = inject(VehicleDialogService);
+  private readonly confirmDialogService = inject(ConfirmDialogService);
+
   @ViewChild('insuranceList') insuranceList!: InsuranceListComponent;
 
-  vehicleId: string = '';
-  vehicle: VehicleDetails | null = null;
+  readonly items: MenuItem[] = [
+    {
+      label: 'Edytuj',
+      icon: 'pi pi-pencil',
+      command: () => this.openEditDialog()
+    },
+    {
+      label: 'Usuń',
+      icon: 'pi pi-trash',
+      command: () => this.confirmVehicleDelete()
+    }
+  ];
+
+  vehicleId = '';
+  vehicle$ = new BehaviorSubject<VehicleDetails | null>(null);
   services: Service[] = [];
-  items: MenuItem[] | undefined;
 
-  ngOnInit() {
-    this.route.paramMap.pipe(
-      switchMap(params => {
-        const vehicleId = params.get('id');
-        this.vehicleId = vehicleId!;
-        return this.vehicleService.getById(this.vehicleId);
-      })
-    ).subscribe({
-      next: (response: VehicleDetails) => {
-        this.vehicle = response;
-      },
-      error: (err) => {
-        console.error('Failed to fetch vehicle details', err);
-      }
-    });
-
-    this.items = [
-      {
-        label: 'Edytuj',
-        icon: 'pi pi-pencil',
-        command: () => this.openEditDialog()
-      },
-      {
-        label: 'Usuń',
-        icon: 'pi pi-trash',
-        command: () => console.log("REMOVE")
-      }
-      ];
+  get vehicle(): VehicleDetails | null {
+    return this.vehicle$.value;
   }
 
-  onTabChange(event: any) {
+  ngOnInit(): void {
+    this.loadVehicleDetails();
+  }
+
+  onTabChange(event: any): void {
     if (event.index === 1) {
       this.insuranceList.loadInsurances();
     }
   }
 
-  openEditDialog() {
-    this.vehicleDialog.openVehicleEdit(this.vehicle!).subscribe(result => {
-      if (result) {
-        this.vehicle = result;
-      }
-    });
+  async openEditDialog(): Promise<void> {
+    if (!this.vehicle) return;
+
+    const result = await firstValueFrom(
+      this.vehicleDialog.openVehicleEdit(this.vehicle)
+    );
+
+    if (result) {
+      this.vehicle$.next(result);
+    }
   }
 
+  async confirmVehicleDelete(): Promise<void> {
+    if (!this.vehicle) return;
+
+    const confirmed = await firstValueFrom(
+      this.confirmDialogService.openConfirmDialog(
+        `${this.vehicle.brand} ${this.vehicle.model}`
+      )
+    );
+
+    if (confirmed) {
+      await firstValueFrom(this.vehicleService.deleteVehicle(this.vehicleId));
+      this.router.navigate(['/moje-pojazdy']);
+    }
+  }
+
+  private loadVehicleDetails(): void {
+    this.route.paramMap.pipe(
+      map(params => params.get('id')),
+      filter((id): id is string => !!id),
+      tap(id => this.vehicleId = id),
+      switchMap(id => this.vehicleService.getById(id)),
+      catchError(err => {
+        console.error('Failed to fetch vehicle details', err);
+        return EMPTY;
+      })
+    ).subscribe(vehicle => this.vehicle$.next(vehicle));
+  }
 }
