@@ -22,7 +22,7 @@ export class VehicleService {
 
   getVehicles(
     page: number = 1,
-    pageSize: number = 10,
+    pageSize: number = 4,
     filter: any = null,
     sort: string = 'brand'
   ): Observable<PaginationResult<Vehicle>> {

@@ -1,48 +1,56 @@
 <div class="page-container">
-
-  <div *ngIf="isLoading" class="spinner-container">
-  <app-loading-spinner/>
+  <div *ngIf="isLoading">
+    <app-loading-spinner/>
   </div>
 
   <ng-container *ngIf="!isLoading">
-  <div class="card flex justify-content-center">
-    <app-filter
-      *ngIf="uniqueBrands.length > 0"
-      [filterOptions]="uniqueBrands"
-      (filterChange)="applyFilter($event)"
-    />
+    <ng-container *ngIf="vehicles.length > 0; else emptyState">
+      <div class="card flex justify-content-center">
+        <app-filter
+          *ngIf="uniqueBrands.length"
+          [filterOptions]="uniqueBrands"
+          (filterChange)="applyFilter($event)"
+        />
 
-    <app-sorting
-      *ngIf="sortOptions.length > 0"
-      [sortOptions]="sortOptions"
-      (sortChange)="applySorting($event)"
-    />
-  </div>
+        <app-sorting
+          *ngIf="sortOptions.length"
+          [sortOptions]="sortOptions"
+          (sortChange)="applySorting($event)"
+        />
+      </div>
 
-  <app-vehicle-list
-    [vehicles]="vehicles"
-    (navigateToDetails)="navigateToDetails($event)"
-  />
+      <app-vehicle-list
+        [vehicles]="vehicles"
+        (navigateToDetails)="navigateToDetails($event)"
+      />
 
-  <div class="paginator-container">
-    <app-pagination
-      [first]="paginationService.getCurrentState().pageIndex * paginationService.getCurrentState().pageSize"
-      [rows]="paginationService.getCurrentState().pageSize"
-      [totalRecords]="totalItems"
-      (pageChange)="onPaginatorChange($event)"
-    />
-  </div>
+      <div class="paginator-container">
+        <app-pagination
+          [first]="paginationService.getCurrentState().pageIndex * paginationService.getCurrentState().pageSize"
+          [rows]="paginationService.getCurrentState().pageSize"
+          [totalRecords]="totalItems"
+          (pageChange)="onPaginatorChange($event)"
+        />
+      </div>
+    </ng-container>
 
-  <button
-    *ngIf="isComponentLoaded"
-    pButton
-    pRipple
-    class="p-button-success"
-    [ngClass]="{'slide-in-right': isComponentLoaded}"
-    (click)="openVehicleDialog()"
-  >
-    <span>Dodaj pojazd </span>
-  </button>
+    <ng-template #emptyState>
+      <div class="empty-state">
+        <i class="pi pi-car"></i>
+        <h3>Brak pojazdów w kolekcji</h3>
+        <p>Dodaj swój pierwszy pojazd, aby rozpocząć</p>
+      </div>
+    </ng-template>
+
+    <button
+      *ngIf="isComponentLoaded"
+      pButton
+      pRipple
+      class="p-button-success"
+      [ngClass]="{'slide-in-right': isComponentLoaded}"
+      (click)="openVehicleDialog()"
+    >
+      <span>Dodaj pojazd</span>
+    </button>
   </ng-container>
-
 </div>

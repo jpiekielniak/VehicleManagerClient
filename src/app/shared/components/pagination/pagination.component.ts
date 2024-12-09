@@ -19,7 +19,7 @@ export class PaginationComponent {
   @Input() totalRecords: number = 0;
   @Input() first: number = 0;
   @Input() rows: number = 5;
-  @Input() rowsPerPageOptions: number[] = [5, 10, 12];
+  @Input() rowsPerPageOptions: number[] = [4, 8, 12];
 
   @Output() pageChange = new EventEmitter<PageChangeEvent>();
 
