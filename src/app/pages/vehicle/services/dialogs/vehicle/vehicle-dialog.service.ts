@@ -12,9 +12,26 @@ export class VehicleDialogService {
   constructor(private dialogService: DialogService) {}
 
   openVehicleEdit(vehicle: VehicleDetails): Observable<VehicleDetails | undefined> {
+    console.log('Opening dialog with vehicle:', vehicle); // dla debugowania
+
     const dialogRef = this.dialogService.open(VehicleEditDialogComponent, {
+      header: 'Edycja pojazdu',
       width: '1200px',
-      data: { vehicle }
+      height: '90vh',
+      showHeader: false,
+      style: {
+        maxWidth: '90vw',
+      },
+      contentStyle: {
+        overflow: 'auto',
+        padding: '0' // dodaj to
+      },
+      baseZIndex: 10000,
+      modal: true,
+      dismissableMask: true,
+      closeOnEscape: true,
+      data: { vehicle },
+      maximizable: true // opcjonalnie, pozwala na maksymalizację okna
     });
 
     return dialogRef.onClose;

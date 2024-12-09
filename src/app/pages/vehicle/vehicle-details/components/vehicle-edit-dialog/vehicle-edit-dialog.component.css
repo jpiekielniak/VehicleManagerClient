@@ -1,42 +1,194 @@
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-  padding: 20px;
+:host ::ng-deep .vehicle-dialog {
+  background: #f8fafc;
 }
 
-.mat-dialog-content {
-  max-height: 500px;
-  overflow-y: auto;
-}
-
-.mat-form-field {
+:host ::ng-deep .loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  margin: 10px;
-}
-
-mat-dialog-actions {
+  height: 100%;
+  background: rgba(255, 255, 255, 0.8);
   display: flex;
-  justify-content: flex-end;
-  padding: 16px;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
-mat-dialog-actions button {
-  margin-left: 10px;
-}
-
-.mat-raised-button.mat-primary {
-  background-color: #1976d2;
+:host ::ng-deep .dialog-header {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  padding: 1.5rem;
   color: white;
 }
 
-.mat-raised-button.mat-primary:disabled {
-  background-color: #ccc;
-  color: rgba(0, 0, 0, 0.38);
+:host ::ng-deep .header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-@media (max-width: 600px) {
-  .form-grid {
-    grid-template-columns: 1fr;
-  }
+:host ::ng-deep .title-section {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+:host ::ng-deep .title-section i {
+  font-size: 1.5rem;
+}
+
+:host ::ng-deep .title-section h2 {
+  margin: 0;
+}
+
+:host ::ng-deep .vehicle-info {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+:host ::ng-deep .license-plate {
+  background: rgba(255, 255, 255, 0.3);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  margin-left: 0.5rem;
+}
+
+:host ::ng-deep .dialog-content {
+  padding: 1.5rem;
+  height: calc(100% - 140px);
+  overflow-y: auto;
+}
+
+:host ::ng-deep .form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+:host ::ng-deep .form-field {
+  margin-bottom: 1rem;
+}
+
+:host ::ng-deep .form-field label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #475569;
+  font-weight: 500;
+}
+
+:host ::ng-deep .required-star {
+  color: #ef4444;
+  margin-left: 0.25rem;
+}
+
+:host ::ng-deep .error-message {
+  color: #ef4444;
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+}
+
+:host ::ng-deep .card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  margin: 1rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+:host ::ng-deep .card-header i {
+  color: #3b82f6;
+  font-size: 1.25rem;
+}
+
+:host ::ng-deep .card-header span {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+:host ::ng-deep .dialog-footer {
+  padding: 1rem 1.5rem;
+  background: white;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+:host ::ng-deep .p-input-icon-left {
+  width: 100%;
+}
+
+:host ::ng-deep .p-input-icon-left i {
+  color: #64748b;
+  left: 0.75rem;
+}
+
+:host ::ng-deep .p-input-icon-left input {
+  padding-left: 2.5rem !important;
+}
+
+:host ::ng-deep .p-dropdown {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+}
+
+:host ::ng-deep .p-dropdown .p-dropdown-label {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+:host ::ng-deep .p-inputtext,
+:host ::ng-deep .p-dropdown,
+:host ::ng-deep .p-inputnumber .p-inputtext {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+}
+
+:host ::ng-deep .p-inputtext:enabled:hover,
+:host ::ng-deep .p-dropdown:enabled:hover,
+:host ::ng-deep .p-inputnumber .p-inputtext:enabled:hover {
+  border-color: #3b82f6;
+}
+
+:host ::ng-deep .p-inputtext:enabled:focus,
+:host ::ng-deep .p-dropdown:enabled:focus,
+:host ::ng-deep .p-inputnumber .p-inputtext:enabled:focus {
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+  border-color: #3b82f6;
+}
+
+:host ::ng-deep .p-button {
+  min-width: 130px;
+}
+
+:host ::ng-deep .p-card {
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+:host ::ng-deep .p-card:last-child {
+  margin-bottom: 0;
+}
+
+:host ::ng-deep .p-card .p-card-content {
+  padding: 1.5rem;
+}
+
+:host ::ng-deep .p-dropdown-panel {
+  border-radius: 8px;
+}
+
+:host ::ng-deep .p-dropdown-items {
+  padding: 0.5rem 0;
+}
+
+:host ::ng-deep .p-dropdown-item {
+  padding: 0.75rem 1rem;
 }
