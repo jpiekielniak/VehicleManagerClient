@@ -1,5 +1,5 @@
 import {Component, inject, OnDestroy, OnInit, signal} from '@angular/core';
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatButton} from "@angular/material/button";
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from "@angular/material/datepicker";
 import {
@@ -21,6 +21,7 @@ import {Enum} from "../../../../../shared/types/enum.type";
 import {EnumService} from "../../../../../shared/services/enum/enum.service";
 import {API_CONSTANTS} from "../../../../../constants/api.constants";
 import {MaterialImports} from "../../../../../imports/material.imports";
+import { FormValidatorsService } from '../../../../../shared/services/form/form-validators.service';
 
 @Component({
   selector: 'app-create-inspection',
@@ -50,11 +51,12 @@ import {MaterialImports} from "../../../../../imports/material.imports";
 })
 export class CreateInspectionComponent implements OnInit, OnDestroy {
   private readonly destroy$ = new Subject<void>();
-  private formBuilder = inject(FormBuilder);
-  private serviceBookService = inject(ServiceBookService);
+  private readonly formBuilder = inject(FormBuilder);
+  private readonly serviceBookService = inject(ServiceBookService);
+  private readonly formValidatorsService = inject(FormValidatorsService);
+  private readonly enumService = inject(EnumService);
   protected dialogRef = inject(MatDialogRef<CreateInspectionComponent>);
   protected readonly data = inject(MAT_DIALOG_DATA) as { serviceBookId: string };
-  private readonly enumService = inject(EnumService);
 
   isError = signal(false);
   createInspectionForm!: FormGroup;
@@ -84,9 +86,9 @@ export class CreateInspectionComponent implements OnInit, OnDestroy {
   private initializeForm(): void {
     this.createInspectionForm = this.formBuilder.group({
       title: [''],
-      scheduledDate: [null, [Validators.required]],
-      performDate: [null, [Validators.required, Validators.max(new Date().getDate())]],
-      inspectionType: [null, [Validators.required]],
+      scheduledDate: [null, this.formValidatorsService.REQUIRED_VALIDATOR],
+      performDate: [null, this.formValidatorsService.DATE_VALIDATORS],
+      inspectionType: [null, this.formValidatorsService.REQUIRED_VALIDATOR],
     });
   }
 

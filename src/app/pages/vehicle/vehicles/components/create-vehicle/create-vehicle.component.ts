@@ -1,5 +1,5 @@
 import {Component, inject, OnDestroy, OnInit, signal} from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {EnumService} from "../../../../../shared/services/enum/enum.service";
 import {API_CONSTANTS} from "../../../../../constants/api.constants";
 import {VehicleService} from "../../../services/vehicle/vehicle.service";
@@ -29,6 +29,7 @@ import {Enum} from "../../../../../shared/types/enum.type";
 import {FormErrorService} from "../../../../../shared/services/form/form-error.service";
 import {CardModule} from "primeng/card";
 import {ProgressSpinnerModule} from "primeng/progressspinner";
+import {FormValidatorsService} from "../../../../../shared/services/form/form-validators.service";
 
 @Component({
   selector: 'app-create-vehicle',
@@ -58,12 +59,13 @@ export class CreateVehicleComponent implements OnInit, OnDestroy {
   private readonly dialogRef = inject(DynamicDialogRef);
   private readonly router = inject(Router);
   private readonly formErrorService = inject(FormErrorService);
+  private readonly formValidatorsService = inject(FormValidatorsService);
   private readonly refreshTrigger$ = new BehaviorSubject<void>(undefined);
 
   protected readonly isLoading = signal(false);
-  protected readonly currentYear = new Date().getFullYear();
   protected readonly createVehicleForm = this.initializeForm();
   protected readonly enumData$ = this.loadEnumValues();
+  protected readonly currentYear = new Date().getFullYear();
 
   ngOnInit(): void {
     this.initializeForm();
@@ -71,44 +73,16 @@ export class CreateVehicleComponent implements OnInit, OnDestroy {
 
   private initializeForm(): FormGroup {
     return this.formBuilder.group({
-      brand: ['', [
-        Validators.required,
-        Validators.minLength(2),
-        Validators.pattern(/^[a-zA-Z0-9\s-]+$/)
-      ]],
-      model: ['', [
-        Validators.required,
-        Validators.minLength(2),
-        Validators.pattern(/^[a-zA-Z0-9\s-]+$/)
-      ]],
-      year: [null, [
-        Validators.required,
-        Validators.min(1900),
-        Validators.max(this.currentYear)
-      ]],
-      licensePlate: ['', [
-        Validators.required,
-        Validators.pattern(/^[A-Z]{1,3} ?[A-Z0-9]{1,5}(?: [A-Z0-9]{1,5})?$/)
-      ]],
-      vin: ['', [
-        Validators.required,
-        Validators.minLength(17),
-        Validators.maxLength(17),
-        Validators.pattern(/^[A-HJ-NPR-Z0-9]+$/)
-      ]],
-      engineCapacity: [null, [
-        Validators.required,
-        Validators.min(0),
-        Validators.max(10000)
-      ]],
-      enginePower: [null, [
-        Validators.required,
-        Validators.min(0),
-        Validators.max(2000)
-      ]],
-      gearboxType: [null, Validators.required],
-      fuelType: [null, Validators.required],
-      vehicleType: [null, Validators.required]
+      brand: ['', this.formValidatorsService.BASIC_TEXT_INPUT_VALIDATORS],
+      model: ['', this.formValidatorsService.BASIC_TEXT_INPUT_VALIDATORS],
+      year: [null, this.formValidatorsService.YEAR_VALIDATORS],
+      licensePlate: ['', this.formValidatorsService.LICENSE_PLATE_VALIDATORS],
+      vin: ['', this.formValidatorsService.VIN_VALIDATORS],
+      engineCapacity: [null, this.formValidatorsService.ENGINE_CAPACITY_VALIDATORS],
+      enginePower: [null, this.formValidatorsService.ENGINE_POWER_VALIDATORS],
+      gearboxType: [null, this.formValidatorsService.REQUIRED_VALIDATOR],
+      fuelType: [null, this.formValidatorsService.REQUIRED_VALIDATOR],
+      vehicleType: [null, this.formValidatorsService.REQUIRED_VALIDATOR]
     });
   }
 
@@ -124,7 +98,7 @@ export class CreateVehicleComponent implements OnInit, OnDestroy {
         gearboxTypes: response.gearboxTypes as Enum[],
         vehicleTypes: response.vehicleTypes as Enum[]
       })),
-      catchError(error => {
+      catchError(() => {
         this.handleError('Nie udało się załadować danych formularza');
         return EMPTY;
       })
@@ -183,8 +157,7 @@ export class CreateVehicleComponent implements OnInit, OnDestroy {
     return this.formErrorService.getControlError(this.createVehicleForm, licensePlate);
   }
 
-  protected isFieldInvalid(controlName: string): boolean {
-    const control = this.createVehicleForm.get(controlName);
-    return !!control && control.invalid && control.touched;
+  isFieldInvalid(controlName: string): boolean {
+    return this.formErrorService.isFieldInvalid(this.createVehicleForm, controlName);
   }
 }

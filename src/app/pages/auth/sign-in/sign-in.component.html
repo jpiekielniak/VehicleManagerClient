@@ -1,57 +1,81 @@
-<p-toast></p-toast>
-<div class="animated-background">
-  <div class="main-container">
-    <div class="rectangle"></div>
-    <div class="flex-column">
-      <span class="waiting-for-you">Czekamy na Ciebie!</span>
-      <h2>Logowanie! 👋</h2>
-      <form [formGroup]="signInForm" (ngSubmit)="onSubmit()" class="sign-in-form">
-        <mat-form-field appearance="outline">
-          <mat-label>Email</mat-label>
-          <input matInput formControlName="email" type="email" required />
-          <mat-error
-            *ngIf="
-              signInForm.get('email')?.invalid &&
-              signInForm.get('email')?.touched
-            "
-          >
-            Nieprawidłowy adres e-mail
-          </mat-error>
-        </mat-form-field>
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-image-section">
+      <div class="overlay"></div>
+      <div class="welcome-text">
+        <h1>Menadżer pojazdów</h1>
+        <p>Zarządzaj swoimi pojazdami w prosty i intuicyjny sposób</p>
+      </div>
+    </div>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Hasło</mat-label>
-          <input matInput formControlName="password" type="password" required />
-          <mat-error *ngIf="!this.signInForm.get('password')?.valid">
-            Hasło musi zawierać 8 - 16 znaków
-          </mat-error>
-        </mat-form-field>
+    <div class="auth-form-section">
+      <div class="auth-form-header">
+        <h2>Logowanie! <span class="wave">👋</span></h2>
+        <p>Wprowadź swoje dane aby się zalogować</p>
+      </div>
 
-        <div class="link-div">
-          <span>Zapomniałeś hasła?</span>
-          <a [routerLink]="''" class="link">Przypomnij hasło</a>
+      <form [formGroup]="signInForm" (ngSubmit)="onSubmit()" class="auth-form">
+        <div class="form-field-wrapper">
+          <div>
+            <span class="p-float-label">
+              <input
+                id="email"
+                type="email"
+                pInputText
+                [style]="{ width: '100%' }"
+                formControlName="email"
+              />
+              <label for="email">Email</label>
+            </span>
+          </div>
+          <small class="error-message" *ngIf="isFieldInvalid('email')">
+            {{ getControlError('email') }}
+          </small>
         </div>
 
+        <div class="form-field-wrapper">
+          <div class="password-input-container">
+            <span class="p-float-label">
+              <input
+                id="password"
+                [type]="showPassword() ? 'text' : 'password'"
+                pInputText
+                formControlName="password"
+                [style]="{ width: '100%' }"
+              />
+              <label for="password">Hasło</label>
+            </span>
+            <button
+              type="button"
+              pButton
+              class="p-button-text p-button-rounded password-toggle-btn"
+              (click)="togglePasswordVisibility()"
+              [icon]="showPassword() ? 'pi pi-eye-slash' : 'pi pi-eye'"
+            ></button>
+          </div>
+          <small class="error-message" *ngIf="isFieldInvalid('password')">
+            {{ getControlError('password') }}
+          </small>
+        </div>
+
+        <div class="form-options">
+          <a class="forgot-password" [routerLink]="''">Zapomniałeś hasła?</a>
+        </div>
 
         <button
-          class="sign-in-button"
-          mat-raised-button
+          pButton
           type="submit"
-          [disabled]="this.signInForm.invalid || isLoading()"
-        >
-          <mat-spinner
-            *ngIf="isLoading()"
-            diameter="20"
-            class="spinner"
-          ></mat-spinner>
-          <span *ngIf="!isLoading()">Zaloguj się</span>
-        </button>
-      </form>
+          [loading]="isLoading()"
+          [disabled]="signInForm.invalid || isLoading()"
+          label="Zaloguj się"
+          class="submit-button"
+        ></button>
 
-      <div class="link-div">
-        <span>Jesteś nowy?</span>
-        <a [routerLink]="'/rejestracja'" class="link">Zarejestruj się</a>
-      </div>
+        <div class="auth-footer">
+          <span>Nie masz jeszcze konta?</span>
+          <a [routerLink]="'/rejestracja'" class="register-link">Zarejestruj się</a>
+        </div>
+      </form>
     </div>
   </div>
 </div>

@@ -12,9 +12,10 @@ export class FormErrorService {
     required: 'To pole jest wymagane',
     minlength: (err) => `Minimalna długość to ${err.requiredLength} znaków`,
     maxlength: (err) => `Maksymalna długość to ${err.requiredLength} znaków`,
-    pattern: 'Nieprawidłowy format',
     min: (err) => `Minimalna wartość to ${err.min}`,
-    max: (err) => `Maksymalna wartość to ${err.max}`
+    max: (err) => `Maksymalna wartość to ${err.max}`,
+    email: () => `Nieprawidłowy adres email`,
+    pattern: 'Nieprawidłowy format'
   };
 
   getError(control: AbstractControl | null, customMessages?: ErrorMessages): string | null {
@@ -31,5 +32,10 @@ export class FormErrorService {
 
   getControlError(form: FormGroup, controlName: string, customMessages?: ErrorMessages): string | null {
     return this.getError(form.get(controlName), customMessages);
+  }
+
+  isFieldInvalid(form: FormGroup, controlName: string): boolean {
+    const control = form.get(controlName);
+    return !!control && control.invalid && control.touched;
   }
 }

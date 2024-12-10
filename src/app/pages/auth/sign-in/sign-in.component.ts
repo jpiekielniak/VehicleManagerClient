@@ -1,14 +1,17 @@
 import {AfterViewInit, Component, inject, OnDestroy, OnInit, signal} from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators,} from '@angular/forms';
+import {FormBuilder, FormGroup, ReactiveFormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {SignIn} from './types/sign-in.type';
 import {AuthService} from '../shared/services/auth.service';
 import {MaterialImports} from '../../../imports/material.imports';
 import {Router, RouterLink} from '@angular/router';
 import {ToastModule} from 'primeng/toast';
-import {MessageService} from 'primeng/api';
-import {Subject} from "rxjs";
+import {Subject, takeUntil} from "rxjs";
 import {ToastService} from "../../../shared/services/toast/toast.service";
+import {ButtonDirective} from "primeng/button";
+import {InputTextModule} from "primeng/inputtext";
+import {FormErrorService} from "../../../shared/services/form/form-error.service";
+import {FormValidatorsService} from "../../../shared/services/form/form-validators.service";
 
 @Component({
   selector: 'sign-in',
@@ -21,71 +24,103 @@ import {ToastService} from "../../../shared/services/toast/toast.service";
     RouterLink,
     ToastModule,
     ...MaterialImports,
+    ButtonDirective,
+    InputTextModule,
   ],
-  providers: [MessageService, ToastService],
+  providers: [ToastService],
 })
 export class SignInComponent implements OnInit, OnDestroy, AfterViewInit {
   private readonly formBuilder = inject(FormBuilder);
   private readonly authService = inject(AuthService);
-  private readonly messageService = inject(MessageService);
   private readonly router = inject(Router);
   private readonly route = inject(Router).routerState.root;
   private readonly toastService = inject(ToastService);
-  private destroy$ = new Subject<void>();
+  private readonly formErrorService = inject(FormErrorService);
+  private readonly formValidators = inject(FormValidatorsService);
+  private readonly destroy$ = new Subject<void>();
 
-  signInForm!: FormGroup;
-  isLoading = signal(false);
+  readonly signInForm: FormGroup = this.initializeForm();
+  readonly isLoading = signal<boolean>(false);
+  showPassword = signal<boolean>(false);
 
-  ngOnInit() {
-    this.initializeForm();
-
+  ngOnInit(): void {
+    this.setupFormValidation();
   }
 
-  ngAfterViewInit() {
-    if (this.route.snapshot.queryParams['rejestracja'] === 'sukces') {
-      this.toastService.showSuccess('Rejestracja zakończona pomyślnie');
-    }
+  ngAfterViewInit(): void {
+    this.checkRegistrationSuccess();
   }
 
-  private initializeForm(): void {
-    this.signInForm = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(8),
-          Validators.maxLength(16),
-        ],
-      ],
+  private initializeForm(): FormGroup {
+    return this.formBuilder.group({
+      email: ['', this.formValidators.EMAIL_VALIDATORS],
+      password: ['', this.formValidators.PASSWORD_VALIDATORS]
     });
   }
 
-  onSubmit(): void {
+  private setupFormValidation(): void {
+    this.signInForm.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        if (this.signInForm.dirty) {
+          requestAnimationFrame(() => {
+            this.formValidators.validateForm(
+              this.signInForm,
+              (key) => this.getControlError(key)
+            );
+          });
+        }
+      });
+  }
+
+  private checkRegistrationSuccess(): void {
+    const registrationSuccess = this.route.snapshot.queryParams['rejestracja'] === 'sukces';
+    if (registrationSuccess) {
+      requestAnimationFrame(() => {
+        this.toastService.showSuccess('Rejestracja zakończona pomyślnie');
+      });
+    }
+  }
+
+  async onSubmit(): Promise<void> {
     if (this.signInForm.valid) {
-      this.isLoading.set(true);
-
-      this.authService.signIn(this.signInForm.value as SignIn)
-        .subscribe({
-          next: () => this.handleSignInSuccess(),
-          error: () => this.showError(),
-        });
+      try {
+        this.isLoading.set(true);
+        await this.handleSignIn();
+      } catch (error) {
+        this.showError();
+      } finally {
+        this.isLoading.set(false);
+      }
     }
   }
 
-  handleSignInSuccess() {
-    this.router.navigate(['/moje-pojazdy']);
-    this.isLoading.set(false);
+  private async handleSignIn(): Promise<void> {
+    const signInData = this.signInForm.value as SignIn;
+    await this.authService.signIn(signInData)
+      .pipe(takeUntil(this.destroy$))
+      .toPromise();
+    await this.handleSignInSuccess();
   }
 
-  showError() {
-    this.isLoading.set(false);
-    this.messageService.add({
-      severity: 'warn',
-      summary: 'Błąd',
-      detail: 'Nieprawidłowe dane logowania',
-      life: 3000,
-    });
+  private async handleSignInSuccess(): Promise<void> {
+    await this.router.navigate(['/moje-pojazdy']);
+  }
+
+  private showError(): void {
+    this.toastService.showInfo('Nieprawidłowy email lub hasło');
+  }
+
+  togglePasswordVisibility(): void {
+    this.showPassword.update(value => !value);
+  }
+
+  getControlError(controlName: string): string | null {
+    return this.formErrorService.getControlError(this.signInForm, controlName);
+  }
+
+  isFieldInvalid(controlName: string): boolean {
+    return this.formErrorService.isFieldInvalid(this.signInForm, controlName);
   }
 
   ngOnDestroy(): void {

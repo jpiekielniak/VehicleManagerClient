@@ -1,7 +1,18 @@
-import {Component, inject, OnInit, signal} from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {Component, inject, OnDestroy, OnInit, signal} from '@angular/core';
+import {FormBuilder, FormGroup, ReactiveFormsModule} from '@angular/forms';
 import {AsyncPipe, NgIf} from '@angular/common';
-import {BehaviorSubject, catchError, firstValueFrom, forkJoin, map, Observable, of, switchMap} from 'rxjs';
+import {
+  BehaviorSubject,
+  catchError,
+  firstValueFrom,
+  forkJoin,
+  map,
+  Observable,
+  of,
+  Subject,
+  switchMap,
+  takeUntil
+} from 'rxjs';
 import {Button} from 'primeng/button';
 import {DropdownModule} from 'primeng/dropdown';
 import {InputNumberModule} from 'primeng/inputnumber';
@@ -16,12 +27,13 @@ import {ProgressSpinnerModule} from "primeng/progressspinner";
 import {ToastService} from "../../../../../shared/services/toast/toast.service";
 import {VehicleType} from "../../types/vehicle.type";
 import {EnumResponseType} from "../../types/enum.response.type";
-import { FormErrorService } from '../../../../../shared/services/form/form-error.service';
+import {FormErrorService} from '../../../../../shared/services/form/form-error.service';
+import {FormValidatorsService} from '../../../../../shared/services/form/form-validators.service';
 
 @Component({
   selector: 'app-vehicle-edit-dialog',
   templateUrl: './vehicle-edit-dialog.component.html',
-  styleUrls: ['./vehicle-edit-dialog.component.css'],
+  styleUrls: ['./vehicle-edit-dialog.component.scss'],
   standalone: true,
   imports: [
     NgIf,
@@ -36,68 +48,57 @@ import { FormErrorService } from '../../../../../shared/services/form/form-error
   ],
   providers: [ToastService]
 })
-export class VehicleEditDialogComponent implements OnInit {
+export class VehicleEditDialogComponent implements OnInit, OnDestroy {
   private readonly formBuilder = inject(FormBuilder);
   private readonly vehicleService = inject(VehicleService);
   private readonly enumService = inject(EnumService);
   private readonly dialogRef = inject(DynamicDialogRef);
   private readonly formErrorService = inject(FormErrorService);
-  protected readonly config = inject(DynamicDialogConfig);
+  private readonly formValidators = inject(FormValidatorsService);
   private readonly toastService = inject(ToastService);
+  protected readonly config = inject(DynamicDialogConfig);
 
+  private readonly destroy$ = new Subject<void>();
   private readonly refreshTrigger$ = new BehaviorSubject<void>(undefined);
-  protected readonly isLoading = signal(false);
+
+  protected readonly isLoading = signal<boolean>(false);
   protected readonly vehicle = signal<VehicleType>(this.config.data.vehicle);
   protected readonly currentYear = new Date().getFullYear();
-
-  protected readonly vehicleForm = this.initializeForm();
+  protected readonly vehicleForm: FormGroup = this.initializeForm();
   protected readonly enumData$ = this.loadEnumValues();
 
-
   ngOnInit(): void {
+    this.setupFormValidation();
     this.loadInitialData();
+  }
+
+  private setupFormValidation(): void {
+    this.vehicleForm.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        if (this.vehicleForm.dirty) {
+          requestAnimationFrame(() => {
+            this.formValidators.validateForm(
+              this.vehicleForm,
+              (key) => this.getControlError(key)
+            );
+          });
+        }
+      });
   }
 
   private initializeForm(): FormGroup {
     return this.formBuilder.group({
-      brand: ['', [
-        Validators.required,
-        Validators.minLength(2),
-        Validators.pattern(/^[a-zA-Z0-9\s-]+$/)
-      ]],
-      model: ['', [
-        Validators.required,
-        Validators.minLength(2),
-        Validators.pattern(/^[a-zA-Z0-9\s-]+$/)
-      ]],
-      year: [null, [
-        Validators.required,
-        Validators.min(1900),
-        Validators.max(this.currentYear)
-      ]],
-      licensePlate: ['', [
-        Validators.required,
-        Validators.pattern(/^[A-Z]{1,3} ?[A-Z0-9]{1,5}(?: [A-Z0-9]{1,5})?$/)
-      ]],
-      vin: ['', [
-        Validators.required,
-        Validators.minLength(17),
-        Validators.maxLength(17),
-        Validators.pattern(/^[A-HJ-NPR-Z0-9]+$/)
-      ]],
-      engineCapacity: [null, [
-        Validators.required,
-        Validators.min(0),
-        Validators.max(10000)
-      ]],
-      enginePower: [null, [
-        Validators.required,
-        Validators.min(0),
-        Validators.max(2000)
-      ]],
-      gearboxType: [null, Validators.required],
-      fuelType: [null, Validators.required],
-      vehicleType: [null, Validators.required]
+      brand: ['', this.formValidators.BASIC_TEXT_INPUT_VALIDATORS],
+      model: ['', this.formValidators.BASIC_TEXT_INPUT_VALIDATORS],
+      year: [null, this.formValidators.YEAR_VALIDATORS],
+      licensePlate: ['', this.formValidators.LICENSE_PLATE_VALIDATORS],
+      vin: ['', this.formValidators.VIN_VALIDATORS],
+      engineCapacity: [null, this.formValidators.ENGINE_CAPACITY_VALIDATORS],
+      enginePower: [null, this.formValidators.ENGINE_POWER_VALIDATORS],
+      gearboxType: [null, this.formValidators.REQUIRED_VALIDATOR],
+      fuelType: [null, this.formValidators.REQUIRED_VALIDATOR],
+      vehicleType: [null, this.formValidators.REQUIRED_VALIDATOR]
     });
   }
 
@@ -113,10 +114,8 @@ export class VehicleEditDialogComponent implements OnInit {
         gearboxTypes: response.gearboxTypes as Enum[],
         vehicleTypes: response.vehicleTypes as Enum[]
       })),
-      catchError(error => {
-        console.error('Failed to load enum values', error);
-        return of({fuelTypes: [], gearboxTypes: [], vehicleTypes: []});
-      })
+      catchError(() => of({fuelTypes: [], gearboxTypes: [], vehicleTypes: []})),
+      takeUntil(this.destroy$)
     );
   }
 
@@ -126,11 +125,10 @@ export class VehicleEditDialogComponent implements OnInit {
 
     try {
       this.isLoading.set(true);
-
       const enumData = await firstValueFrom(this.enumData$);
       const formData = this.mapVehicleToForm(vehicle, enumData);
       this.vehicleForm.patchValue(formData);
-    } catch (error) {
+    } catch {
       this.toastService.showError('Wystąpił błąd podczas ładowania danych');
     } finally {
       this.isLoading.set(false);
@@ -138,35 +136,23 @@ export class VehicleEditDialogComponent implements OnInit {
   }
 
   private mapVehicleToForm(vehicle: VehicleType, enumData: EnumResponseType) {
-    const selectedVehicleType = enumData.vehicleTypes.find(type => type.value === vehicle.vehicleType);
-    const selectedFuelType = enumData.fuelTypes.find(type => type.value === vehicle.fuelType);
-    const selectedGearboxType = enumData.gearboxTypes.find(type => type.value === vehicle.gearboxType);
-
     return {
-      brand: vehicle.brand,
-      model: vehicle.model,
-      year: vehicle.year,
-      licensePlate: vehicle.licensePlate,
-      vin: vehicle.vin,
-      engineCapacity: vehicle.engineCapacity,
-      enginePower: vehicle.enginePower,
-      vehicleType: selectedVehicleType,
-      fuelType: selectedFuelType,
-      gearboxType: selectedGearboxType
+      ...vehicle,
+      vehicleType: enumData.vehicleTypes.find(type => type.value === vehicle.vehicleType),
+      fuelType: enumData.fuelTypes.find(type => type.value === vehicle.fuelType),
+      gearboxType: enumData.gearboxTypes.find(type => type.value === vehicle.gearboxType)
     };
   }
 
   protected async saveChanges(): Promise<void> {
-    if (!this.validateForm())
-      return;
-
-    this.isLoading.set(true);
+    if (!this.validateForm()) return;
 
     try {
+      this.isLoading.set(true);
       const updatedVehicle = this.prepareVehicleData();
-      const response = await this.updateVehicle(updatedVehicle);
-      this.handleSuccessfulUpdate(response);
-    } catch (error) {
+      await this.updateVehicle(updatedVehicle);
+      await this.handleSuccessfulUpdate();
+    } catch {
       this.handleError();
     } finally {
       this.isLoading.set(false);
@@ -174,14 +160,13 @@ export class VehicleEditDialogComponent implements OnInit {
   }
 
   private validateForm(): boolean {
-    if (this.vehicleForm.valid)
-      return true;
+    if (this.vehicleForm.valid) return true;
 
     this.toastService.showWarning('Formularz zawiera błędy. Sprawdź wszystkie pola.');
     return false;
   }
 
-  private prepareVehicleData() {
+  private prepareVehicleData(): VehicleType {
     const formValue = this.vehicleForm.value;
     return {
       ...this.vehicle(),
@@ -192,17 +177,19 @@ export class VehicleEditDialogComponent implements OnInit {
     };
   }
 
-  private async updateVehicle(vehicleData: any) {
-    return firstValueFrom(
-      this.vehicleService.update(this.vehicle().id, vehicleData)
+  private async updateVehicle(vehicleData: VehicleType): Promise<void> {
+    await firstValueFrom(
+      this.vehicleService.update(this.vehicle().id, vehicleData).pipe(
+        takeUntil(this.destroy$)
+      )
     );
   }
 
-  private handleSuccessfulUpdate(response: any): void {
+  private async handleSuccessfulUpdate(): Promise<void> {
     this.toastService.showSuccess('Pojazd został pomyślnie zaktualizowany');
-    this.dialogRef.close(response);
-
-    setTimeout(() => window.location.reload(), 300);
+    this.dialogRef.close();
+    await new Promise(resolve => setTimeout(resolve, 300));
+    window.location.reload();
   }
 
   private handleError(): void {
@@ -213,12 +200,16 @@ export class VehicleEditDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  getControlError(controlName: string): string | null {
+  protected getControlError(controlName: string): string | null {
     return this.formErrorService.getControlError(this.vehicleForm, controlName);
   }
 
   protected isFieldInvalid(controlName: string): boolean {
-    const control = this.vehicleForm.get(controlName);
-    return !!control && control.invalid && control.touched;
+    return this.formErrorService.isFieldInvalid(this.vehicleForm, controlName);
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

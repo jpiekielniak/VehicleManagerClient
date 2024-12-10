@@ -14,6 +14,7 @@ import {CardModule} from "primeng/card";
 import {InputTextareaModule} from "primeng/inputtextarea";
 import {DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
 import {MessageService, PrimeNGConfig} from "primeng/api";
+import {FormValidatorsService} from "../../../../../shared/services/form/form-validators.service";
 
 export type Cost = {
   title: string,
@@ -50,6 +51,7 @@ export class CreateServiceComponent implements OnInit, OnDestroy {
   private config = inject(DynamicDialogConfig);
   private messageService = inject(MessageService);
   private configC = inject(PrimeNGConfig);
+  private formValidatorsService = inject(FormValidatorsService);
 
   createServiceForm!: FormGroup;
   pl = {
@@ -75,9 +77,9 @@ export class CreateServiceComponent implements OnInit, OnDestroy {
 
   private initializeForm(): void {
     this.createServiceForm = this.formBuilder.group({
-      title: ['', [Validators.required, Validators.maxLength(50)]],
-      description: ['', Validators.maxLength(500)],
-      date: [null, [Validators.required]],
+      title: ['', this.formValidatorsService.BASIC_TEXT_INPUT_VALIDATORS],
+      description: ['', this.formValidatorsService.DESCRIPTION_VALIDATORS],
+      date: [null, this.formValidatorsService.REQUIRED_VALIDATOR],
       costs: this.formBuilder.array([])
     });
   }

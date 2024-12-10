@@ -1,52 +1,77 @@
-<p-toast></p-toast>
-<div class="animated-background">
-  <div class="main-container">
-    <div class="rectangle"></div>
-    <div class="flex-column">
-      <span class="join-to-us">Dołącz do menadżera pojazdów!</span>
-      <h2>Rejestracja! 👋</h2>
-      <form [formGroup]="signUpForm" (ngSubmit)="onSubmit()" class="sign-up-form">
-        <mat-form-field appearance="outline">
-          <mat-label>Email</mat-label>
-          <input matInput formControlName="email" type="email" required />
-          <mat-error
-            *ngIf="
-              signUpForm.get('email')?.invalid &&
-              signUpForm.get('email')?.touched
-            "
-          >
-            Nieprawidłowy adres e-mail
-          </mat-error>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Hasło</mat-label>
-          <input matInput formControlName="password" type="password" required />
-          <mat-error *ngIf="!this.signUpForm.get('password')?.valid">
-            Hasło musi zawierać 8 - 16 znaków
-          </mat-error>
-        </mat-form-field>
-
-        <button
-          class="sign-up-button"
-          mat-raised-button
-          type="submit"
-          [disabled]="this.signUpForm.invalid || isLoading()"
-        >
-          <mat-spinner
-            *ngIf="isLoading()"
-            diameter="20"
-            class="spinner"
-          ></mat-spinner>
-          <span *ngIf="!isLoading()">Zarejestruj się</span>
-        </button>
-      </form>
-
-      <div class="sign-in-option">
-        <span>Masz już konto?</span>
-        <a (click)="navigateToSignIn()" class="sign-in-link">Zaloguj się</a>
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-image-section">
+      <div class="overlay"></div>
+      <div class="welcome-text">
+        <h1>Menadżer pojazdów</h1>
+        <p>Zarządzaj swoimi pojazdami w prosty i intuicyjny sposób</p>
       </div>
     </div>
 
+    <div class="auth-form-section">
+      <div class="auth-form-header">
+        <h2>Rejestracja! <span class="wave">👋</span></h2>
+        <p>Dołącz do menadżera pojazdów!</p>
+      </div>
+
+      <form [formGroup]="signUpForm" (ngSubmit)="onSubmit()" class="auth-form">
+        <div class="form-field-wrapper">
+          <div>
+            <span class="p-float-label">
+              <input
+                id="email"
+                type="email"
+                pInputText
+                [style]="{ width: '100%' }"
+                formControlName="email"
+              />
+              <label for="email">Email</label>
+            </span>
+          </div>
+          <small class="error-message" *ngIf="isFieldInvalid('email')">
+            {{ getControlError('email') }}
+          </small>
+        </div>
+
+        <div class="form-field-wrapper">
+          <div class="password-input-container">
+            <span class="p-float-label">
+              <input
+                id="password"
+                [type]="showPassword() ? 'text' : 'password'"
+                pInputText
+                formControlName="password"
+                [style]="{ width: '100%' }"
+              />
+              <label for="password">Hasło</label>
+            </span>
+            <button
+              type="button"
+              pButton
+              class="p-button-text p-button-rounded password-toggle-btn"
+              (click)="togglePasswordVisibility()"
+              [icon]="showPassword() ? 'pi pi-eye-slash' : 'pi pi-eye'"
+            ></button>
+          </div>
+          <small class="error-message" *ngIf="isFieldInvalid('password')">
+            {{ getControlError('password') }}
+          </small>
+        </div>
+
+        <button
+          pButton
+          type="submit"
+          [loading]="isLoading()"
+          [disabled]="signUpForm.invalid || isLoading()"
+          label="Zarejestruj się"
+          class="submit-button"
+        ></button>
+
+        <div class="auth-footer">
+          <span>Masz już konto?</span>
+          <a (click)="navigateToSignIn()" class="register-link">Zaloguj się</a>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
