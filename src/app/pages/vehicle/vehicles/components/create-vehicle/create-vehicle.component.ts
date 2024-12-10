@@ -148,16 +148,16 @@ export class CreateVehicleComponent implements OnInit, OnDestroy {
     this.dialogRef.close(false);
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
   getControlError(licensePlate: string) {
     return this.formErrorService.getControlError(this.createVehicleForm, licensePlate);
   }
 
   isFieldInvalid(controlName: string): boolean {
     return this.formErrorService.isFieldInvalid(this.createVehicleForm, controlName);
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

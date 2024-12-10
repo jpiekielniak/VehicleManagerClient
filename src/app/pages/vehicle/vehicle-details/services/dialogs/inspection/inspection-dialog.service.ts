@@ -1,27 +1,37 @@
-import { Injectable } from '@angular/core';
-import {Inspection} from "../../../types/inspection.type";
-import {MatDialog} from "@angular/material/dialog";
-import {InspectionDetailsComponent} from "../../../components/inspection-details/inspection-details.component";
-import {Observable} from "rxjs";
-import {CreateInspectionComponent} from "../../../components/create-inspection/create-inspection.component";
+import {inject, Injectable} from '@angular/core';
+import { Observable } from 'rxjs';
+import { DialogService, DynamicDialogConfig } from 'primeng/dynamicdialog';
+import { Inspection } from '../../../types/inspection.type';
+import { InspectionDetailsComponent } from '../../../components/inspection-details/inspection-details.component';
+import { CreateInspectionComponent } from '../../../components/create-inspection/create-inspection.component';
+
+const DIALOG_CONFIG: Partial<DynamicDialogConfig> = {
+  width: '1050px',
+  style: { 'max-width': '90%' },
+  contentStyle: { padding: '0' },
+  baseZIndex: 10000,
+  dismissableMask: true
+};
 
 @Injectable({
   providedIn: 'root'
 })
 export class InspectionDialogService {
-  constructor(private dialog: MatDialog) {}
+  private readonly dialogService = inject(DialogService);
 
   openInspectionDetails(inspection: Inspection, serviceBookId: string): Observable<void> {
-    return this.dialog.open(InspectionDetailsComponent, {
-      width: '600px',
+    return this.dialogService.open(InspectionDetailsComponent, {
+      ...DIALOG_CONFIG,
+      header: 'Szczegóły przeglądu',
       data: { inspection, serviceBookId }
-    }).afterClosed();
+    }).onClose;
   }
 
-  openCreateInspection(serviceBookId: string): Observable<any> {
-    return this.dialog.open(CreateInspectionComponent, {
-      width: '600px',
+  openCreateInspection(serviceBookId: string): Observable<unknown> {
+    return this.dialogService.open(CreateInspectionComponent, {
+      ...DIALOG_CONFIG,
+      header: 'Nowy przegląd',
       data: { serviceBookId }
-    }).afterClosed();
+    }).onClose;
   }
 }

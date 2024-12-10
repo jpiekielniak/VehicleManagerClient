@@ -20,7 +20,7 @@ import {DialogService} from "primeng/dynamicdialog";
     TooltipModule,
     AccordionTabComponent
   ],
-  providers: [DialogService, ConfirmDialogService],
+  providers: [InspectionDialogService, DialogService, ConfirmDialogService],
   templateUrl: './service-book-tab.component.html',
   styleUrl: './service-book-tab.component.css'
 })
@@ -30,7 +30,6 @@ export class ServiceBookTabComponent {
   private serviceDialog = inject(ServiceDialogService);
   private inspectionDialog = inject(InspectionDialogService);
   private confirmDialog = inject(ConfirmDialogService);
-
 
   services: Service[] = [];
   inspections: Inspection[] = [];

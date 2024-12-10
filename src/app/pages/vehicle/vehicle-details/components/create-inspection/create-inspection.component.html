@@ -1,56 +1,88 @@
-<h2 mat-dialog-title>Dodaj nowy przegląd</h2>
-
-<form [formGroup]="createInspectionForm" (ngSubmit)="onSubmit()">
-  <mat-dialog-content>
+<div class="create-inspection-container">
+  <form [formGroup]="createInspectionForm" (ngSubmit)="onSubmit()" class="p-fluid">
     <div class="form-grid">
-      <mat-form-field>
-        <mat-label>Tytuł</mat-label>
-        <input matInput formControlName="title" required>
-        <mat-error *ngIf="createInspectionForm.get('title')?.errors?.['required']">
-          Pole wymagane
-        </mat-error>
-      </mat-form-field>
+      <div class="field">
+        <span class="p-float-label">
+          <i class="pi pi-tag" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: #666;"></i>
+          <input pInputText id="title-input" formControlName="title"
+                 [ngClass]="{'ng-invalid ng-dirty': createInspectionForm.get('title')?.errors?.['required'] && createInspectionForm.get('title')?.touched}"/>
+          <label for="title-input">📝 Tytuł</label>
+        </span>
+        <small class="p-error" *ngIf="isFieldInvalid('title')">
+          {{ getControlError('title') }}
+        </small>
+      </div>
 
-      <mat-form-field>
-        <mat-label>Planowana data</mat-label>
-        <input matInput [matDatepicker]="scheduledDatePicker" formControlName="scheduledDate" required>
-        <mat-datepicker-toggle matSuffix [for]="scheduledDatePicker"></mat-datepicker-toggle>
-        <mat-datepicker #scheduledDatePicker></mat-datepicker>
-        <mat-error *ngIf="createInspectionForm.get('scheduledDate')?.errors?.['required']">
-          Pole wymagane
-        </mat-error>
-      </mat-form-field>
+      <div class="field">
+        <span class="p-float-label">
+          <p-calendar id="scheduledDate-input"
+                      formControlName="scheduledDate"
+                      [showIcon]="true"
+                      dateFormat="dd.mm.yy"
+                      [touchUI]="true"
+                      [readonlyInput]="true"
+                      [showButtonBar]="true"
+                      [style]="{'width': '100%'}"
+                      [panelStyle]="{'width': '90%', 'max-width': '300px', 'min-height': '300px', 'height': 'auto'}">
+          </p-calendar>
+          <label for="scheduledDate-input">📅 Planowana data</label>
+        </span>
+        <small class="p-error" *ngIf="isFieldInvalid('scheduledDate')">
+          {{ getControlError('scheduledDate') }}
+        </small>
+      </div>
 
-      <mat-form-field>
-        <mat-label>Data wykonania</mat-label>
-        <input matInput [matDatepicker]="performDatePicker" formControlName="performDate" required>
-        <mat-datepicker-toggle matSuffix [for]="performDatePicker"></mat-datepicker-toggle>
-        <mat-datepicker #performDatePicker></mat-datepicker>
-        <mat-error *ngIf="createInspectionForm.get('performDate')?.errors?.['required']">
-          Pole wymagane
-        </mat-error>
-      </mat-form-field>
+      <div class="field">
+        <span class="p-float-label">
+          <p-calendar id="performDate-input"
+                      formControlName="performDate"
+                      [showIcon]="true"
+                      dateFormat="dd.mm.yy"
+                      [touchUI]="true"
+                      [readonlyInput]="true"
+                      [showButtonBar]="true"
+                      [style]="{'width': '100%'}"
+                      [panelStyle]="{'width': '90%', 'max-width': '300px', 'min-height': '300px', 'height': 'auto'}">
+          </p-calendar>
+          <label for="performDate-input">📅 Data wykonania</label>
+        </span>
+        <small class="p-error" *ngIf="isFieldInvalid('performDate')">
+          {{ getControlError('performDate') }}
+        </small>
+      </div>
 
-      <mat-form-field>
-        <mat-label>Rodzaj przeglądu</mat-label>
-        <mat-select formControlName="inspectionType" required>
-          <mat-option *ngFor="let type of inspectionTypes" [value]="type.key">
-            {{type.value}}
-          </mat-option>
-        </mat-select>
-        <mat-error *ngIf="createInspectionForm.get('inspectionType')?.errors?.['required']">
-          Pole wymagane
-        </mat-error>
-      </mat-form-field>
-
+      <div class="field">
+        <span class="p-float-label">
+          <p-dropdown id="inspectionType-input"
+                      [options]="inspectionTypes"
+                      formControlName="inspectionType"
+                      optionLabel="value"
+                      optionValue="key"
+                      [style]="{'width': '100%'}"
+                      [showClear]="true">
+          </p-dropdown>
+          <label for="inspectionType-input">🔍 Rodzaj przeglądu</label>
+        </span>
+        <small class="p-error" *ngIf="isFieldInvalid('inspectionType')">
+          {{ getControlError('inspectionType') }}
+        </small>
+      </div>
     </div>
-  </mat-dialog-content>
 
-  <mat-dialog-actions align="end">
-    <button mat-button type="button" (click)="dialogRef.close()">Anuluj</button>
-    <button mat-button type="reset" (click)="createInspectionForm.reset()">Wyczyść</button>
-    <button mat-raised-button color="primary" type="submit" [disabled]="!createInspectionForm.valid">
-      Dodaj nowe ubezpieczenie
-    </button>
-  </mat-dialog-actions>
-</form>
+    <p-divider></p-divider>
+
+    <div class="button-container">
+      <button pButton type="button"
+              label="❌ Anuluj"
+              class="p-button-outlined"
+              (click)="dialogRef.close()"></button>
+      <button pButton type="reset"
+              label="🔄 Wyczyść"
+              class="p-button-secondary"
+              (click)="createInspectionForm.reset()"></button>
+      <button pButton type="submit"
+              label="✅ Dodaj nowy przegląd"
+              [disabled]="!createInspectionForm.valid"></button>
+    </div>
+  </form>
+</div>

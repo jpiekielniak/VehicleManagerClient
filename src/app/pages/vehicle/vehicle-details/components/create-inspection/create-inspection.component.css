@@ -1,4 +1,54 @@
-.form-grid {
-  display: grid;
-  gap: 1rem;
+.create-inspection-container {
+  padding: 1.5rem;
+
+  .form-grid {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .field {
+    margin-bottom: 1.5rem;
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: flex-end;
+    gap: 3rem;
+    margin-top: 2rem;
+
+    .p-button {
+      min-width: 120px;
+      padding: 0.75rem 1.25rem;
+    }
+  }
+
+  :host ::ng-deep {
+    .p-calendar, .p-dropdown {
+      width: 100%;
+    }
+
+    .p-float-label {
+      margin-bottom: 1rem;
+    }
+
+    .p-dropdown-panel {
+      width: 100%;
+    }
+  }
+}
+
+:host ::ng-deep {
+  .p-datepicker-touch-ui {
+    transform: scale(0.8);
+    width: 90vw;
+    max-width: 300px;
+
+    .p-datepicker-header {
+      padding: 0.3rem;
+    }
+
+    table {
+      font-size: 0.8rem;
+    }
+  }
 }

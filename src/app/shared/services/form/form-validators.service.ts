@@ -26,6 +26,12 @@ export class FormValidatorsService {
     Validators.pattern(/^[a-zA-Z0-9\s-]+$/)
   ];
 
+  readonly TITLE_VALIDATORS: ValidatorFn[] = [
+    Validators.required,
+    Validators.minLength(2),
+    Validators.maxLength(50),
+  ];
+
   readonly YEAR_VALIDATORS: Validators[] = [
     Validators.required,
     Validators.min(1900),

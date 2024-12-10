@@ -10,12 +10,11 @@ type ErrorMessages = { [key: string]: string | ErrorMessageFn };
 export class FormErrorService {
   private defaultErrorMessages: ErrorMessages = {
     required: 'To pole jest wymagane',
+    pattern: 'Nieprawidłowy format',
     minlength: (err) => `Minimalna długość to ${err.requiredLength} znaków`,
     maxlength: (err) => `Maksymalna długość to ${err.requiredLength} znaków`,
     min: (err) => `Minimalna wartość to ${err.min}`,
-    max: (err) => `Maksymalna wartość to ${err.max}`,
-    email: () => `Nieprawidłowy adres email`,
-    pattern: 'Nieprawidłowy format'
+    max: (err) => `Maksymalna wartość to ${err.max}`
   };
 
   getError(control: AbstractControl | null, customMessages?: ErrorMessages): string | null {

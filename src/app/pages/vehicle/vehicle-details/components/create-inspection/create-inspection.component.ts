@@ -1,51 +1,36 @@
 import {Component, inject, OnDestroy, OnInit, signal} from '@angular/core';
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {MatButton} from "@angular/material/button";
-import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from "@angular/material/datepicker";
-import {
-  MAT_DIALOG_DATA,
-  MatDialogActions,
-  MatDialogContent,
-  MatDialogRef,
-  MatDialogTitle
-} from "@angular/material/dialog";
-import {MatError, MatLabel, MatSuffix} from "@angular/material/form-field";
-import {MatInput} from "@angular/material/input";
-import {NgForOf, NgIf} from "@angular/common";
+import {FormBuilder, FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {Subject, takeUntil} from "rxjs";
 import {ServiceBookService} from "../../services/serviceBook/service-book.service";
 import {CreateInspection} from "../../types/create-inspection.type";
-import {MatOption} from "@angular/material/autocomplete";
-import {MatSelect} from "@angular/material/select";
 import {Enum} from "../../../../../shared/types/enum.type";
 import {EnumService} from "../../../../../shared/services/enum/enum.service";
 import {API_CONSTANTS} from "../../../../../constants/api.constants";
-import {MaterialImports} from "../../../../../imports/material.imports";
-import { FormValidatorsService } from '../../../../../shared/services/form/form-validators.service';
+import {FormValidatorsService} from '../../../../../shared/services/form/form-validators.service';
+import {NgClass, NgIf} from "@angular/common";
+import {CalendarModule} from "primeng/calendar";
+import {InputTextModule} from "primeng/inputtext";
+import {DividerModule} from "primeng/divider";
+import {DropdownModule} from "primeng/dropdown";
+import {DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
+import {ButtonModule} from "primeng/button";
+import {ToastService} from "../../../../../shared/services/toast/toast.service";
+import {FormErrorService} from "../../../../../shared/services/form/form-error.service";
 
 @Component({
   selector: 'app-create-inspection',
   standalone: true,
   imports: [
-    ...MaterialImports,
-    FormsModule,
-    MatButton,
-    MatDatepicker,
-    MatDatepickerInput,
-    MatDatepickerToggle,
-    MatDialogActions,
-    MatDialogContent,
-    MatDialogTitle,
-    MatError,
-    MatInput,
-    MatLabel,
-    NgIf,
     ReactiveFormsModule,
-    MatSuffix,
-    MatOption,
-    MatSelect,
-    NgForOf
+    CalendarModule,
+    NgClass,
+    InputTextModule,
+    DividerModule,
+    DropdownModule,
+    ButtonModule,
+    NgIf
   ],
+  providers: [ToastService],
   templateUrl: './create-inspection.component.html',
   styleUrl: './create-inspection.component.css'
 })
@@ -53,65 +38,95 @@ export class CreateInspectionComponent implements OnInit, OnDestroy {
   private readonly destroy$ = new Subject<void>();
   private readonly formBuilder = inject(FormBuilder);
   private readonly serviceBookService = inject(ServiceBookService);
-  private readonly formValidatorsService = inject(FormValidatorsService);
+  private readonly formValidators = inject(FormValidatorsService);
   private readonly enumService = inject(EnumService);
-  protected dialogRef = inject(MatDialogRef<CreateInspectionComponent>);
-  protected readonly data = inject(MAT_DIALOG_DATA) as { serviceBookId: string };
+  private readonly toastService = inject(ToastService);
+  private readonly formErrorService = inject(FormErrorService);
+  protected readonly dialogRef = inject(DynamicDialogRef);
+  protected readonly config = inject(DynamicDialogConfig);
 
-  isError = signal(false);
-  createInspectionForm!: FormGroup;
-  inspectionTypes: Enum[] = [];
+  protected readonly isLoading = signal<boolean>(false);
+  protected createInspectionForm!: FormGroup;
+  protected inspectionTypes: Enum[] = [];
 
   ngOnInit(): void {
     this.initializeForm();
     this.loadEnumValues();
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
-  private loadEnumValues() {
-    this.enumService.getEnumValues(API_CONSTANTS.ENUMS.INSPECTION_TYPES)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response: Enum[]) => {
-          this.inspectionTypes = response;
-        },
-        error: this.handleError.bind(this)
-      });
-  }
-
   private initializeForm(): void {
     this.createInspectionForm = this.formBuilder.group({
-      title: [''],
-      scheduledDate: [null, this.formValidatorsService.REQUIRED_VALIDATOR],
-      performDate: [null, this.formValidatorsService.DATE_VALIDATORS],
-      inspectionType: [null, this.formValidatorsService.REQUIRED_VALIDATOR],
+      title: ['', this.formValidators.TITLE_VALIDATORS],
+      scheduledDate: [null, this.formValidators.REQUIRED_VALIDATOR],
+      performDate: [null, this.formValidators.DATE_VALIDATORS],
+      inspectionType: [null, this.formValidators.REQUIRED_VALIDATOR],
     });
   }
 
+  private async loadEnumValues(): Promise<void> {
+    try {
+      const response = await this.enumService.getEnumValues(API_CONSTANTS.ENUMS.INSPECTION_TYPES)
+        .pipe(takeUntil(this.destroy$))
+        .toPromise();
 
-  handleError(): void {
-    this.isError.set(true);
-    setTimeout(() => {
-      this.isError.set(false);
-    }, 3000);
+      if (response) {
+        this.inspectionTypes = response;
+      }
+    } catch {
+      this.handleError('Błąd podczas ładowania typów przeglądów');
+    }
   }
 
-  onSubmit() {
+  protected async onSubmit(): Promise<void> {
     if (this.createInspectionForm.valid) {
+      try {
+        this.isLoading.set(true);
+        const formValue = this.prepareFormData();
 
-      this.serviceBookService.createInspection(this.data.serviceBookId, this.createInspectionForm.value as CreateInspection)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe({
-          next: () => {
-            this.dialogRef.close.bind(this.dialogRef);
-            window.location.reload();
-          },
-          error: this.handleError.bind(this)
-        });
+        await this.serviceBookService.createInspection(
+          this.config.data.serviceBookId,
+          formValue
+        )
+          .pipe(takeUntil(this.destroy$))
+          .toPromise();
+
+        this.handleSuccess();
+      } catch {
+        this.handleError('Błąd podczas tworzenia przeglądu');
+      } finally {
+        this.isLoading.set(false);
+      }
     }
+  }
+
+  private prepareFormData(): CreateInspection {
+    const formValue = this.createInspectionForm.value;
+    return {
+      ...formValue,
+      inspectionType: formValue.inspectionType?.key ?? 0
+    };
+  }
+
+  private handleSuccess(): void {
+    this.toastService.showSuccess('Przegląd został pomyślnie utworzony');
+    this.dialogRef.close(true);
+    setTimeout(() => window.location.reload(), 300);
+  }
+
+  private handleError(message: string): void {
+    this.toastService.showError(message);
+  }
+
+  getControlError(controlName: string): string | null {
+    return this.formErrorService.getControlError(this.createInspectionForm, controlName);
+  }
+
+  isFieldInvalid(controlName: string): boolean {
+    return this.formErrorService.isFieldInvalid(this.createInspectionForm, controlName);
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

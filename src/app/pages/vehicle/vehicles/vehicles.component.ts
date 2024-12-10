@@ -61,72 +61,75 @@ export class VehiclesComponent implements OnInit, OnDestroy {
   isLoading = true;
 
   ngOnInit(): void {
-    this.loadVehicles();
-    this.initializeComponent();
+     this.initializeComponent();
+     this.loadVehicles();
   }
 
-  private initializeComponent(): void {
+  private async initializeComponent(): Promise<void> {
     this.loadingService.loading$
       .pipe(takeUntil(this.destroy$))
       .subscribe(loading => this.isLoading = loading);
 
-    setTimeout(() => this.isComponentLoaded = true, 2000);
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    this.isComponentLoaded = true;
   }
 
-  private loadVehicles(): void {
-    this.vehicleDataService.loadVehicles()
-      .pipe(
-        takeUntil(this.destroy$),
-        catchError(() => {
-          this.toastService.showError('Wystąpił błąd podczas ładowania pojazdów');
-          return EMPTY;
-        })
-      )
-      .subscribe(result => {
-        this.updateState(result);
-        this.toastService.showSuccess('Pojazdy zostały załadowane pomyślnie');
-      });
+  private async loadVehicles(): Promise<void> {
+    try {
+      const result = await firstValueFrom(
+        this.vehicleDataService.loadVehicles().pipe(
+          takeUntil(this.destroy$)
+        )
+      );
+      this.updateState(result);
+      this.toastService.showSuccess('Pojazdy zostały załadowane pomyślnie');
+    } catch {
+      this.toastService.showError('Wystąpił błąd podczas ładowania pojazdów');
+    }
   }
 
-  applySorting(sortConfig: SortConfig<Vehicle>): void {
-    this.vehicleDataService.applySorting(sortConfig)
-      .pipe(
-        takeUntil(this.destroy$),
-        catchError(() => {
-          this.toastService.showError('Wystąpił błąd podczas sortowania pojazdów');
-          return EMPTY;
-        })
-      )
-      .subscribe(result => this.updateState(result));
+  async applySorting(sortConfig: SortConfig<Vehicle>): Promise<void> {
+    try {
+      const result = await firstValueFrom(
+        this.vehicleDataService.applySorting(sortConfig).pipe(
+          takeUntil(this.destroy$)
+        )
+      );
+      this.updateState(result);
+    } catch {
+      this.toastService.showError('Wystąpił błąd podczas sortowania pojazdów');
+    }
   }
 
-  applyFilter(brand: string): void {
+  async applyFilter(brand: string): Promise<void> {
     if (brand === 'Wszystkie marki') {
-      this.loadVehicles();
+      await this.loadVehicles();
       return;
     }
 
-    this.vehicleDataService.applyFilter(brand)
-      .pipe(
-        takeUntil(this.destroy$),
-        catchError(() => {
-          this.toastService.showError('Wystąpił błąd podczas filtrowania pojazdów');
-          return EMPTY;
-        })
-      )
-      .subscribe(result => this.updateState(result));
+    try {
+      const result = await firstValueFrom(
+        this.vehicleDataService.applyFilter(brand).pipe(
+          takeUntil(this.destroy$)
+        )
+      );
+      this.updateState(result);
+    } catch {
+      this.toastService.showError('Wystąpił błąd podczas filtrowania pojazdów');
+    }
   }
 
-  onPaginatorChange(event: PageChangeEvent): void {
-    this.vehicleDataService.changePage(event)
-      .pipe(
-        takeUntil(this.destroy$),
-        catchError(error => {
-          this.toastService.showError('Wystąpił błąd podczas zmiany strony');
-          return EMPTY;
-        })
-      )
-      .subscribe(result => this.updateState(result));
+  async onPaginatorChange(event: PageChangeEvent): Promise<void> {
+    try {
+      const result = await firstValueFrom(
+        this.vehicleDataService.changePage(event).pipe(
+          takeUntil(this.destroy$)
+        )
+      );
+      this.updateState(result);
+    } catch {
+      this.toastService.showError('Wystąpił błąd podczas zmiany strony');
+    }
   }
 
   private updateState(result: PaginationResult<Vehicle>): void {
@@ -136,17 +139,21 @@ export class VehiclesComponent implements OnInit, OnDestroy {
   }
 
   async openVehicleDialog(): Promise<void> {
-    const result = await firstValueFrom(
-      this.dialogService.openCreateVehicleDialog()
-    );
+    try {
+      const result = await firstValueFrom(
+        this.dialogService.openCreateVehicleDialog()
+      );
 
-    if (result) {
-      this.loadVehicles();
+      if (result) {
+        await this.loadVehicles();
+      }
+    } catch {
+      this.toastService.showError('Wystąpił błąd podczas otwierania okna dialogowego');
     }
   }
 
-  navigateToDetails(vehicleId: string): void {
-    this.router.navigate([`/moje-pojazdy/${vehicleId}`]);
+  async navigateToDetails(vehicleId: string): Promise<void> {
+    await this.router.navigate([`/moje-pojazdy/${vehicleId}`]);
   }
 
   ngOnDestroy(): void {
