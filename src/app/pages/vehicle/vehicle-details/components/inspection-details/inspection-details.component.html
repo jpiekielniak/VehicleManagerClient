@@ -1,28 +1,51 @@
-<h2 mat-dialog-title>{{ inspectionDetails?.title }}</h2>
-<mat-dialog-content>
-  <div class="row">
-    <div class="col-12 mb-3">
-      <strong>Opis:</strong>
-      {{ inspectionDetails?.title  }}
-    </div>
+<div class="inspection-details">
+  <p-card styleClass="inspection-card">
+    <ng-container *ngIf="!state.loading; else loadingTpl">
+      <div class="header">
+        <h2 class="title">{{ state.details?.title }}</h2>
+        <p-divider></p-divider>
+      </div>
 
-    <div class="col-12 mb-3">
-      <strong>Planowana data:</strong>
-      {{ inspectionDetails?.scheduledDate | date:'dd.MM.yyyy' }}
-    </div>
+      <div class="content">
+        <div class="info-field">
+          <label>Planowana data</label>
+          <div class="info-value">
+            {{ state.details?.scheduledDate | date:'dd.MM.yyyy' }}
+          </div>
+        </div>
 
-    <div class="col-12 mb-3">
-      <strong>Data wykonania:</strong>
-      {{ inspectionDetails?.performDate | date:'dd.MM.yyyy' }}
-    </div>
+        <div class="info-field">
+          <label>Data wykonania</label>
+          <div class="info-value">
+            {{ state.details?.performDate | date:'dd.MM.yyyy' }}
+          </div>
+        </div>
 
-    <div class="col-12 mb-3">
-      <strong>Typ przeglądu:</strong>
-      {{ inspectionDetails?.inspectionType }}
-    </div>
+        <div class="info-field">
+          <label>Typ przeglądu</label>
+          <div class="info-value">
+            {{ state.details?.inspectionType }}
+          </div>
+        </div>
+      </div>
 
-  </div>
-</mat-dialog-content>
-<mat-dialog-actions>
-  <button mat-button [mat-dialog-close]="true">Zamknij</button>
-</mat-dialog-actions>
+      <div class="footer">
+        <p-divider></p-divider>
+        <div class="actions">
+          <p-button
+            label="Zamknij"
+            icon="pi pi-times"
+            styleClass="p-button-outlined"
+            (onClick)="close()">
+          </p-button>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-template #loadingTpl>
+      <div class="loading-container">
+        <p-progressSpinner></p-progressSpinner>
+      </div>
+    </ng-template>
+  </p-card>
+</div>

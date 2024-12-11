@@ -1,4 +1,100 @@
-.form-grid {
-  display: grid;
-  gap: 1rem;
+.create-insurance {
+  padding: 1.5rem;
+  background: #f1f5f9;
+
+  ::ng-deep .form-card {
+    .p-card {
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+      border: 1px solid #e2e8f0;
+    }
+
+    .p-card-body {
+      padding: 1.5rem;
+    }
+  }
+
+  .form-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    label {
+      font-weight: 600;
+      color: #334155;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    input, .p-calendar {
+      width: 100%;
+    }
+
+    .p-calendar {
+      .p-inputtext {
+        width: 100%;
+      }
+    }
+
+    .error-message {
+      color: #dc2626;
+      font-size: 0.75rem;
+      margin-top: 0.25rem;
+    }
+  }
+
+  .dates-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e2e8f0;
+  }
+
+  ::ng-deep {
+    .p-button {
+      &.p-button-primary {
+        background: linear-gradient(135deg, #2563eb, #3b82f6);
+        border: none;
+
+        &:not(:disabled) {
+          &:hover {
+            background: linear-gradient(135deg, #1d4ed8, #2563eb);
+          }
+        }
+
+        &:disabled {
+          opacity: 0.7;
+          cursor: not-allowed;
+        }
+      }
+    }
+
+    .p-calendar {
+      .p-inputtext {
+        &.ng-invalid.ng-touched {
+          border-color: #dc2626;
+        }
+      }
+    }
+
+    .p-inputtext {
+      &.ng-invalid.ng-touched {
+        border-color: #dc2626;
+      }
+    }
+  }
 }

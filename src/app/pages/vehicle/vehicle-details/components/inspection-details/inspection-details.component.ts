@@ -1,43 +1,81 @@
-import {Component, inject, OnInit} from '@angular/core';
-import {MaterialImports} from "../../../../../imports/material.imports";
-import {DatePipe} from "@angular/common";
-import {MAT_DIALOG_DATA, MatDialogClose} from "@angular/material/dialog";
-import {ServiceBookService} from "../../services/serviceBook/service-book.service";
-import {InspectionDetails} from "../../types/inspection-details.type";
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { DatePipe, NgIf } from "@angular/common";
+import { Subject, takeUntil, finalize } from 'rxjs';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { ButtonModule } from 'primeng/button';
+import { CardModule } from 'primeng/card';
+import { DividerModule } from 'primeng/divider';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ServiceBookService } from "../../services/serviceBook/service-book.service";
+import { InspectionDetails } from "../../types/inspection-details.type";
+import { ToastService } from '../../../../../shared/services/toast/toast.service';
+
+interface InspectionState {
+  loading: boolean;
+  details: InspectionDetails | null;
+}
 
 @Component({
   selector: 'app-inspection-details',
   standalone: true,
   imports: [
-    MaterialImports,
+    NgIf,
     DatePipe,
-    MatDialogClose
+    ButtonModule,
+    CardModule,
+    DividerModule,
+    ProgressSpinnerModule
   ],
   templateUrl: './inspection-details.component.html',
   styleUrl: './inspection-details.component.css'
 })
-export class InspectionDetailsComponent implements OnInit{
-  protected readonly data = inject(MAT_DIALOG_DATA);
+export class InspectionDetailsComponent implements OnInit, OnDestroy {
+  private readonly destroy$ = new Subject<void>();
   private readonly serviceBookService = inject(ServiceBookService);
-  loadingInspectionDetails = false;
-  inspectionDetails: any;
+  private readonly dialogRef = inject(DynamicDialogRef);
+  private readonly config = inject(DynamicDialogConfig);
+  private readonly toastService = inject(ToastService);
 
-  ngOnInit() {
-    this.getInspectionDetails(this.data.inspection.id);
+  protected state: InspectionState = {
+    loading: false,
+    details: null,
+  };
+
+  ngOnInit(): void {
+    this.loadInspectionDetails();
   }
 
-  getInspectionDetails(inspectionId: string) {
-    this.loadingInspectionDetails = true;
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
-    this.serviceBookService.getInspection(this.data.serviceBookId, inspectionId).subscribe({
-      next: (response: InspectionDetails) => {
-        this.inspectionDetails = response;
-        this.loadingInspectionDetails = false;
-      },
-      error: (err) => {
-        console.error('Failed to fetch service details', err);
-        this.loadingInspectionDetails = false;
-      }
-    });
+  private loadInspectionDetails(): void {
+    const { serviceBookId, inspection } = this.config.data;
+
+    this.state = { ...this.state, loading: true };
+
+    this.serviceBookService.getInspection(serviceBookId, inspection.id)
+      .pipe(
+        takeUntil(this.destroy$),
+        finalize(() => {
+          this.state = { ...this.state, loading: false };
+        })
+      )
+      .subscribe({
+        next: (response: InspectionDetails) => {
+          this.state = {
+            ...this.state,
+            details: response,
+          };
+        },
+        error: () => {
+          this.toastService.showError('Nie udało się pobrać szczegółów przeglądu');
+        }
+      });
+  }
+
+  close(): void {
+    this.dialogRef.close();
   }
 }

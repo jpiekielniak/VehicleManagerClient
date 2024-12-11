@@ -1,33 +1,63 @@
-<h2 mat-dialog-title>{{ insuranceDetails?.title }}</h2>
-<mat-dialog-content>
-  <div class="row">
-    <div class="col-12 mb-3">
-      <strong>Opis:</strong>
-      {{ insuranceDetails?.title  }}
-    </div>
+<div class="insurance-details">
+  <p-card styleClass="insurance-card">
+    <ng-container *ngIf="!state.loading; else loadingTpl">
+      <div class="header">
+        <h2 class="title">{{ state.details?.title }}</h2>
+        <div class="status-badge" [ngClass]="{ 'active': isInsuranceActive(), 'expired': !isInsuranceActive() }">
+          {{ isInsuranceActive() ? 'Aktywne' : 'Nieaktywne' }}
+        </div>
+        <p-divider></p-divider>
+      </div>
 
-    <div class="col-12 mb-3">
-      <strong>Ubezpieczyciel</strong>
-      {{ insuranceDetails?.provider }}
-    </div>
+      <div class="content">
+        <div class="info-field">
+          <label>Ubezpieczyciel</label>
+          <div class="info-value">
+            {{ state.details?.provider }}
+          </div>
+        </div>
 
-    <div class="col-12 mb-3">
-      <strong>Numer polisy:</strong>
-      {{ insuranceDetails?.policyNumber }}
-    </div>
+        <div class="info-field">
+          <label>Numer polisy</label>
+          <div class="info-value policy-number">
+            {{ state.details?.policyNumber }}
+          </div>
+        </div>
 
-    <div class="col-12 mb-3">
-      <strong>Ważna od</strong>
-      {{ insuranceDetails?.validFrom | date:'dd.MM.yyyy' }}
-    </div>
+        <div class="info-row">
+          <div class="info-field">
+            <label>Data rozpoczęcia</label>
+            <div class="info-value">
+              {{ state.details?.validFrom | date:'dd.MM.yyyy' }}
+            </div>
+          </div>
 
-    <div class="col-12 mb-3">
-      <strong>Ważna do</strong>
-      {{ insuranceDetails?.validTo | date:'dd.MM.yyyy' }}
-    </div>
+          <div class="info-field">
+            <label>Data zakończenia</label>
+            <div class="info-value" [ngClass]="{ 'text-danger': !isInsuranceActive() }">
+              {{ state.details?.validTo | date:'dd.MM.yyyy' }}
+            </div>
+          </div>
+        </div>
+      </div>
 
-  </div>
-</mat-dialog-content>
-<mat-dialog-actions>
-  <button mat-button [mat-dialog-close]="true">Zamknij</button>
-</mat-dialog-actions>
+      <div class="footer">
+        <p-divider></p-divider>
+        <div class="actions">
+          <p-button
+            label="Zamknij"
+            icon="pi pi-times"
+            styleClass="p-button-outlined"
+            (onClick)="close()">
+          </p-button>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-template #loadingTpl>
+      <div class="loading-container">
+        <p-progressSpinner></p-progressSpinner>
+      </div>
+    </ng-template>
+  </p-card>
+</div>

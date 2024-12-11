@@ -1,0 +1,87 @@
+.inspection-details {
+  padding: 1rem;
+
+  ::ng-deep .inspection-card {
+    .p-card {
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+    }
+
+    .p-card-body {
+      padding: 0;
+    }
+
+    .p-card-content {
+      padding: 0;
+    }
+  }
+
+  .header {
+    padding: 1.5rem 1.5rem 0;
+
+    .title {
+      color: #2563eb;
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 0 0 1rem;
+      letter-spacing: -0.02em;
+    }
+  }
+
+  .content {
+    padding: 1.5rem;
+
+    .info-field {
+      margin-bottom: 1.25rem;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      label {
+        display: block;
+        font-weight: 600;
+        color: #334155;
+        font-size: 0.875rem;
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .info-value {
+        background: #f8fafc;
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+        color: #1e293b;
+        font-size: 1rem;
+        line-height: 1.5;
+
+        &:empty::before {
+          content: 'Brak danych';
+          color: #94a3b8;
+          font-style: italic;
+        }
+      }
+    }
+  }
+
+  .footer {
+    padding: 0 1.5rem 1.5rem;
+
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+  }
+
+  .loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+  }
+}

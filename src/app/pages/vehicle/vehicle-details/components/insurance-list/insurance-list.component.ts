@@ -9,6 +9,7 @@ import {ProgressSpinnerModule} from "primeng/progressspinner";
 import {VehicleService} from "../../../services/vehicle/vehicle.service";
 import {InsuranceDialogService} from "../../services/dialogs/insurance/insurance-dialog.service";
 import {ConfirmDialogService} from "../../../../../shared/services/dialogs/confirm/confirm-dialog.service";
+import { ToastService } from '../../../../../shared/services/toast/toast.service';
 
 @Component({
   selector: 'app-insurance-list',

@@ -23,6 +23,7 @@ import {VehicleService} from "../services/vehicle/vehicle.service";
 import {MenuItem} from "primeng/api";
 import {VehicleDetails} from "./types/vehicle-details.type";
 import {Service} from "./types/service.type";
+import { InsuranceDialogService } from "./services/dialogs/insurance/insurance-dialog.service";
 
 @Component({
   selector: 'app-vehicle-details',
@@ -43,7 +44,7 @@ import {Service} from "./types/service.type";
     InsuranceListComponent,
     LoadingSpinnerComponent,
   ],
-  providers: [ConfirmDialogService, DialogService, ServiceDialogService, VehicleDialogService],
+  providers: [ConfirmDialogService, DialogService, InsuranceDialogService, ServiceDialogService, VehicleDialogService],
   templateUrl: './vehicle-details.component.html',
   styleUrl: './vehicle-details.component.css'
 })
