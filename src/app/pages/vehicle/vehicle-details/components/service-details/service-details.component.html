@@ -1,54 +1,79 @@
 <div class="service-details">
-  <h2 class="dialog-title">{{ serviceDetails?.title }}</h2>
+  <h2 class="dialog-title">
+    {{ serviceDetails?.title }}
+  </h2>
 
   <div class="content-wrapper">
     <div class="info-section">
-      <p-card styleClass="mb-3">
+      <p-card>
         <div class="info-field">
-          <label>Data</label>
-          <div class="info-value">{{ serviceDetails?.date | date:'dd.MM.yyyy' }}</div>
+          <label>Data serwisu</label>
+          <div class="info-value">
+            {{ serviceDetails?.date | date:'dd.MM.yyyy' }}
+          </div>
         </div>
 
         <div class="info-field">
-          <label>Opis</label>
-          <div class="info-value description">{{ serviceDetails?.description || 'Brak szczegółowego opisu' }}</div>
+          <label>Szczegółowy opis</label>
+          <div class="info-value description">
+            {{ serviceDetails?.description || 'Nie dodano szczegółowego opisu dla tego serwisu.' }}
+          </div>
         </div>
       </p-card>
     </div>
 
     <div class="costs-section">
-      <h3>Koszty</h3>
-      <p-table [value]="serviceDetails?.costs || []" class="costs-table" [showCurrentPageReport]="false"
-               *ngIf="serviceDetails?.costs?.length > 0; else noCosts">
+      <h3>Zestawienie kosztów</h3>
+
+      <p-table
+        [value]="serviceDetails?.costs || []"
+        class="costs-table"
+        [showCurrentPageReport]="false"
+        *ngIf="serviceDetails?.costs?.length > 0; else noCosts"
+        styleClass="p-datatable-sm"
+      >
         <ng-template pTemplate="header">
           <tr>
-            <th>Tytuł</th>
+            <th>Pozycja</th>
             <th class="text-right">Kwota</th>
           </tr>
         </ng-template>
+
         <ng-template pTemplate="body" let-cost>
           <tr>
             <td>{{ cost?.title }}</td>
-            <td class="text-right">{{ cost?.amount }} PLN</td>
+            <td class="text-right">
+              {{ cost?.amount | number:'1.2-2' }} PLN
+            </td>
           </tr>
         </ng-template>
+
         <ng-template pTemplate="footer">
           <tr>
             <td><strong>Suma kosztów</strong></td>
             <td class="text-right">
-              <strong>{{ serviceDetails?.costs | sumBy: 'amount' }} PLN</strong>
+              <strong>{{ serviceDetails?.costs | sumBy: 'amount' | number:'1.2-2' }} PLN</strong>
             </td>
           </tr>
         </ng-template>
       </p-table>
 
       <ng-template #noCosts>
-        <p-message severity="info" text="Brak zarejestrowanych kosztów" class="w-full"></p-message>
+        <p-message
+          severity="info"
+          text="Nie zarejestrowano żadnych kosztów dla tego serwisu"
+          styleClass="w-full">
+        </p-message>
       </ng-template>
     </div>
   </div>
 
   <div class="dialog-footer">
-    <p-button label="Zamknij" (onClick)="close()" class="p-button-outlined"></p-button>
+    <p-button
+      label="Zamknij podgląd"
+      (onClick)="close()"
+      icon="pi pi-times"
+      class="p-button-outlined">
+    </p-button>
   </div>
 </div>

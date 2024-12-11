@@ -1,88 +1,109 @@
-<div class="create-inspection-container">
-  <form [formGroup]="createInspectionForm" (ngSubmit)="onSubmit()" class="p-fluid">
-    <div class="form-grid">
-      <div class="field">
-        <span class="p-float-label">
-          <i class="pi pi-tag" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: #666;"></i>
-          <input pInputText id="title-input" formControlName="title"
-                 [ngClass]="{'ng-invalid ng-dirty': createInspectionForm.get('title')?.errors?.['required'] && createInspectionForm.get('title')?.touched}"/>
-          <label for="title-input">📝 Tytuł</label>
-        </span>
-        <small class="p-error" *ngIf="isFieldInvalid('title')">
-          {{ getControlError('title') }}
-        </small>
-      </div>
-
-      <div class="field">
-        <span class="p-float-label">
-          <p-calendar id="scheduledDate-input"
-                      formControlName="scheduledDate"
-                      [showIcon]="true"
-                      dateFormat="dd.mm.yy"
-                      [touchUI]="true"
-                      [readonlyInput]="true"
-                      [showButtonBar]="true"
-                      [style]="{'width': '100%'}"
-                      [panelStyle]="{'width': '90%', 'max-width': '300px', 'min-height': '300px', 'height': 'auto'}">
-          </p-calendar>
-          <label for="scheduledDate-input">📅 Planowana data</label>
-        </span>
-        <small class="p-error" *ngIf="isFieldInvalid('scheduledDate')">
-          {{ getControlError('scheduledDate') }}
-        </small>
-      </div>
-
-      <div class="field">
-        <span class="p-float-label">
-          <p-calendar id="performDate-input"
-                      formControlName="performDate"
-                      [showIcon]="true"
-                      dateFormat="dd.mm.yy"
-                      [touchUI]="true"
-                      [readonlyInput]="true"
-                      [showButtonBar]="true"
-                      [style]="{'width': '100%'}"
-                      [panelStyle]="{'width': '90%', 'max-width': '300px', 'min-height': '300px', 'height': 'auto'}">
-          </p-calendar>
-          <label for="performDate-input">📅 Data wykonania</label>
-        </span>
-        <small class="p-error" *ngIf="isFieldInvalid('performDate')">
-          {{ getControlError('performDate') }}
-        </small>
-      </div>
-
-      <div class="field">
-        <span class="p-float-label">
-          <p-dropdown id="inspectionType-input"
-                      [options]="inspectionTypes"
-                      formControlName="inspectionType"
-                      optionLabel="value"
-                      optionValue="key"
-                      [style]="{'width': '100%'}"
-                      [showClear]="true">
-          </p-dropdown>
-          <label for="inspectionType-input">🔍 Rodzaj przeglądu</label>
-        </span>
-        <small class="p-error" *ngIf="isFieldInvalid('inspectionType')">
-          {{ getControlError('inspectionType') }}
-        </small>
+<div class="inspection-dialog">
+  <div class="dialog-header">
+    <div class="header-content">
+      <div class="title-section">
+        <i class="pi pi-calendar-plus"></i>
+        <h2>Dodaj nowy przegląd</h2>
       </div>
     </div>
+  </div>
 
-    <p-divider></p-divider>
+  <div class="dialog-content" *ngIf="!isLoading()">
+    <form [formGroup]="createInspectionForm" (ngSubmit)="onSubmit()" class="p-fluid">
+      <p-card styleClass="mb-3">
+        <div class="form-grid">
+          <div class="field">
+            <label>Tytuł <span class="required-star">*</span></label>
+            <span class="p-input-icon-left">
+             <i class="pi pi-tag"></i>
+             <input pInputText
+                    id="title-input"
+                    formControlName="title"
+                    placeholder="Wprowadź tytuł przeglądu"/>
+           </span>
+            <small class="error-message" *ngIf="isFieldInvalid('title')">
+              {{ getControlError('title') }}
+            </small>
+          </div>
 
-    <div class="button-container">
-      <button pButton type="button"
-              label="❌ Anuluj"
-              class="p-button-outlined"
-              (click)="dialogRef.close()"></button>
-      <button pButton type="reset"
-              label="🔄 Wyczyść"
-              class="p-button-secondary"
-              (click)="createInspectionForm.reset()"></button>
-      <button pButton type="submit"
-              label="✅ Dodaj nowy przegląd"
-              [disabled]="!createInspectionForm.valid"></button>
-    </div>
-  </form>
+          <div class="field">
+            <label>Planowana data <span class="required-star">*</span></label>
+            <span class="p-input-icon-left">
+             <i class="pi pi-calendar"></i>
+             <p-calendar id="scheduledDate-input"
+                         formControlName="scheduledDate"
+                         [showIcon]="true"
+                         dateFormat="dd.mm.yy"
+                         [touchUI]="true"
+                         [readonlyInput]="true"
+                         [locale]="pl"
+                         placeholder="Wybierz planowaną datę"
+                         [showButtonBar]="true">
+             </p-calendar>
+           </span>
+            <small class="error-message" *ngIf="isFieldInvalid('scheduledDate')">
+              {{ getControlError('scheduledDate') }}
+            </small>
+          </div>
+
+          <div class="field">
+            <label>Data wykonania <span class="required-star">*</span></label>
+            <span class="p-input-icon-left">
+             <i class="pi pi-calendar-times"></i>
+             <p-calendar id="performDate-input"
+                         formControlName="performDate"
+                         [showIcon]="true"
+                         dateFormat="dd.mm.yy"
+                         [touchUI]="true"
+                         [readonlyInput]="true"
+                         placeholder="Wybierz datę wykonania"
+                         [showButtonBar]="true">
+             </p-calendar>
+           </span>
+            <small class="error-message" *ngIf="isFieldInvalid('performDate')">
+              {{ getControlError('performDate') }}
+            </small>
+          </div>
+
+          <div class="field">
+            <label>Rodzaj przeglądu <span class="required-star">*</span></label>
+            <span class="p-input-icon-left">
+             <i class="pi pi-cog"></i>
+             <p-dropdown id="inspectionType-input"
+                         [options]="inspectionTypes"
+                         formControlName="inspectionType"
+                         optionLabel="value"
+                         optionValue="key"
+                         placeholder="Wybierz rodzaj przeglądu"
+                         [showClear]="true">
+             </p-dropdown>
+           </span>
+            <small class="error-message" *ngIf="isFieldInvalid('inspectionType')">
+              {{ getControlError('inspectionType') }}
+            </small>
+          </div>
+        </div>
+      </p-card>
+
+      <div class="dialog-footer">
+        <p-button icon="pi pi-times"
+                  label="Anuluj"
+                  styleClass="p-button-outlined p-button-secondary"
+                  (onClick)="dialogRef.close()">
+        </p-button>
+        <p-button icon="pi pi-refresh"
+                  label="Wyczyść"
+                  styleClass="p-button-outlined p-button-info"
+                  (onClick)="createInspectionForm.reset()">
+        </p-button>
+        <p-button icon="pi pi-check"
+                  label="Dodaj przegląd"
+                  [loading]="isLoading()"
+                  (onClick)="onSubmit()"
+                  styleClass="p-button-primary"
+                  [disabled]="!createInspectionForm.valid">
+        </p-button>
+      </div>
+    </form>
+  </div>
 </div>

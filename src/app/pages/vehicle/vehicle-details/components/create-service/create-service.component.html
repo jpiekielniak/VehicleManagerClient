@@ -3,13 +3,15 @@
     <div class="form-grid">
       <div class="field">
        <span class="p-float-label">
-         <i class="pi pi-tag" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: #666;"></i>
+         <i class="pi pi-tag"
+            style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: #666;"></i>
          <input pInputText id="title" formControlName="title"
-                [ngClass]="{'ng-invalid ng-dirty': validateControl('title', 'required')}"/>
+                [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('title')}"/>
          <label for="title">📝 Tytuł</label>
        </span>
-        <small class="p-error" *ngIf="validateControl('title', 'required')">Pole wymagane</small>
-        <small class="p-error" *ngIf="validateControl('title', 'maxlength')">Maksymalna długość to 50 znaków</small>
+        <small class="error-message" *ngIf="isFieldInvalid('title')">
+          {{ getControlError('title') }}
+        </small>
       </div>
 
       <div class="field">
@@ -18,7 +20,9 @@
          <textarea pInputTextarea id="description" formControlName="description" rows="3" autoResize="true"></textarea>
          <label for="description">📄 Opis</label>
        </span>
-        <small class="p-error" *ngIf="validateControl('description', 'maxlength')">Maksymalna długość to 500 znaków</small>
+        <small class="error-message" *ngIf="isFieldInvalid('description')">
+          {{ getControlError('description') }}
+        </small>
       </div>
 
       <div class="field">
@@ -37,14 +41,16 @@
           </p-calendar>
          <label for="date">📅 Data wykonania</label>
        </span>
-        <small class="p-error" *ngIf="validateControl('date', 'required')">Pole wymagane</small>
+        <small class="error-message" *ngIf="isFieldInvalid('date')">
+          {{ getControlError('date') }}
+        </small>
       </div>
 
       <p-card>
         <ng-template pTemplate="header">
           <div>
             <h3 class="costs">💰 Koszty</h3>
-            <span class="total-cost costs mt-2">💵 Suma: {{ totalCost }} PLN</span>
+            <span class="total-cost costs mt-2">💵 Suma: {{ formState$.getValue().totalCost }} PLN</span>
           </div>
         </ng-template>
 
@@ -53,21 +59,33 @@
             <div class="grid cols-gap-6">
               <div class="col-5">
                <span class="p-float-label">
-                 <i class="pi pi-bookmark" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: #666;"></i>
+                 <i class="pi pi-bookmark"
+                    style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: #666;"></i>
                  <input pInputText formControlName="title"
                         [ngClass]="{'ng-invalid ng-dirty': validateCostControl(i, 'title', 'required')}"/>
                  <label>🏷️ Tytuł kosztu</label>
                </span>
-                <small class="p-error" *ngIf="validateCostControl(i, 'title', 'required')">Pole wymagane</small>
+                <small class="error-message" *ngIf="isFieldInvalid('title')">
+                  {{ getControlError('title') }}
+                </small>
               </div>
 
               <div class="col-5">
                <span class="p-float-label">
-                 <p-inputNumber formControlName="amount" mode="decimal" [minFractionDigits]="2"
-                                [maxFractionDigits]="2"></p-inputNumber>
+                 <p-inputNumber
+                   formControlName="amount"
+                   mode="decimal"
+                   [minFractionDigits]="2"
+                   [maxFractionDigits]="2"
+                   [suffix]="' PLN'"
+                 >
+
+                 </p-inputNumber>
                  <label>💲 Kwota</label>
                </span>
-                <small class="p-error" *ngIf="validateCostControl(i, 'amount', 'required')">Pole wymagane</small>
+                <small class="error-message" *ngIf="isFieldInvalid('amount')">
+                  {{ getControlError('amount') }}
+                </small>
               </div>
 
               <div class="col-2 flex align-items-center justify-content-center">
@@ -98,7 +116,7 @@
               (click)="createServiceForm.reset()"></button>
       <button pButton type="submit"
               label="✅ Dodaj nowy serwis"
-              [disabled]="!createServiceForm.valid"></button>
+              [disabled]="!isFormValid()"></button>
     </div>
   </form>
 </div>

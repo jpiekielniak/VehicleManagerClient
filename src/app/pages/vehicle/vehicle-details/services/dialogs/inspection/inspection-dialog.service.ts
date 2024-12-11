@@ -6,11 +6,15 @@ import { InspectionDetailsComponent } from '../../../components/inspection-detai
 import { CreateInspectionComponent } from '../../../components/create-inspection/create-inspection.component';
 
 const DIALOG_CONFIG: Partial<DynamicDialogConfig> = {
-  width: '1050px',
-  style: { 'max-width': '90%' },
-  contentStyle: { padding: '0' },
+  width: '1200px',
+  height: '545px',
+  showHeader: false,
+  contentStyle: { overflow: 'auto', padding: '0' },
   baseZIndex: 10000,
-  dismissableMask: true
+  modal: true,
+  dismissableMask: true,
+  closeOnEscape: true,
+  maximizable: true
 };
 
 @Injectable({
@@ -30,7 +34,6 @@ export class InspectionDialogService {
   openCreateInspection(serviceBookId: string): Observable<unknown> {
     return this.dialogService.open(CreateInspectionComponent, {
       ...DIALOG_CONFIG,
-      header: 'Nowy przegląd',
       data: { serviceBookId }
     }).onClose;
   }

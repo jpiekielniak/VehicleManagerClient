@@ -2,8 +2,8 @@
   <p-accordion [multiple]="true" [activeIndex]="[]">
     <p-accordionTab header="Serwisy" (click)="loadServices()">
       <app-accordion-tab
-        [records]="services"
-        [isLoading]="isLoadingServices"
+        [records]="state.services"
+        [isLoading]="state.isLoadingServices"
         emptyMessage="Brak wpisów serwisowych"
         viewTooltip="Zobacz szczegóły serwisu"
         deleteTooltip="Usuń serwis"
@@ -16,8 +16,8 @@
 
     <p-accordionTab header="Przeglądy" (click)="loadInspections()">
       <app-accordion-tab
-        [records]="inspections"
-        [isLoading]="isLoadingInspections"
+        [records]="state.inspections"
+        [isLoading]="state.isLoadingInspections"
         emptyMessage="Brak wpisów przeglądów"
         viewTooltip="Zobacz szczegóły przeglądu"
         deleteTooltip="Usuń przegląd"

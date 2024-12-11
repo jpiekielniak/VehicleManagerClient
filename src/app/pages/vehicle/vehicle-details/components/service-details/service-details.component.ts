@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { SumByPipe } from "./pipes/sum-by.pipe";
-import {DatePipe, NgIf} from "@angular/common";
+import {DatePipe, DecimalPipe, NgIf} from "@angular/common";
 import { CardModule } from "primeng/card";
 import { TableModule } from "primeng/table";
 import { MessageModule } from "primeng/message";
@@ -21,7 +21,8 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     MessageModule,
     ButtonModule,
     ProgressSpinnerModule,
-    NgIf
+    NgIf,
+    DecimalPipe
   ],
   templateUrl: './service-details.component.html',
   styleUrl: './service-details.component.css'

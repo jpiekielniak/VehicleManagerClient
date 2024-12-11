@@ -7,7 +7,7 @@ import {Enum} from "../../../../../shared/types/enum.type";
 import {EnumService} from "../../../../../shared/services/enum/enum.service";
 import {API_CONSTANTS} from "../../../../../constants/api.constants";
 import {FormValidatorsService} from '../../../../../shared/services/form/form-validators.service';
-import {NgClass, NgIf} from "@angular/common";
+import {NgIf} from "@angular/common";
 import {CalendarModule} from "primeng/calendar";
 import {InputTextModule} from "primeng/inputtext";
 import {DividerModule} from "primeng/divider";
@@ -16,6 +16,8 @@ import {DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
 import {ButtonModule} from "primeng/button";
 import {ToastService} from "../../../../../shared/services/toast/toast.service";
 import {FormErrorService} from "../../../../../shared/services/form/form-error.service";
+import {CardModule} from "primeng/card";
+import {PrimeNGConfig} from "primeng/api";
 
 @Component({
   selector: 'app-create-inspection',
@@ -23,12 +25,12 @@ import {FormErrorService} from "../../../../../shared/services/form/form-error.s
   imports: [
     ReactiveFormsModule,
     CalendarModule,
-    NgClass,
     InputTextModule,
     DividerModule,
     DropdownModule,
     ButtonModule,
-    NgIf
+    NgIf,
+    CardModule
   ],
   providers: [ToastService],
   templateUrl: './create-inspection.component.html',
@@ -44,14 +46,28 @@ export class CreateInspectionComponent implements OnInit, OnDestroy {
   private readonly formErrorService = inject(FormErrorService);
   protected readonly dialogRef = inject(DynamicDialogRef);
   protected readonly config = inject(DynamicDialogConfig);
+  private configC = inject(PrimeNGConfig);
+
 
   protected readonly isLoading = signal<boolean>(false);
   protected createInspectionForm!: FormGroup;
   protected inspectionTypes: Enum[] = [];
+  pl = {
+    firstDayOfWeek: 1,
+    dayNames: ["Niedziela", "Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek", "Sobota"],
+    dayNamesShort: ["Nie", "Pon", "Wt", "Śr", "Czw", "Pt", "Sob"],
+    dayNamesMin: ["Nd", "Pn", "Wt", "Śr", "Cz", "Pt", "Sb"],
+    monthNames: ["Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec", "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień"],
+    monthNamesShort: ["Sty", "Lut", "Mar", "Kwi", "Maj", "Cze", "Lip", "Sie", "Wrz", "Paź", "Lis", "Gru"],
+    today: "Dziś",
+    clear: "Wyczyść",
+    dateFormat: "dd.mm.yy"
+  };
 
   ngOnInit(): void {
     this.initializeForm();
     this.loadEnumValues();
+    this.configC.setTranslation(this.pl);
   }
 
   private initializeForm(): void {
