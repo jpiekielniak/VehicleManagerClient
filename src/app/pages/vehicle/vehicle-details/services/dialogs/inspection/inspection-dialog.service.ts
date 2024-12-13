@@ -7,7 +7,7 @@ import { CreateInspectionComponent } from '../../../components/create-inspection
 
 const DIALOG_CONFIG: Partial<DynamicDialogConfig> = {
   width: '1200px',
-  height: '545px',
+  height: '580px',
   showHeader: false,
   contentStyle: { overflow: 'auto', padding: '0' },
   baseZIndex: 10000,
