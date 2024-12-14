@@ -1,15 +1,24 @@
-import {Component, EventEmitter, inject, Input, Output} from '@angular/core';
-import {CardModule} from "primeng/card";
-import {NgForOf, NgIf} from "@angular/common";
-import {TabViewModule} from "primeng/tabview";
-import {Button} from "primeng/button";
-import {MenuModule} from "primeng/menu";
-import {Insurance} from "../../types/insurance.type";
-import {ProgressSpinnerModule} from "primeng/progressspinner";
-import {VehicleService} from "../../../services/vehicle/vehicle.service";
-import {InsuranceDialogService} from "../../services/dialogs/insurance/insurance-dialog.service";
-import {ConfirmDialogService} from "../../../../../shared/services/dialogs/confirm/confirm-dialog.service";
+import { Component, EventEmitter, inject, Input, Output, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { NgForOf, NgIf } from "@angular/common";
+import { CardModule } from "primeng/card";
+import { TabViewModule } from "primeng/tabview";
+import { Button } from "primeng/button";
+import { MenuModule } from "primeng/menu";
+import { ProgressSpinnerModule } from "primeng/progressspinner";
+import { firstValueFrom } from 'rxjs';
+
+import { Insurance } from "../../types/insurance.type";
+import { VehicleService } from "../../../services/vehicle/vehicle.service";
+import { InsuranceDialogService } from "../../services/dialogs/insurance/insurance-dialog.service";
+import { ConfirmDialogService } from "../../../../../shared/services/dialogs/confirm/confirm-dialog.service";
 import { ToastService } from '../../../../../shared/services/toast/toast.service';
+
+interface InsuranceState {
+  insurances: Insurance[];
+  isLoading: boolean;
+  isInitialized: boolean;
+  isOperationInProgress: boolean;
+}
 
 @Component({
   selector: 'app-insurance-list',
@@ -23,76 +32,135 @@ import { ToastService } from '../../../../../shared/services/toast/toast.service
     MenuModule,
     ProgressSpinnerModule
   ],
+  providers: [ToastService],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './insurance-list.component.html',
   styleUrl: './insurance-list.component.css'
 })
-export class InsuranceListComponent  {
+export class InsuranceListComponent {
   @Input() vehicleId!: string;
   @Output() onView = new EventEmitter<string>();
   @Output() onDelete = new EventEmitter<string>();
   @Output() onAdd = new EventEmitter<void>();
 
-  private readonly vehicleService = inject(VehicleService)
-  private insuranceDialog = inject(InsuranceDialogService);
-  private confirmDialog = inject(ConfirmDialogService);
+  private readonly vehicleService = inject(VehicleService);
+  private readonly insuranceDialog = inject(InsuranceDialogService);
+  private readonly confirmDialog = inject(ConfirmDialogService);
+  private readonly toastService = inject(ToastService);
+  private readonly cdr = inject(ChangeDetectorRef);
 
+  protected state: InsuranceState = {
+    insurances: [],
+    isLoading: false,
+    isInitialized: false,
+    isOperationInProgress: false
+  };
 
-  insurances: Insurance[] = [];
-  isLoading = false;
+  async loadInsurances(): Promise<void> {
+    if (this.state.isInitialized || this.state.isOperationInProgress) {
+      return;
+    }
 
-  loadInsurances() {
-    this.vehicleService.getInsurances(this.vehicleId).subscribe({
-      next: (response: any) => {
-        this.insurances = response.items || [];
-        this.isLoading = false;
-      },
-      error: (err) => {
-        console.error('Failed to fetch insurances', err);
-        this.isLoading = false;
-      }
-    });
-  }
+    try {
+      this.state.isLoading = true;
+      this.state.isOperationInProgress = true;
+      this.cdr.detectChanges();
 
-  openInsuranceDetails(insuranceId: string) {
-    const insurance = this.insurances.find(i => i.insuranceId === insuranceId);
-    if (insurance) {
-      this.insuranceDialog.openInsuranceDetails(insurance, this.vehicleId);
+      const response = await firstValueFrom(
+        this.vehicleService.getInsurances(this.vehicleId)
+      );
+
+      this.state.insurances = response.items || [];
+      this.state.isInitialized = true;
+
+    } catch (error) {
+      this.toastService.showError('Nie udało się pobrać ubezpieczeń');
+    } finally {
+      this.state.isLoading = false;
+      this.state.isOperationInProgress = false;
+      this.cdr.detectChanges();
     }
   }
 
-  deleteInsurance(insuranceId: string) {
-    this.vehicleService.deleteInsurance(this.vehicleId, insuranceId).subscribe({
-      next: () => {
-        window.location.reload();
-      },
-      error: (error) => {
-        console.error('Error deleting insurance:', error);
-      }
-    });
-  }
+  async openInsuranceDetails(insuranceId: string): Promise<void> {
+    if (this.state.isOperationInProgress) return;
 
-  confirmInsuranceDelete(insuranceId: string): void {
-    const insurance = this.insurances.find(i => i.insuranceId === insuranceId);
-    if (insurance) {
-      this.confirmDialog
-        .openConfirmDialog(
-          insurance.title
-        )
-        .subscribe(result => {
-          if (result) {
-            this.deleteInsurance(insuranceId);
-          }
-        });
+    const insurance = this.state.insurances.find(i => i.insuranceId === insuranceId);
+    if (!insurance) return;
+
+    try {
+      this.state.isOperationInProgress = true;
+      await this.insuranceDialog.openInsuranceDetails(insurance, this.vehicleId);
+    } finally {
+      this.state.isOperationInProgress = false;
+      this.cdr.detectChanges();
     }
   }
 
-  addInsurance() {
-    this.insuranceDialog
-      .openCreateInsurance(this.vehicleId)
-      .subscribe(result => {
-        if (result) {
-          window.location.reload();
-        }
-      });
+  async deleteInsurance(insuranceId: string): Promise<void> {
+    if (this.state.isOperationInProgress) return;
+
+    try {
+      this.state.isOperationInProgress = true;
+      this.cdr.detectChanges();
+
+      await firstValueFrom(
+        this.vehicleService.deleteInsurance(this.vehicleId, insuranceId)
+      );
+
+      this.toastService.showSuccess('Ubezpieczenie zostało usunięte');
+      await this.refreshData();
+
+    } catch (error) {
+      this.toastService.showError('Nie udało się usunąć ubezpieczenia');
+    } finally {
+      this.state.isOperationInProgress = false;
+      this.cdr.detectChanges();
+    }
+  }
+
+  async confirmInsuranceDelete(insuranceId: string): Promise<void> {
+    if (this.state.isOperationInProgress) return;
+
+    const insurance = this.state.insurances.find(i => i.insuranceId === insuranceId);
+    if (!insurance) return;
+
+    try {
+      this.state.isOperationInProgress = true;
+      const result = await firstValueFrom(
+        this.confirmDialog.openConfirmDialog(insurance.title)
+      );
+
+      if (result) {
+        await this.deleteInsurance(insuranceId);
+      }
+    } finally {
+      this.state.isOperationInProgress = false;
+      this.cdr.detectChanges();
+    }
+  }
+
+  async addInsurance(): Promise<void> {
+    if (this.state.isOperationInProgress) return;
+
+    try {
+      this.state.isOperationInProgress = true;
+      const result = await firstValueFrom(
+        this.insuranceDialog.openCreateInsurance(this.vehicleId)
+      );
+
+      if (result) {
+        await this.refreshData();
+      }
+    } finally {
+      this.state.isOperationInProgress = false;
+      this.cdr.detectChanges();
+    }
+  }
+
+  private async refreshData(): Promise<void> {
+    this.state.isInitialized = false;
+    this.state.insurances = [];
+    await this.loadInsurances();
   }
 }

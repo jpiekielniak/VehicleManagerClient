@@ -1,6 +1,6 @@
 <ng-container (click)="loadInsurances()">
-  <div class="record-list" *ngIf="!isLoading && insurances.length > 0; else noInsurances">
-    <div *ngFor="let insurance of insurances" class="record-item">
+  <div class="record-list" *ngIf="!state.isLoading && state.insurances.length > 0; else noInsurances">
+    <div *ngFor="let insurance of state.insurances" class="record-item">
       <span class="record-title">{{ insurance.title }}</span>
       <div class="record-actions">
         <p-button
@@ -30,7 +30,7 @@
     </p-button>
   </div>
 </ng-container>
-<div *ngIf="isLoading" class="loading-state">
+<div *ngIf="state.isLoading" class="loading-state">
   <div class="spinner-container">
     <p-progressSpinner></p-progressSpinner>
   </div>

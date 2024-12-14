@@ -1,31 +1,29 @@
-<div>
-  <p-accordion [multiple]="true" [activeIndex]="[]">
-    <p-accordionTab header="Serwisy" (click)="loadServices()">
-      <app-accordion-tab
-        [records]="state.services"
-        [isLoading]="state.isLoadingServices"
-        emptyMessage="Brak wpisów serwisowych"
-        viewTooltip="Zobacz szczegóły serwisu"
-        deleteTooltip="Usuń serwis"
-        addButtonLabel="Dodaj serwis"
-        (onView)="openServiceDetails($event)"
-        (onDelete)="confirmServiceDelete($event)"
-        (onAdd)="addService()">
-      </app-accordion-tab>
-    </p-accordionTab>
+<p-accordion>
+  <p-accordionTab header="Serwisy" (click)="loadServices()">
+    <app-accordion-tab
+      [records]="state.services"
+      [isLoading]="state.isLoadingServices"
+      emptyMessage="Brak serwisów"
+      viewTooltip="Zobacz szczegóły serwisu"
+      deleteTooltip="Usuń serwis"
+      addButtonLabel="Dodaj serwis"
+      (onView)="openServiceDetails($event)"
+      (onDelete)="confirmServiceDelete($event)"
+      (onAdd)="addService()">
+    </app-accordion-tab>
+  </p-accordionTab>
 
-    <p-accordionTab header="Przeglądy" (click)="loadInspections()">
-      <app-accordion-tab
-        [records]="state.inspections"
-        [isLoading]="state.isLoadingInspections"
-        emptyMessage="Brak wpisów przeglądów"
-        viewTooltip="Zobacz szczegóły przeglądu"
-        deleteTooltip="Usuń przegląd"
-        addButtonLabel="Dodaj przegląd"
-        (onView)="openInspectionDetails($event)"
-        (onDelete)="confirmInspectionDelete($event)"
-        (onAdd)="addInspection()">
-      </app-accordion-tab>
-    </p-accordionTab>
-  </p-accordion>
-</div>
+  <p-accordionTab header="Przeglądy" (click)="loadInspections()">
+    <app-accordion-tab
+      [records]="state.inspections"
+      [isLoading]="state.isLoadingInspections"
+      emptyMessage="Brak przeglądów"
+      viewTooltip="Zobacz szczegóły przeglądu"
+      deleteTooltip="Usuń przegląd"
+      addButtonLabel="Dodaj przegląd"
+      (onView)="openInspectionDetails($event)"
+      (onDelete)="confirmInspectionDelete($event)"
+      (onAdd)="addInspection()">
+    </app-accordion-tab>
+  </p-accordionTab>
+</p-accordion>

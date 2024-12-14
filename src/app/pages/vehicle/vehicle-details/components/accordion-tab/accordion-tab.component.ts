@@ -3,6 +3,11 @@ import {RecordListComponent} from "../record-list/record-list.component";
 import {NgIf} from "@angular/common";
 import {ProgressSpinnerModule} from "primeng/progressspinner";
 
+interface Record {
+  id: string;
+  title: string;
+}
+
 @Component({
   selector: 'app-accordion-tab',
   standalone: true,
@@ -15,12 +20,12 @@ import {ProgressSpinnerModule} from "primeng/progressspinner";
   styleUrl: './accordion-tab.component.css'
 })
 export class AccordionTabComponent {
-  @Input() records: Array<{ id: string, title: string }> = [];
+  @Input() records: Record[] = [];
   @Input() isLoading = false;
-  @Input() emptyMessage: string = '';
-  @Input() viewTooltip: string = '';
-  @Input() deleteTooltip: string = '';
-  @Input() addButtonLabel: string = '';
+  @Input() emptyMessage = '';
+  @Input() viewTooltip = '';
+  @Input() deleteTooltip = '';
+  @Input() addButtonLabel = '';
 
   @Output() onView = new EventEmitter<string>();
   @Output() onDelete = new EventEmitter<string>();
