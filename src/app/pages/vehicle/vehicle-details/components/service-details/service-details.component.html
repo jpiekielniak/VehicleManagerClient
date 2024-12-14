@@ -1,6 +1,6 @@
 <div class="service-details">
   <h2 class="dialog-title">
-    {{ serviceDetails?.title }}
+    {{ state.serviceDetails?.title }}
   </h2>
 
   <div class="content-wrapper">
@@ -9,14 +9,14 @@
         <div class="info-field">
           <label>Data serwisu</label>
           <div class="info-value">
-            {{ serviceDetails?.date | date:'dd.MM.yyyy' }}
+            {{ state.serviceDetails?.date | date:'dd.MM.yyyy' }}
           </div>
         </div>
 
         <div class="info-field">
           <label>Szczegółowy opis</label>
           <div class="info-value description">
-            {{ serviceDetails?.description || 'Nie dodano szczegółowego opisu dla tego serwisu.' }}
+            {{ state.serviceDetails?.description || 'Nie dodano szczegółowego opisu dla tego serwisu.' }}
           </div>
         </div>
       </p-card>
@@ -26,10 +26,10 @@
       <h3>Zestawienie kosztów</h3>
 
       <p-table
-        [value]="serviceDetails?.costs || []"
+        [value]="state.serviceDetails?.costs || []"
         class="costs-table"
         [showCurrentPageReport]="false"
-        *ngIf="serviceDetails?.costs?.length > 0; else noCosts"
+        *ngIf="hasCosts(); else noCosts"
         styleClass="p-datatable-sm"
       >
         <ng-template pTemplate="header">
@@ -52,7 +52,7 @@
           <tr>
             <td><strong>Suma kosztów</strong></td>
             <td class="text-right">
-              <strong>{{ serviceDetails?.costs | sumBy: 'amount' | number:'1.2-2' }} PLN</strong>
+              <strong>{{ getTotalCost() | number:'1.2-2' }} PLN</strong>
             </td>
           </tr>
         </ng-template>
