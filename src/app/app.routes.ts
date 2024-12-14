@@ -30,4 +30,8 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/user-details/user-details.component').then(m => m.UserDetailsComponent),
     canActivate: [authGuard]
   },
+  {
+    path: '**',
+    loadComponent: () => import('./pages/not-found/not-found.component').then(m => m.NotFoundComponent)
+  }
 ];
