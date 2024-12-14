@@ -1,6 +1,6 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {BehaviorSubject, map, Observable} from 'rxjs';
+import {BehaviorSubject, catchError, map, Observable, of} from 'rxjs';
 import {SignUp} from '../../sign-up/types/sign-up.type';
 import {SignIn} from '../../sign-in/types/sign-in.type';
 import {DOCUMENT} from '@angular/common';
@@ -23,16 +23,23 @@ export class AuthService {
     return this.http.post(API_CONSTANTS.USERS.SIGN_UP, signUpData);
   }
 
-  signIn(signInData: SignIn): Observable<any> {
-    return this.http
-      .post<SignInResponse>(API_CONSTANTS.USERS.SIGN_IN, signInData)
-      .pipe(map((result: SignInResponse) => {
-          if (result && result.token) {
-            this.localStorage?.setItem('token', String(result.token));
-            this.authStateSubject.next(true);
+  signIn(signInData: SignIn): Observable<boolean> {
+    return this.http.post<SignInResponse>(API_CONSTANTS.USERS.SIGN_IN, signInData)
+      .pipe(
+        map((response: SignInResponse) => {
+          if (response?.token) {
+            queueMicrotask(() => {
+              this.localStorage?.setItem('token', String(response.token));
+              this.authStateSubject.next(true);
+            });
             return true;
           }
           return false;
+        }),
+        catchError((error) => {
+          console.error('Sign in error:', error);
+          this.authStateSubject.next(false);
+          return of(false);
         })
       );
   }
@@ -61,11 +68,15 @@ export class AuthService {
   }
 
   completeUserData(updateUser: any) : Observable<void> {
-    return this.http.put<void>(`${API_CONSTANTS.USERS.BASE_PATH}/${updateUser.id}/complete`, updateUser);
+    return this.http.put<void>(`${API_CONSTANTS.USERS.BASE_PATH}/${updateUser.userId}/complete`, updateUser);
   }
 
   async signOut() : Promise<void> {
      this.localStorage?.removeItem('token');
      this.authStateSubject.next(false);
+  }
+
+  deleteAccount(userId: string) : Observable<void> {
+    return this.http.delete<void>(`${API_CONSTANTS.USERS.BASE_PATH}/${userId}`);
   }
 }

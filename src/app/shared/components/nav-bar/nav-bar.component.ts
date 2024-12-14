@@ -80,6 +80,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
         {
           label: 'Wyloguj',
           icon: 'pi pi-sign-out',
+          styleClass: 'logout-item',
           command: () => this.logout()
         }
       ];

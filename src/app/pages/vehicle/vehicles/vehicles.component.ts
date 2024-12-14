@@ -1,9 +1,9 @@
-import {Component, CUSTOM_ELEMENTS_SCHEMA, inject, OnDestroy, OnInit} from '@angular/core';
+import {Component, CUSTOM_ELEMENTS_SCHEMA, OnDestroy, OnInit} from '@angular/core';
 import {FilterComponent} from "../../../shared/components/filter/filter.component";
 import {NgClass, NgIf} from "@angular/common";
 import {SortConfig, SortingComponent} from "../../../shared/components/sorting/sorting.component";
 import {PageChangeEvent, VehicleListComponent} from "./components/vehicle-list/vehicle-list.component";
-import {catchError, EMPTY, firstValueFrom, Subject, takeUntil} from "rxjs";
+import {catchError, EMPTY, finalize, Subject, takeUntil} from "rxjs";
 import {Vehicle} from "./types/vehicle.type";
 import {PaginationComponent} from "../../../shared/components/pagination/pagination.component";
 import {ButtonDirective} from "primeng/button";
@@ -17,7 +17,6 @@ import {LoadingService} from "../../../shared/services/loading/loading.service";
 import {LoadingSpinnerComponent} from "../../../shared/components/loading-spinner/loading-spinner.component";
 import {VehicleDialogService} from "../services/dialogs/vehicle/vehicle-dialog.service";
 import {DialogService} from "primeng/dynamicdialog";
-import {ToastService} from "../../../shared/services/toast/toast.service";
 
 const VEHICLE_SORT_OPTIONS: { label: string, value: keyof Vehicle }[] = [
   {label: 'Marka', value: 'brand'},
@@ -37,123 +36,151 @@ const VEHICLE_SORT_OPTIONS: { label: string, value: keyof Vehicle }[] = [
     Ripple,
     NgClass,
     ProgressSpinnerModule,
-    LoadingSpinnerComponent
+    LoadingSpinnerComponent,
   ],
-  providers: [VehicleDialogService, DialogService, ToastService],
+  providers: [VehicleDialogService, DialogService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './vehicles.component.html',
   styleUrl: './vehicles.component.css'
 })
 export class VehiclesComponent implements OnInit, OnDestroy {
   private readonly destroy$ = new Subject<void>();
-  private readonly vehicleDataService = inject(VehicleDataService);
-  private readonly dialogService = inject(VehicleDialogService);
-  private readonly loadingService = inject(LoadingService);
-  private readonly toastService = inject(ToastService);
-  private readonly router = inject(Router);
-  protected readonly paginationService = inject(PaginationService);
 
-  readonly sortOptions = VEHICLE_SORT_OPTIONS;
   vehicles: Vehicle[] = [];
   totalItems = 0;
   uniqueBrands: string[] = [];
+  sortOptions = VEHICLE_SORT_OPTIONS;
   isComponentLoaded = false;
   isLoading = true;
 
-  ngOnInit(): void {
-     this.initializeComponent();
-     this.loadVehicles();
+  constructor(
+    private vehicleDataService: VehicleDataService,
+    private dialogService: VehicleDialogService,
+    protected paginationService: PaginationService,
+    private loadingService: LoadingService,
+    private router: Router
+  ) {
   }
 
-  private async initializeComponent(): Promise<void> {
+  ngOnInit(): void {
+    this.loadVehicles();
+    this.setupComponentLoadedFlag();
     this.loadingService.loading$
       .pipe(takeUntil(this.destroy$))
-      .subscribe(loading => this.isLoading = loading);
+      .subscribe(loading => {
+        this.isLoading = loading;
+      });
 
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    this.isComponentLoaded = true;
+    this.extractUniqueBrands(this.vehicles);
   }
 
-  private async loadVehicles(): Promise<void> {
-    try {
-      const result = await firstValueFrom(
-        this.vehicleDataService.loadVehicles().pipe(
-          takeUntil(this.destroy$)
-        )
-      );
-      this.updateState(result);
-      this.toastService.showSuccess('Pojazdy zostały załadowane pomyślnie');
-    } catch {
-      this.toastService.showError('Wystąpił błąd podczas ładowania pojazdów');
-    }
+  private loadVehicles(): void {
+    this.loadingService.setLoading(true);
+    this.vehicleDataService.loadVehicles()
+      .pipe(
+        takeUntil(this.destroy$),
+        finalize(() => this.loadingService.setLoading(false)),
+        catchError(error => {
+          console.error('Błąd ładowania pojazdów', error);
+          return EMPTY;
+        })
+      )
+      .subscribe(result => {
+        this.handleVehiclesResult(result);
+      });
   }
 
-  async applySorting(sortConfig: SortConfig<Vehicle>): Promise<void> {
-    try {
-      const result = await firstValueFrom(
-        this.vehicleDataService.applySorting(sortConfig).pipe(
-          takeUntil(this.destroy$)
-        )
-      );
-      this.updateState(result);
-    } catch {
-      this.toastService.showError('Wystąpił błąd podczas sortowania pojazdów');
-    }
+  private handleVehiclesResult(result: PaginationResult<Vehicle>) {
+    this.vehicles = result.items;
+    this.uniqueBrands = this.extractUniqueBrands(result.items);
+
+    this.updatePaginationState(result.totalItemsCount);
   }
 
-  async applyFilter(brand: string): Promise<void> {
-    if (brand === 'Wszystkie marki') {
-      await this.loadVehicles();
+  private updatePaginationState(totalItemsCount: number): void {
+    this.totalItems = totalItemsCount;
+    const currentState = this.paginationService.getCurrentState();
+
+    this.paginationService.updateState({
+      totalItems: totalItemsCount,
+      pageIndex: currentState.pageIndex,
+      pageSize: currentState.pageSize
+    });
+  }
+
+  applySorting(sortConfig: SortConfig<Vehicle>): void {
+    this.vehicleDataService.applySorting(sortConfig)
+      .pipe(
+        takeUntil(this.destroy$),
+        finalize(() => this.loadingService.setLoading(false)),
+        catchError(error => {
+          console.error('Błąd sortowania', error);
+          return EMPTY;
+        })
+      )
+      .subscribe(result => {
+        this.handleVehiclesResult(result);
+      });
+  }
+
+  applyFilter(selectedBrand: string): void {
+    if(selectedBrand === 'Wszystkie marki') {
+      this.loadVehicles();
       return;
     }
 
-    try {
-      const result = await firstValueFrom(
-        this.vehicleDataService.applyFilter(brand).pipe(
-          takeUntil(this.destroy$)
-        )
-      );
-      this.updateState(result);
-    } catch {
-      this.toastService.showError('Wystąpił błąd podczas filtrowania pojazdów');
-    }
+    this.vehicleDataService.applyFilter(selectedBrand)
+      .pipe(
+        takeUntil(this.destroy$),
+        finalize(() => this.loadingService.setLoading(false)),
+        catchError(error => {
+          console.error('Błąd filtrowania', error);
+          return EMPTY;
+        })
+      )
+      .subscribe(result => {
+        this.handleVehiclesResult(result);
+
+      });
   }
 
-  async onPaginatorChange(event: PageChangeEvent): Promise<void> {
-    try {
-      const result = await firstValueFrom(
-        this.vehicleDataService.changePage(event).pipe(
-          takeUntil(this.destroy$)
-        )
-      );
-      this.updateState(result);
-    } catch {
-      this.toastService.showError('Wystąpił błąd podczas zmiany strony');
-    }
+  onPaginatorChange(event: PageChangeEvent): void {
+    this.paginationService.updateState({
+      pageIndex: event.pageIndex,
+      pageSize: event.pageSize
+    });
+
+    this.vehicleDataService.changePage(event)
+      .pipe(
+        takeUntil(this.destroy$),
+        catchError(error => {
+          console.error('Błąd zmiany strony', error);
+          return EMPTY;
+        })
+      )
+      .subscribe(result => {
+        this.handleVehiclesResult(result);
+      });
   }
 
-  private updateState(result: PaginationResult<Vehicle>): void {
-    this.vehicles = result.items;
-    this.uniqueBrands = [...new Set(result.items.map(v => v.brand))];
-    this.totalItems = result.totalItemsCount;
+  openVehicleDialog(): void {
+    this.dialogService.openCreateVehicleDialog()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(shouldReload => {
+        if (shouldReload) this.loadVehicles();
+      });
   }
 
-  async openVehicleDialog(): Promise<void> {
-    try {
-      const result = await firstValueFrom(
-        this.dialogService.openCreateVehicleDialog()
-      );
-
-      if (result) {
-        await this.loadVehicles();
-      }
-    } catch {
-      this.toastService.showError('Wystąpił błąd podczas otwierania okna dialogowego');
-    }
+  navigateToDetails(vehicleId: string): void {
+    this.router.navigate([`/moje-pojazdy/${vehicleId}`]);
   }
 
-  async navigateToDetails(vehicleId: string): Promise<void> {
-    await this.router.navigate([`/moje-pojazdy/${vehicleId}`]);
+  private extractUniqueBrands(data: Vehicle[]): string[] {
+    return [...new Set(data.map(vehicle => vehicle.brand))];
+  }
+
+  private setupComponentLoadedFlag(): void {
+    setTimeout(() => this.isComponentLoaded = true, 2000);
   }
 
   ngOnDestroy(): void {
