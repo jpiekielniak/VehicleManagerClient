@@ -16,6 +16,10 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/auth/sign-up/sign-up.component').then(m => m.SignUpComponent)
   },
   {
+    path: 'resetowanie-hasla',
+    loadComponent: () => import('./pages/auth/reset-password/reset-password.component').then(m => m.ResetPasswordComponent)
+  },
+  {
     path: 'moje-pojazdy',
     loadComponent: () => import('./pages/vehicle/vehicles/vehicles.component').then(m => m.VehiclesComponent),
     canActivate: [authGuard]

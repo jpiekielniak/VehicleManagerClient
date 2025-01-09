@@ -8,6 +8,7 @@ import {SignInResponse} from '../../sign-in/types/token.type';
 import {API_CONSTANTS} from '../../../../constants/api.constants';
 import {JwtHelperService} from "@auth0/angular-jwt";
 import {UserDetails} from "../../../user-details/types/user-details.type";
+import {ResetPassword} from "../../reset-password/types/reset-password.type";
 
 @Injectable({
   providedIn: 'root',
@@ -78,5 +79,9 @@ export class AuthService {
 
   deleteAccount(userId: string) : Observable<void> {
     return this.http.delete<void>(`${API_CONSTANTS.USERS.BASE_PATH}/${userId}`);
+  }
+
+  resetPassword(resetPasswordData: ResetPassword): Observable<void> {
+    return this.http.post<void>(API_CONSTANTS.USERS.FORGOT_PASSWORD, resetPasswordData);
   }
 }

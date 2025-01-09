@@ -7,6 +7,8 @@ export const API_CONSTANTS = {
     BASE_PATH: `${API_URL}/users`,
     SIGN_IN: `${API_URL}/users/sign-in`,
     SIGN_UP: `${API_URL}/users/sign-up`,
+    FORGOT_PASSWORD: `${API_URL}/users/forgot-password`,
+
   },
   SERVICE_BOOKS: {
     BASE_PATH: `${API_URL}/service-books`,
