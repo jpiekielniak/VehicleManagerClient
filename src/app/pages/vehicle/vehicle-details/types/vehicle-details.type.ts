@@ -11,5 +11,6 @@ export type VehicleDetails = {
   gearboxType: string,
   vehicleType: string,
   createdAt: Date,
-  serviceBookId: string
+  serviceBookId: string,
+  imageUrl: string
 }

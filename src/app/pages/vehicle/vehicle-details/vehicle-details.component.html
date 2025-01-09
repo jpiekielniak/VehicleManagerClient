@@ -3,7 +3,7 @@
     <app-vehicle-header [items]="items"></app-vehicle-header>
 
     <div class="content-wrapper">
-      <app-vehicle-image></app-vehicle-image>
+      <app-vehicle-image [imageUrl]="vehicle.imageUrl"></app-vehicle-image>
       <app-vehicle-info-grid [vehicle]="vehicle"></app-vehicle-info-grid>
     </div>
   </p-card>

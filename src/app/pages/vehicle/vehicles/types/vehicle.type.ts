@@ -3,4 +3,5 @@ export type Vehicle = {
   brand: string;
   model: string;
   licensePlate: string;
+  imageUrl: string;
 }

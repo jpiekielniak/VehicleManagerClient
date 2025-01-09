@@ -44,6 +44,11 @@ export class VehicleListComponent implements OnDestroy {
     this.navigateToDetails.emit(vehicleId);
   }
 
+  getVehicleImage(imageUrl: string | null): string {
+    return imageUrl && imageUrl.trim() ? `url(${imageUrl})` : ``;
+  }
+
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
