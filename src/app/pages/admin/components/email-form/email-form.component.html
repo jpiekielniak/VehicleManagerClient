@@ -1,0 +1,63 @@
+<div class="email-form-container">
+  <div class="email-form-header">
+    <h2>Wyślij powiadomienie</h2>
+  </div>
+
+  <form [formGroup]="emailForm" (ngSubmit)="onSubmit()" class="email-form">
+    <div class="form-group">
+      <div class="input-wrapper">
+        <input
+          type="text"
+          pInputText
+          formControlName="title"
+          placeholder="Wpisz temat wiadomości"
+          class="email-input"
+        />
+        <div
+          *ngIf="emailForm.get('title')?.invalid && emailForm.get('title')?.touched"
+          class="error-message"
+        >
+          Temat jest wymagany
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="input-wrapper">
+        <textarea
+          pInputTextarea
+          formControlName="content"
+          [rows]="8"
+          placeholder="Treść wiadomości"
+          class="email-textarea"
+        ></textarea>
+        <div
+          *ngIf="emailForm.get('content')?.invalid && emailForm.get('content')?.touched"
+          class="error-message"
+        >
+          Treść wiadomości jest wymagana
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button
+        pButton
+        type="submit"
+        [disabled]="emailForm.invalid || sending"
+        class="send-button"
+      >
+        <i *ngIf="!sending" class="pi pi-send mr-2"></i>
+        <i *ngIf="sending" class="pi pi-spinner pi-spin mr-2"></i>
+        {{ sending ? 'Wysyłanie...' : 'Wyślij wiadomość' }}
+      </button>
+    </div>
+  </form>
+
+  <div class="email-form-footer">
+    <div class="warning">
+      <i class="pi pi-info-circle"></i>
+      <span>Uwaga: Wiadomość zostanie wysłana do wszystkich użytkowników systemu</span>
+    </div>
+  </div>
+</div>

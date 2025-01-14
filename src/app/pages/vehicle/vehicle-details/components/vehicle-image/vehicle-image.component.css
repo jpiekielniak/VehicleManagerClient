@@ -1,13 +1,52 @@
+/* vehicle-image.component.css */
 .vehicle-image {
   flex: 0 0 400px;
   position: relative;
 }
 
-.vehicle-image .vehicle-photo {
+.image-container {
+  position: relative;
   width: 450px;
   height: 350px;
-  object-fit: cover;
   border-radius: 16px;
+  overflow: hidden;
+}
+
+.vehicle-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
+.upload-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.image-container:hover .upload-overlay {
+  opacity: 1;
+}
+
+:host ::ng-deep .upload-button {
+  background-color: #ffffff !important;
+  border: none !important;
+  border-radius: 8px !important;
+  padding: 0.5rem 1rem !important;
+  font-weight: 500 !important;
+  transition: all 0.3s ease !important;
+}
+
+:host ::ng-deep .upload-button:hover {
+  background-color: #f0f0f0 !important;
+  transform: scale(1.05);
+}

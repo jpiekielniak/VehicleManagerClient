@@ -1,0 +1,22 @@
+<p-confirmDialog></p-confirmDialog>
+
+<div class="admin-panel">
+  <p-tabView>
+    <p-tabPanel header="Użytkownicy">
+      <app-user-list
+        [users]="users"
+        [loading]="loading"
+        [totalItems]="totalItems"
+        (deleteUser)="confirmDelete($event)"
+        (pageChange)="onPageChange($event)"
+      />
+    </p-tabPanel>
+
+    <p-tabPanel header="Wyślij Email">
+      <app-email-form
+        [sending]="sending"
+        (emailSend)="sendEmail($event)"
+      />
+    </p-tabPanel>
+  </p-tabView>
+</div>

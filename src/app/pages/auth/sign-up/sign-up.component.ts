@@ -6,12 +6,12 @@ import {Router} from '@angular/router';
 import {MaterialImports} from "../../../imports/material.imports";
 import {ToastModule} from "primeng/toast";
 import {MessageService} from "primeng/api";
-import {ToastService} from "../../../shared/services/toast/toast.service";
 import {ButtonDirective} from "primeng/button";
 import {InputTextModule} from "primeng/inputtext";
 import {FormErrorService} from "../../../shared/services/form/form-error.service";
 import {Subject, takeUntil} from "rxjs";
 import {FormValidatorsService} from "../../../shared/services/form/form-validators.service";
+import {ToastService} from "../../../shared/services/toast/toast.service";
 
 @Component({
   selector: 'sign-up',
@@ -66,23 +66,23 @@ export class SignUpComponent implements OnInit, OnDestroy {
       });
   }
 
-  async onSubmit(): Promise<void> {
+  onSubmit(): void {
     if (this.signUpForm.valid) {
-      try {
-        this.isLoading.set(true);
-        await this.handleSignUp();
-      } catch (error) {
-        this.handleError();
-      }
+      this.isLoading.set(true);
+      this.handleSignUp();
     }
   }
 
-  private async handleSignUp(): Promise<void> {
-    await this.authService.signUp(this.signUpForm.value as SignUp)
+  private handleSignUp(): void {
+    this.authService.signUp(this.signUpForm.value as SignUp)
       .pipe(takeUntil(this.destroy$))
-      .toPromise();
-
-    await this.handleSignUpSuccess();
+      .subscribe({
+        next: () => this.handleSignUpSuccess(),
+        error: (error) => {
+          this.toastService.showError('Rejestracja nie powiodła się. Spróbuj ponownie.');
+          this.isLoading.set(false);
+        }
+      });
   }
 
   private async handleSignUpSuccess(): Promise<void> {
@@ -90,11 +90,6 @@ export class SignUpComponent implements OnInit, OnDestroy {
     await this.router.navigate(['/logowanie'], {
       queryParams: { rejestracja: 'sukces' }
     });
-  }
-
-  private handleError(): void {
-    this.toastService.showError('Rejestracja nie powiodła się');
-    this.isLoading.set(false);
   }
 
   async navigateToSignIn(): Promise<void> {

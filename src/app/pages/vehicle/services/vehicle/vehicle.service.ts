@@ -66,4 +66,8 @@ export class VehicleService {
   createInsurance(createInsuranceData: CreateInsurance) : Observable<any> {
     return this.http.post<any>(API_CONSTANTS.VEHICLE.BASE_PATH + `/${createInsuranceData.vehicleId}` + `/insurances`, createInsuranceData);
   }
+
+  uploadImage(image: FormData, vehicleId : string) : Observable<any> {
+    return this.http.post<any>(API_CONSTANTS.VEHICLE.BASE_PATH + `/${vehicleId}/image`, image);
+  }
 }

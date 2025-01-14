@@ -1,3 +1,20 @@
+<!-- vehicle-image.component.html -->
 <div class="vehicle-image">
-  <img [src]="validImageUrl" alt="Zdjęcie pojazdu" class="vehicle-photo" />
+  <div class="image-container">
+    <img [src]="validImageUrl" [alt]="uploadButtonLabel" class="vehicle-photo"/>
+    <div class="upload-overlay">
+      <p-fileUpload
+        mode="basic"
+        name="file"
+        chooseIcon="pi pi-upload"
+        [url]="API_CONSTANTS.VEHICLE.BASE_PATH + '/' + vehicleId + '/image'"
+        accept="image/*"
+        maxFileSize="1000000"
+        (onUpload)="onBasicUploadAuto($event)"
+        [auto]="true"
+        [chooseLabel]="uploadButtonLabel"
+        styleClass="upload-button"
+      />
+    </div>
+  </div>
 </div>

@@ -18,5 +18,10 @@ export const API_CONSTANTS = {
     GEARBOX_TYPES: `${API_URL}/gearbox-types`,
     VEHICLE_TYPES: `${API_URL}/vehicle-types`,
     INSPECTION_TYPES: `${API_URL}/inspection-types`,
-  }
+  },
+  ADMIN: {
+    USERS: `${API_URL}/admin/browse-users`,
+    EMAIL: `${API_URL}/admin/send-email`,
+    DELETE_USER: `${API_URL}/admin/delete-user`
+  },
 } as const;

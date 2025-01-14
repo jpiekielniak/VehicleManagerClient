@@ -18,11 +18,9 @@ export const authGuard: CanActivateFn = async (route, state) => {
       return true;
     }
 
-    return router.createUrlTree(['/logowanie'], {
-      queryParams: { returnUrl: state.url }
-    });
+    return router.navigate(['/logowanie']);
   } catch (error) {
     loadingService.setLoading(false);
-    return router.createUrlTree(['/logowanie']);
+    return router.navigate(['/logowanie']);
   }
 };
