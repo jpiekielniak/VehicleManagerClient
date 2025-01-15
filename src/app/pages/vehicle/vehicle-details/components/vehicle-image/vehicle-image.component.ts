@@ -1,74 +1,130 @@
-// vehicle-image.component.ts
-import { Component, Input } from '@angular/core';
-import { FileUploadModule } from "primeng/fileupload";
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import {API_CONSTANTS} from "../../../../../constants/api.constants";
+import {Component, ElementRef, inject, Input, ViewChild} from '@angular/core';
+import {FileUploadModule} from "primeng/fileupload";
+import {ButtonModule} from "primeng/button";
+import {NgIf} from "@angular/common";
+import {ProgressSpinnerModule} from "primeng/progressspinner";
+import {VehicleService} from "../../../services/vehicle/vehicle.service";
+import {ToastService} from "../../../../../shared/services/toast/toast.service";
 
 interface UploadResponse {
-  imageUrl?: string;
+  blobUrl?: string;
 }
 
 @Component({
   selector: 'app-vehicle-image',
   standalone: true,
   imports: [
-    FileUploadModule
+    FileUploadModule,
+    ButtonModule,
+    NgIf,
+    ProgressSpinnerModule
   ],
+  providers: [ToastService],
   templateUrl: './vehicle-image.component.html',
   styleUrl: './vehicle-image.component.css'
 })
 export class VehicleImageComponent {
   @Input() imageUrl!: string;
   @Input() vehicleId!: string;
+  @ViewChild('fileInput') fileInput!: ElementRef;
+  @ViewChild('initialFileInput') initialFileInput!: ElementRef;
 
-  constructor(private http: HttpClient) {}
+  private readonly vehicleService = inject(VehicleService);
+  private readonly toastService = inject(ToastService);
 
-  get validImageUrl(): string {
-    return this.imageUrl && this.imageUrl.trim()
-      ? this.imageUrl
-      : '/assets/no_image.png';
+  isLoading = false;
+  showControls = false;
+  isDragging = false;
+
+  handleDragOver(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragging = true;
   }
 
-  get uploadButtonLabel(): string {
-    return this.imageUrl && this.imageUrl.trim()
-      ? 'Zmień zdjęcie'
-      : 'Dodaj zdjęcie';
+  handleDragLeave(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragging = false;
   }
 
-  onBasicUploadAuto(event: any) {
-    const file = event.files[0];
-    if (file) {
-      const formData = new FormData();
-      // Zmieniono nazwę pola na 'file' zgodnie z przykładem curl
-      formData.append('file', file, file.name);
+  handleDrop(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragging = false;
 
-      this.uploadImage(formData, this.vehicleId).subscribe({
-        next: (response: UploadResponse) => {
-          console.log('Image uploaded successfully', response);
-          if (response.imageUrl) {
-            this.imageUrl = response.imageUrl;
-          }
-        },
-        error: (error) => {
-          console.error('Error uploading image', error);
-          // Możesz tutaj dodać obsługę błędów, np. wyświetlenie komunikatu
-        }
-      });
+    const files = event.dataTransfer?.files;
+    if (files && files.length > 0) {
+      const file = files[0];
+      this.uploadFile(file);
     }
   }
 
-  uploadImage(image: FormData, vehicleId: string) {
-    const headers = new HttpHeaders({
-      'Accept': 'application/json'
-      // Content-Type zostanie automatycznie ustawiony przez HttpClient
-    });
-
-    return this.http.post<UploadResponse>(
-      `${API_CONSTANTS.VEHICLE.BASE_PATH}/${vehicleId}/image`,
-      image,
-      { headers }
-    );
+  triggerFileInput() {
+    if (this.fileInput) {
+      this.fileInput.nativeElement.value = '';
+      this.fileInput.nativeElement.click();
+    }
   }
 
-  protected readonly API_CONSTANTS = API_CONSTANTS;
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.uploadFile(file);
+    }
+    if (event.target) {
+      event.target.value = '';
+    }
+  }
+
+  private uploadFile(file: File) {
+    this.isLoading = true;
+    const formData = new FormData();
+    formData.append('file', file, file.name);
+
+    this.vehicleService.uploadImage(formData, this.vehicleId)
+      .subscribe({
+        next: (response: UploadResponse) => {
+          this.isLoading = false;
+          this.imageUrl = response.blobUrl!;
+          this.handleSuccessUpload();
+        },
+        error: () => {
+          this.handleError('Wystąpił błąd podczas przesyłania zdjęcia');
+          this.isLoading = false;
+        }
+      });
+  }
+
+  deleteImage() {
+    this.isLoading = true;
+    this.vehicleService.deleteImage(this.vehicleId)
+      .subscribe({
+        next: () => {
+          this.imageUrl = '';
+          this.isLoading = false;
+        },
+        error: () => {
+          this.handleError('Wystąpił błąd podczas usuwania zdjęcia');
+          this.isLoading = false;
+        }
+      });
+  }
+
+  handleError(message: string) {
+    this.toastService.showError(message);
+  }
+
+  handleSuccessUpload() {
+    this.toastService.showSuccess('Zdjęcie zostało przesłane');
+  }
+
+  getImageUrl() {
+    return this.imageUrl || 'assets/no_image.png';
+  }
+
+  hasImage() {
+    return this.imageUrl && this.imageUrl.trim() !== '' && !this.imageUrl.includes('no_image.png');
+  }
+
 }

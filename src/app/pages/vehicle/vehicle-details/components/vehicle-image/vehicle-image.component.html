@@ -1,20 +1,47 @@
-<!-- vehicle-image.component.html -->
 <div class="vehicle-image">
-  <div class="image-container">
-    <img [src]="validImageUrl" [alt]="uploadButtonLabel" class="vehicle-photo"/>
-    <div class="upload-overlay">
-      <p-fileUpload
-        mode="basic"
-        name="file"
-        chooseIcon="pi pi-upload"
-        [url]="API_CONSTANTS.VEHICLE.BASE_PATH + '/' + vehicleId + '/image'"
-        accept="image/*"
-        maxFileSize="1000000"
-        (onUpload)="onBasicUploadAuto($event)"
-        [auto]="true"
-        [chooseLabel]="uploadButtonLabel"
-        styleClass="upload-button"
-      />
+  <div class="image-container"
+       (mouseenter)="showControls = true"
+       (mouseleave)="showControls = false"
+       [class.dragover]="isDragging"
+       (dragover)="handleDragOver($event)"
+       (dragleave)="handleDragLeave($event)"
+       (drop)="handleDrop($event)">
+
+    <img [src]="getImageUrl()"
+         [alt]="'Vehicle Image'"
+         class="vehicle-photo"
+         [class.loading]="isLoading"
+    />
+
+    <div class="upload-overlay"
+         [class.loading]="isLoading"
+         [class.visible]="showControls || isLoading">
+
+      <div *ngIf="isLoading" class="spinner-overlay">
+        <p-progressSpinner [style]="{width: '50px', height: '50px'}"></p-progressSpinner>
+      </div>
+
+      <div
+           class="button-group"
+           [class.visible]="showControls">
+        <input type="file"
+               #fileInput
+               (change)="onFileSelected($event)"
+               style="display: none"
+               accept="image/*">
+        <button class="icon-button edit-button"
+                (click)="triggerFileInput()"
+                [disabled]="isLoading">
+          <i class="pi pi-camera"></i>
+        </button>
+        <button
+          class="icon-button delete-button"
+          *ngIf="hasImage()"
+          (click)="deleteImage()"
+          [disabled]="isLoading">
+          <i class="pi pi-trash"></i>
+        </button>
+      </div>
     </div>
   </div>
 </div>

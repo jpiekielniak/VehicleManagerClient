@@ -70,4 +70,8 @@ export class VehicleService {
   uploadImage(image: FormData, vehicleId : string) : Observable<any> {
     return this.http.post<any>(API_CONSTANTS.VEHICLE.BASE_PATH + `/${vehicleId}/image`, image);
   }
+
+  deleteImage(vehicleId: string) : Observable<any> {
+    return this.http.delete<any>(API_CONSTANTS.VEHICLE.BASE_PATH + `/${vehicleId}/image`);
+  }
 }

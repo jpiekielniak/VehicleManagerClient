@@ -8,7 +8,7 @@ import {RippleModule} from 'primeng/ripple';
   standalone: true,
   imports: [CommonModule, CardModule, RippleModule],
   templateUrl: './contact.component.html',
-  styleUrls: ['./contact.component.scss']
+  styleUrls: ['./contact.component.css']
 })
 export class ContactComponent {
   contactInfo = [
