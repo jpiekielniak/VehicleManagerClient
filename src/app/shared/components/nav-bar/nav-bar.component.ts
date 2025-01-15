@@ -34,7 +34,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     {
       label: 'O nas',
       icon: 'pi pi-info-circle',
-      routerLink: ['/info']
+      routerLink: ['/informacje-o-aplikacji']
     },
     {
       label: 'Kontakt',
@@ -66,7 +66,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
         this.authService.isAdmin()
       ]).subscribe(([isLoggedIn, isAdmin]) => {
         this.updateNavigationItems(isLoggedIn, isAdmin);
-        this.updateUserMenu(isLoggedIn, isAdmin);
+        this.updateUserMenu(isLoggedIn);
       })
     );
   }
@@ -83,7 +83,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     }
   }
 
-  private updateUserMenu(isLoggedIn: boolean, isAdmin: boolean) {
+  private updateUserMenu(isLoggedIn: boolean) {
     if (isLoggedIn) {
       this.userMenuItems = [
         {

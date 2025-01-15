@@ -41,6 +41,10 @@ export const routes: Routes = [
     canActivate: [adminGuard]
   },
   {
+    path: 'informacje-o-aplikacji',
+    loadComponent: () => import('./pages/about-us/about-us.component').then(m => m.AboutUsComponent)
+  },
+  {
     path: '**',
     loadComponent: () => import('./pages/not-found/not-found.component').then(m => m.NotFoundComponent)
   }

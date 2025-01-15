@@ -1,0 +1,24 @@
+<div class="about-us-container">
+  <div class="content-wrapper">
+    <p-card class="team-intro">
+      <div class="team-content">
+        <h2>Menadżer pojazdów</h2>
+        <p>
+          Innowacyjne rozwiązanie w zakresie zarządzania pojazdami,
+          zaimplementowane z&nbsp;pasją i&nbsp;precyzją w ramach pracy dyplomowej. Łączy najnowsze
+          technologie z praktycznym podejściem, aby dostarczyć narzędzie, które
+          rzeczywiście ułatwia codzienne zarządzanie pojazdami. Celem jest
+          ciągłe doskonalenie i rozwój aplikacji, aby sprostać zmieniającym się
+          potrzebom użytkowników.
+        </p>
+
+      </div>
+    </p-card>
+
+    <p-accordion class="faq-section">
+      <p-accordionTab *ngFor="let faq of faqs" [header]="faq.question">
+        <p class="faq-answer">{{ faq.answer }}</p>
+      </p-accordionTab>
+    </p-accordion>
+  </div>
+</div>

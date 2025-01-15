@@ -66,7 +66,6 @@ export class AuthService {
       this.authStateSubject.next(true);
       this.userRolesSubject.next(role ? [role] : []);
     } catch (error) {
-      console.error('Token decode error:', error);
       this.resetAuthState();
     }
   }
