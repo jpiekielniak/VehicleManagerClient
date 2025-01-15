@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, inject} from '@angular/core';
 import {MenuItem} from "primeng/api";
 import {TabMenuModule} from "primeng/tabmenu";
 import {Button} from "primeng/button";
@@ -24,6 +24,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
   items: MenuItem[] = [];
   userMenuItems: MenuItem[] = [];
   activeItem: MenuItem | undefined;
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
+
   private subscriptions = new Subscription();
   private readonly baseItems: MenuItem[] = [
     {
@@ -42,12 +45,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
       routerLink: ['/kontakt']
     }
   ];
-
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) {
-  }
 
   ngOnInit() {
     this.initializeNavigation();
@@ -123,7 +120,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.items = [...this.baseItems];
     this.activeItem = this.items[0];
     await this.router.navigate(['/']);
-    window.location.reload();
   }
 
   ngOnDestroy() {

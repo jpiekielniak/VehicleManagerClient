@@ -86,20 +86,15 @@ export class AuthService {
   isLoggedIn(): boolean {
     const token = this.localStorage?.getItem('token');
 
-    if (!token) {
+    if (!token || this.jwtHelper.isTokenExpired(token)) {
       this.resetAuthState();
       return false;
     }
 
-    const isNotExpired = !this.jwtHelper.isTokenExpired(token);
-    if (isNotExpired) {
-      this.updateAuthState(token);
-    } else {
-      this.resetAuthState();
-    }
-
-    return isNotExpired;
+    this.updateAuthState(token);
+    return true;
   }
+
 
   isAdmin(): Observable<boolean> {
     return this.userRolesSubject.pipe(
