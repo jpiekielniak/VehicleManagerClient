@@ -1,0 +1,12 @@
+<div class="contact-container">
+  <h1 class="contact-header">Kontakt</h1>
+  <p-card>
+    <div class="contact-info">
+      <div *ngFor="let info of contactInfo" class="contact-item" pRipple>
+        <span class="contact-icon">{{ info.icon }}</span>
+        <span class="contact-type">{{ info.type }}:</span>
+        <span class="contact-value" [innerHTML]="info.value"></span>
+      </div>
+    </div>
+  </p-card>
+</div>
