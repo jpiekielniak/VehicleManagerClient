@@ -1,3 +1,103 @@
-.paginator {
-  padding: 10px;
+.paginator-container {
+  margin-top: auto;
+  padding: 20px 0;
+  display: flex;
+  justify-content: center;
+}
+
+:host ::ng-deep .custom-paginator {
+  padding: 12px 24px;
+  border-radius: 12px;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(33, 150, 243, 0.1);
+}
+
+:host ::ng-deep .custom-paginator .p-paginator {
+  background: transparent;
+}
+
+:host ::ng-deep .custom-paginator .p-paginator-page {
+  min-width: 25px;
+  height: 25px;
+  margin: 0 2px;
+  border-radius: 8px;
+  font-weight: 500;
+  color: #475569;
+  transition: all 0.2s ease;
+}
+
+:host ::ng-deep .custom-paginator .p-paginator-page.p-highlight {
+  color: black;
+}
+
+:host ::ng-deep .custom-paginator .p-paginator-page:not(.p-highlight):hover {
+  background: rgba(33, 150, 243, 0.1);
+  color: #2196f3;
+}
+
+:host ::ng-deep .custom-paginator .p-paginator-first,
+:host ::ng-deep .custom-paginator .p-paginator-prev,
+:host ::ng-deep .custom-paginator .p-paginator-next,
+:host ::ng-deep .custom-paginator .p-paginator-last {
+  min-width: 25px;
+  height: 25px;
+  border-radius: 8px;
+  color: #475569;
+  transition: all 0.2s ease;
+}
+
+:host ::ng-deep .custom-paginator .p-paginator-first:hover,
+:host ::ng-deep .custom-paginator .p-paginator-prev:hover,
+:host ::ng-deep .custom-paginator .p-paginator-next:hover,
+:host ::ng-deep .custom-paginator .p-paginator-last:hover {
+  background: rgba(33, 150, 243, 0.1);
+  color: #2196f3;
+}
+
+:host ::ng-deep .custom-paginator .p-paginator-current {
+  margin: 0 16px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+:host ::ng-deep .custom-paginator .p-paginator-rpp-options {
+  margin-right: 16px;
+  background: white;
+  border: 1px solid rgba(33, 150, 243, 0.2);
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+:host ::ng-deep .custom-paginator .p-paginator-rpp-options:hover {
+  border-color: #2196f3;
+}
+
+:host ::ng-deep .custom-paginator .p-dropdown-panel {
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+  .paginator-container {
+    padding: 16px 8px;
+  }
+
+  :host ::ng-deep .custom-paginator {
+    padding: 10px;
+  }
+
+  :host ::ng-deep .custom-paginator .p-paginator-page,
+  :host ::ng-deep .custom-paginator .p-paginator-first,
+  :host ::ng-deep .custom-paginator .p-paginator-prev,
+  :host ::ng-deep .custom-paginator .p-paginator-next,
+  :host ::ng-deep .custom-paginator .p-paginator-last {
+    min-width: 25px;
+    height: 25px;
+  }
+
+  :host ::ng-deep .custom-paginator .p-paginator-current {
+    margin: 0 8px;
+    font-size: 0.9rem;
+  }
 }

@@ -36,9 +36,16 @@
 
     <ng-template #emptyState>
       <div class="empty-state">
-        <i class="pi pi-car"></i>
-        <h3>Brak pojazdów w kolekcji</h3>
-        <p>Dodaj swój pierwszy pojazd, aby rozpocząć</p>
+        <div class="icon-wrapper">
+          <i class="pi pi-car"></i>
+        </div>
+        <div class="content-wrapper">
+          <h3>Twoja kolekcja pojazdów jest pusta</h3>
+          <p>Rozpocznij swoją przygodę od dodania pierwszego pojazdu do swojej kolekcji</p>
+          <div class="hint">
+            <span>Kliknij przycisk w prawym dolnym rogu ekranu, aby dodać pojazd</span>
+          </div>
+        </div>
       </div>
     </ng-template>
 
@@ -46,11 +53,14 @@
       *ngIf="isComponentLoaded"
       pButton
       pRipple
-      class="p-button-success"
+      class="add-vehicle-btn"
       [ngClass]="{'slide-in-right': isComponentLoaded}"
       (click)="openVehicleDialog()"
     >
-      <span>Dodaj pojazd</span>
+      <div class="btn-content">
+        <i class="pi pi-plus-circle plus-icon"></i>
+        <span class="btn-label">Dodaj pojazd</span>
+      </div>
     </button>
   </ng-container>
 </div>

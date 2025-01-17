@@ -1,10 +1,12 @@
-<p-paginator class="paginator"
-  [first]="first"
-  [rows]="rows"
-  [totalRecords]="totalRecords"
-  [rowsPerPageOptions]="rowsPerPageOptions"
-  (onPageChange)="onPageChange($event)"
-  [showCurrentPageReport]="true"
-  [showPageLinks]="true"
-  currentPageReportTemplate="Pokazuję od {first} do {last} z {totalRecords} pojazdów">
-</p-paginator>
+<div class="paginator-container">
+  <p-paginator class="paginator custom-paginator"
+               [first]="first"
+               [rows]="rows"
+               [totalRecords]="totalRecords"
+               [rowsPerPageOptions]="rowsPerPageOptions"
+               (onPageChange)="onPageChange($event)"
+               [showCurrentPageReport]="true"
+               [showPageLinks]="true"
+               currentPageReportTemplate="Pokazuję od {first} do {last} z {totalRecords} pojazdów">
+  </p-paginator>
+</div>
