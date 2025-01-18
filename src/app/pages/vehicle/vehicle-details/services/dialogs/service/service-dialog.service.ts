@@ -26,10 +26,8 @@ export class ServiceDialogService {
 
   openCreateService(serviceBookId: string): Observable<any> {
     return this.dialogService.open(CreateServiceComponent, {
-      header: 'Nowy serwis',
-      width: '1050px',
-      style: { 'max-width': '90%' },
-      contentStyle: { 'padding': '0' },
+      width: '900px',
+      style: { 'max-width': '80%' },
       data: { serviceBookId },
       baseZIndex: 10000,
       dismissableMask: true

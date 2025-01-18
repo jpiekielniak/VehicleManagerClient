@@ -20,11 +20,15 @@
   <p *ngIf="records.length === 0" class="no-data">{{ emptyMessage }}</p>
 
   <div class="button-container">
-    <p-button
-      [label]="addButtonLabel"
-      icon="pi pi-plus"
-      styleClass="p-button-primary add-button"
-      (onClick)="onAdd.emit()">
-    </p-button>
+    <button
+      pButton
+      class="add-button"
+      (click)="onAdd.emit()"
+    >
+      <div class="btn-content">
+        <i class="pi pi-plus plus-icon"></i>
+        <span class="btn-label">{{ addButtonLabel }}</span>
+      </div>
+    </button>
   </div>
 </div>

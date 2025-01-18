@@ -22,12 +22,16 @@
     <p class="no-data">Brak aktywnych ubezpieczeń</p>
   </ng-template>
   <div class="button-container">
-    <p-button
-      label="Dodaj ubezpieczenie"
-      icon="pi pi-plus"
-      styleClass="p-button-primary add-button"
-      (onClick)="addInsurance()">
-    </p-button>
+    <button
+      pButton
+      class="add-button"
+      (click)="addInsurance()"
+    >
+      <div class="btn-content">
+        <i class="pi pi-plus plus-icon"></i>
+        <span class="btn-label">Dodaj ubezpieczenie</span>
+      </div>
+    </button>
   </div>
 </ng-container>
 <div *ngIf="state.isLoading" class="loading-state">

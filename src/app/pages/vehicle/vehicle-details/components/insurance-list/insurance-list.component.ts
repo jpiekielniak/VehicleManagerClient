@@ -10,7 +10,7 @@ import {
 import {NgForOf, NgIf} from "@angular/common";
 import {CardModule} from "primeng/card";
 import {TabViewModule} from "primeng/tabview";
-import {Button} from "primeng/button";
+import {Button, ButtonDirective} from "primeng/button";
 import {MenuModule} from "primeng/menu";
 import {ProgressSpinnerModule} from "primeng/progressspinner";
 import {firstValueFrom} from 'rxjs';
@@ -38,7 +38,8 @@ interface InsuranceState {
     Button,
     NgForOf,
     MenuModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    ButtonDirective
   ],
   providers: [ToastService],
   changeDetection: ChangeDetectionStrategy.OnPush,

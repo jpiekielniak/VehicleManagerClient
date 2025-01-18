@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {Button} from "primeng/button";
+import {Button, ButtonDirective} from "primeng/button";
 import {MenuModule} from "primeng/menu";
 import {NgForOf, NgIf} from "@angular/common";
 
@@ -15,7 +15,8 @@ interface Record {
     Button,
     MenuModule,
     NgIf,
-    NgForOf
+    NgForOf,
+    ButtonDirective
   ],
   templateUrl: './record-list.component.html',
   styleUrl: './record-list.component.css'

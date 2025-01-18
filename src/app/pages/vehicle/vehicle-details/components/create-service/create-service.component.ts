@@ -186,20 +186,32 @@ export class CreateServiceComponent implements OnInit, OnDestroy {
     return this.createServiceForm.get('costs') as FormArray;
   }
 
-  addCost(): void {
-    const costGroup = this.fb.group({
-      title: ['', [Validators.required, Validators.maxLength(100)]],
-      amount: [null, [Validators.required, Validators.min(0), Validators.max(1000000)]]
+  addCost() {
+    const costForm = this.fb.group({
+      title: ['', [Validators.required, Validators.maxLength(50)]],
+      amount: [null, [Validators.required, Validators.min(0.01)]]
     });
 
-    this.costs.push(costGroup);
-    costGroup.markAllAsTouched();
-    this.formChangeSubject$.next();
+    costForm.markAsTouched();
+    costForm.markAsDirty();
+
+    this.costs.push(costForm);
   }
 
   removeCost(index: number): void {
     this.costs.removeAt(index);
     this.formChangeSubject$.next();
+  }
+
+  formatCurrency(value: number): string {
+    return value
+      ? new Intl.NumberFormat('pl-PL', {
+        style: 'currency',
+        currency: 'PLN',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }).format(value)
+      : '0,00 PLN';
   }
 
   validateCostControl(index: number, controlName: string, errorType: string): boolean {
@@ -221,5 +233,10 @@ export class CreateServiceComponent implements OnInit, OnDestroy {
 
   close(): void {
     this.dialogRef.close();
+  }
+
+  resetForm() {
+    this.createServiceForm.reset();
+    this.costs.clear();
   }
 }

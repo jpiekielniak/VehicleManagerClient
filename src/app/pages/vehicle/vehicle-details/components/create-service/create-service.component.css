@@ -1,114 +1,232 @@
-.create-service-container {
-  padding: 1.5rem;
-
-  h2 {
-    color: var(--primary-color);
-    margin-bottom: 2.5rem;
-  }
-
-  .form-grid {
-    display: grid;
-    gap: 1rem;
-  }
-
-  .field {
-    margin-bottom: 1.5rem;
-  }
-
-  .costs-container {
-    .cost-item {
-      margin-bottom: 2.5rem;
-
-      .grid {
-        display: grid;
-        grid-template-columns: 5fr 5fr 2fr;
-        gap: 3rem;
-      }
-
-      &:last-child {
-        margin-bottom: 1rem;
-      }
-    }
-  }
-
-  .total-cost {
-    font-weight: 600;
-    color: var(--primary-color);
-    font-size: 1.1rem;
-  }
-
-  .button-container {
-    display: flex;
-    justify-content: flex-end;
-    gap: 3rem;
-    margin-top: 2rem;
-
-    .p-button {
-      min-width: 120px;
-      padding: 0.75rem 1.25rem;
-    }
-  }
-
-  :host ::ng-deep {
-    .p-calendar {
-      width: 100%;
-    }
-
-    .p-inputnumber {
-      width: 100%;
-    }
-
-    .p-card {
-      .p-card-header {
-        padding: 1.25rem;
-        background: var(--surface-100);
-        text-align: center;
-
-        h3 {
-          font-weight: 700;
-          font-size: 1.2rem;
-          color: var(--primary-color);
-          display: inline-block;
-          margin: 0 auto;
-        }
-      }
-
-      .p-card-content {
-        padding: 2rem;
-      }
-    }
-
-    .p-float-label {
-      margin-bottom: 1rem;
-    }
-  }
+.service-form {
+  max-width: 800px;
+  margin: 2rem auto;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-:host ::ng-deep {
-  .p-datepicker-touch-ui {
-    transform: scale(0.8);
-    width: 90vw;
-    max-width: 300px;
-
-    .p-datepicker-header {
-      padding: 0.3rem;
-    }
-
-    table {
-      font-size: 0.8rem;
-    }
-  }
+.service-form__container {
+  background-color: #f0f2f5;
+  border-radius: 12px;
+  padding: 2.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-.costs {
-  font-size: 1.2rem;
-  font-weight: 600;
-  justify-content: center;
-  align-items: center;
+:host {
+  display: block;
+  padding: 2rem 0;
+}
+
+.form-section {
+  display: grid;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.form-field {
+  position: relative;
+}
+
+.float-label {
+  position: relative;
+  display: block;
+}
+
+.input-field {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  background-color: #fff;
+}
+
+.input-field:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  outline: none;
+}
+
+.input-field::placeholder {
+  color: transparent;
+}
+
+.float-label label {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #fff;
+  padding: 0 0.5rem;
+  font-size: 0.9rem;
+  color: #64748b;
+  transition: all 0.2s ease;
+  pointer-events: none;
+}
+
+.input-field:focus ~ label,
+.input-field:not(:placeholder-shown) ~ label {
+  top: 0;
+  font-size: 0.8rem;
+  color: #3b82f6;
+}
+
+.textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.float-label .textarea ~ label {
+  top: 1rem;
+  transform: none;
+}
+
+.float-label .textarea:focus ~ label,
+.float-label .textarea:not(:placeholder-shown) ~ label {
+  top: -0.5rem;
+}
+
+.error-text {
+  color: #ef4444;
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+  display: none;
+}
+
+.input-field.error {
+  border-color: #ef4444;
+}
+
+.input-field.error ~ .error-text {
+  display: block;
+}
+
+
+
+.costs-header {
   display: flex;
-  padding: 5px;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
 }
 
-.error-message {
-  color: red;
+.costs-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #1e293b;
+}
+
+.total-cost {
+  font-weight: 600;
+  color: #3b82f6;
+}
+
+.costs-container {
+  display: grid;
+  gap: 1rem;
+}
+
+.costs-card {
+  background-color: #f8fafc;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.cost-item {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.cost-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 1rem;
+  align-items: start;
+}
+
+.btn {
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+}
+
+.btn-primary {
+  background-color: #3b82f6;
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background-color: #2563eb;
+}
+
+.btn-secondary {
+  background-color: #f1f5f9;
+  color: #64748b;
+}
+
+.btn-secondary:hover {
+  background-color: #e2e8f0;
+}
+
+.btn-danger {
+  background-color: #fee2e2;
+  color: #ef4444;
+}
+
+.btn-danger:hover {
+  background-color: #fecaca;
+}
+
+.btn-icon {
+  padding: 0.8rem;
+  font-size: 1.2rem;
+}
+
+.btn-add {
+  width: 100%;
+}
+
+.btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.divider {
+  height: 1px;
+  background-color: #e2e8f0;
+  margin: 2rem 0;
+}
+
+.button-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+@media (max-width: 768px) {
+  .service-form__container {
+    padding: 1.5rem;
+  }
+
+  .cost-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .button-group {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+  }
 }
