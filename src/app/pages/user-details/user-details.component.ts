@@ -1,11 +1,11 @@
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
-import { DatePipe, NgIf } from "@angular/common";
+import {DatePipe, NgClass, NgIf} from "@angular/common";
 import { FormsModule, NgForm } from "@angular/forms";
 import { Router } from "@angular/router";
 import { finalize, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { MenuItem } from "primeng/api";
-import { Button } from "primeng/button";
+import {ButtonDirective} from "primeng/button";
 import { CardModule } from "primeng/card";
 import { MenuModule } from "primeng/menu";
 import { InputMaskModule } from "primeng/inputmask";
@@ -18,6 +18,7 @@ import { ToastService } from '../../shared/services/toast/toast.service';
 import { UserCompleteData } from "../../shared/types/user-complete-data.type";
 import {UserDetails} from "./types/user-details.type";
 import {DialogService} from "primeng/dynamicdialog";
+import {LoadingSpinnerComponent} from "../../shared/components/loading-spinner/loading-spinner.component";
 
 interface UserDetailsState {
   isLoading: boolean;
@@ -35,12 +36,14 @@ interface UserDetailsState {
     DatePipe,
     FormsModule,
     NgIf,
-    Button,
     CardModule,
     InputMaskModule,
     InputTextModule,
     MenuModule,
     ProgressSpinnerModule,
+    ButtonDirective,
+    NgClass,
+    LoadingSpinnerComponent,
   ],
   providers: [ToastService, ConfirmDialogService, DialogService],
   templateUrl: './user-details.component.html',
@@ -131,9 +134,8 @@ export class UserDetailsComponent implements OnInit {
   private async deleteAccount(): Promise<void> {
     try {
       const userId = this.state.userDetails?.id;
-      if (!userId) throw new Error('Brak ID użytkownika');
 
-      await this.authService.deleteAccount(userId);
+      await this.authService.deleteAccount(userId!);
       await this.authService.signOut();
       await this.router.navigate(['/']);
       this.toastService.showSuccess('Konto zostało usunięte');

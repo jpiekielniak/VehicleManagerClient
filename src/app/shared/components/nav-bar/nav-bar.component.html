@@ -1,15 +1,33 @@
-<div class="navbar-container">
-  <div class="card main-menu">
-    <p-tabMenu [model]="items" [activeItem]="activeItem" styleClass="centered-menu"></p-tabMenu>
-  </div>
+<nav class="navbar">
+  <div class="navbar-container">
+    <div class="navbar-brand">
+      <a [routerLink]="['/']" class="brand-link">
+        <i class="pi pi-car"></i>
+        <span>Menadżer pojazdów</span>
+      </a>
+    </div>
 
-  <div class="user-menu">
-    <p-button
-      icon="pi pi-user"
-      (click)="menu.toggle($event)"
-      styleClass="p-button-rounded p-button-text"
-    ></p-button>
+    <div class="nav-links">
+      <ng-container *ngFor="let item of items">
+        <a [routerLink]="item.routerLink"
+           routerLinkActive="active"
+           class="nav-link">
+          <i class="{{item.icon}}"></i>
+          <span>{{item.label}}</span>
+        </a>
+      </ng-container>
+    </div>
 
-    <p-menu #menu [popup]="true" [model]="userMenuItems"></p-menu>
+    <div class="user-menu">
+      <button class="user-menu-trigger" (click)="userMenu.toggle($event)">
+        <i class="pi pi-user"></i>
+      </button>
+      <p-menu #userMenu
+              [model]="userMenuItems"
+              [popup]="true"
+              [appendTo]="'body'"
+              styleClass="user-menu-dropdown">
+      </p-menu>
+    </div>
   </div>
-</div>
+</nav>

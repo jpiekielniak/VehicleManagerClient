@@ -1,6 +1,6 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { NgIf } from "@angular/common";
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+import {NgClass, NgIf} from "@angular/common";
+import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { BehaviorSubject, finalize, Subject, takeUntil } from "rxjs";
 import { DynamicDialogConfig, DynamicDialogRef } from "primeng/dynamicdialog";
 import { ButtonModule } from 'primeng/button';
@@ -38,7 +38,8 @@ const INITIAL_STATE: FormState = {
     InputTextModule,
     CalendarModule,
     CardModule,
-    DividerModule
+    DividerModule,
+    NgClass
   ],
   providers: [ToastService],
   templateUrl: './create-insurance.component.html',
@@ -50,7 +51,7 @@ export class CreateInsuranceComponent implements OnInit, OnDestroy {
 
   private readonly fb = inject(FormBuilder);
   private readonly vehicleService = inject(VehicleService);
-  private readonly dialogRef = inject(DynamicDialogRef);
+  protected readonly dialogRef = inject(DynamicDialogRef);
   private readonly config = inject(DynamicDialogConfig);
   private readonly formValidators = inject(FormValidatorsService);
   private readonly formErrorService = inject(FormErrorService);
@@ -60,7 +61,7 @@ export class CreateInsuranceComponent implements OnInit, OnDestroy {
   createInsuranceForm: FormGroup = this.initializeForm();
   protected state = INITIAL_STATE;
 
-  readonly minDate = new Date();
+  readonly minDate = new Date(new Date().setFullYear(new Date().getFullYear() - 1));
   readonly pl = {
     firstDayOfWeek: 1,
     dayNames: ["Niedziela", "Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek", "Sobota"],

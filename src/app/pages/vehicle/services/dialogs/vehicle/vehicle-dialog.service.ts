@@ -14,10 +14,10 @@ export class VehicleDialogService {
   private readonly dialogService = inject(DialogService);
   private readonly defaultConfig = {
     width: '1200px',
-    height: '90vh',
+    height: '80vh',
     showHeader: false,
     style: { maxWidth: '90vw' },
-    contentStyle: { overflow: 'auto', padding: '0' },
+    contentStyle: { overflow: 'auto', padding: '0', margin: '2' },
     baseZIndex: 10000,
     modal: true,
     dismissableMask: true,

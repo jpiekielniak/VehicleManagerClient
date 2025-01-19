@@ -1,7 +1,6 @@
 import {Component, OnDestroy, OnInit, inject} from '@angular/core';
 import {MenuItem} from "primeng/api";
 import {TabMenuModule} from "primeng/tabmenu";
-import {Button} from "primeng/button";
 import {MenuModule} from "primeng/menu";
 import {AuthService} from "../../../pages/auth/shared/services/auth.service";
 import {combineLatest, Subscription} from "rxjs";
@@ -13,7 +12,6 @@ import {Router} from "@angular/router";
   standalone: true,
   imports: [
     TabMenuModule,
-    Button,
     MenuModule,
     CommonModule
   ],
@@ -35,7 +33,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
       routerLink: ['/moje-pojazdy']
     },
     {
-      label: 'O nas',
+      label: 'O aplikacji',
       icon: 'pi pi-info-circle',
       routerLink: ['/informacje-o-aplikacji']
     },

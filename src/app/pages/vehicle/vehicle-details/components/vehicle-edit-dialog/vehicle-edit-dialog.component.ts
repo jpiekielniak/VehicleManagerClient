@@ -29,6 +29,7 @@ import {VehicleType} from "../../types/vehicle.type";
 import {EnumResponseType} from "../../types/enum.response.type";
 import {FormErrorService} from '../../../../../shared/services/form/form-error.service';
 import {FormValidatorsService} from '../../../../../shared/services/form/form-validators.service';
+import {LoadingSpinnerComponent} from "../../../../../shared/components/loading-spinner/loading-spinner.component";
 
 @Component({
   selector: 'app-vehicle-edit-dialog',
@@ -44,7 +45,8 @@ import {FormValidatorsService} from '../../../../../shared/services/form/form-va
     InputTextModule,
     CardModule,
     ProgressSpinnerModule,
-    AsyncPipe
+    AsyncPipe,
+    LoadingSpinnerComponent
   ],
   providers: [ToastService]
 })

@@ -1,12 +1,49 @@
-<div class="contact-container">
-  <h1 class="contact-header">Kontakt</h1>
-  <p-card>
-    <div class="contact-info">
-      <div *ngFor="let info of contactInfo" class="contact-item" pRipple>
-        <span class="contact-icon">{{ info.icon }}</span>
-        <span class="contact-type">{{ info.type }}:</span>
-        <span class="contact-value" [innerHTML]="info.value"></span>
-      </div>
+<div class="contact-wrapper">
+  <section class="hero-section">
+    <div class="hero-content">
+      <h1>Skontaktuj się ze mną</h1>
+      <p>Jestem dostępny do współpracy. Napisz do mnie, a odpowiem najszybciej jak to możliwe!</p>
     </div>
-  </p-card>
+  </section>
+
+  <div class="main-content">
+    <section class="contact-info-section">
+      <div class="section-header">
+        <h2>Dane kontaktowe</h2>
+        <p>Wybierz preferowaną formę kontaktu</p>
+      </div>
+
+      <div class="contact-grid">
+        <div class="contact-item" *ngFor="let item of contactItems">
+          <div class="contact-card">
+            <div class="icon-container">
+              <i class="pi" [ngClass]="item.icon"></i>
+            </div>
+            <div class="contact-details">
+              <h3>{{item.label}}</h3>
+              <p>{{item.description}}</p>
+              <a *ngIf="item.link" [href]="item.link" [target]="item.external ? '_blank' : '_self'" class="contact-link">
+                {{item.value}}
+              </a>
+              <span *ngIf="!item.link" class="value">{{item.value}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="schedule-section">
+      <div class="section-header">
+        <h2>Dostępność</h2>
+        <p>Godziny w których najczęściej odpowiadam</p>
+      </div>
+      <div class="schedule-grid">
+        <div class="schedule-item" *ngFor="let schedule of workingHours">
+          <div class="day">{{schedule.day}}</div>
+          <div class="hours">{{schedule.hours}}</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
 </div>

@@ -42,7 +42,7 @@ export const routes: Routes = [
   },
   {
     path: 'informacje-o-aplikacji',
-    loadComponent: () => import('./pages/about-us/about-us.component').then(m => m.AboutUsComponent)
+    loadComponent: () => import('./pages/about/about.component').then(m => m.AboutComponent)
   },
   {
     path: 'kontakt',

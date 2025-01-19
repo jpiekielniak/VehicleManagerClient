@@ -27,10 +27,10 @@ export class ServiceDialogService {
   openCreateService(serviceBookId: string): Observable<any> {
     return this.dialogService.open(CreateServiceComponent, {
       width: '900px',
-      style: { 'max-width': '80%' },
       data: { serviceBookId },
       baseZIndex: 10000,
-      dismissableMask: true
+      dismissableMask: true,
+      closeOnEscape: true,
     }).onClose;
   }
 }

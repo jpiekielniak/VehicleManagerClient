@@ -1,96 +1,123 @@
-<div class="create-insurance">
+<div class="insurance-form-container">
   <form [formGroup]="createInsuranceForm" (ngSubmit)="onSubmit()" class="insurance-form">
-    <p-card styleClass="form-card">
-      <div class="form-content">
-        <div class="form-field">
-          <label for="title">Nazwa ubezpieczenia</label>
-          <input
-            id="title"
-            type="text"
-            pInputText
-            formControlName="title"
-            [class.ng-invalid]="isFieldInvalid('title')"
-          />
-          <small class="error-message" *ngIf="isFieldInvalid('title')">
-            {{ getErrorMessage('title') }}
-          </small>
-        </div>
+    <div class="form-content">
+      <div class="form-section">
+        <p-card>
+          <ng-template pTemplate="header">
+            <div class="card-header">
+              <i class="pi pi-shield"></i>
+              <span>Informacje o polisie</span>
+            </div>
+          </ng-template>
 
-        <div class="form-field">
-          <label for="provider">Ubezpieczyciel</label>
-          <input
-            id="provider"
-            type="text"
-            pInputText
-            formControlName="provider"
-            [class.ng-invalid]="isFieldInvalid('provider')"
-          />
-          <small class="error-message" *ngIf="isFieldInvalid('provider')">
-            {{ getErrorMessage('provider') }}
-          </small>
-        </div>
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="title">Nazwa ubezpieczenia <span class="required-star">*</span></label>
+              <span class="p-input-icon-left">
+                <i class="pi pi-tag"></i>
+                <input pInputText
+                       id="title"
+                       formControlName="title"
+                       placeholder="np. OC/AC"
+                       [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('title')}">
+              </span>
+              <small class="error-message" *ngIf="isFieldInvalid('title')">
+                {{ getErrorMessage('title') }}
+              </small>
+            </div>
 
-        <div class="form-field">
-          <label for="policyNumber">Numer polisy</label>
-          <input
-            id="policyNumber"
-            type="text"
-            pInputText
-            formControlName="policyNumber"
-            [class.ng-invalid]="isFieldInvalid('policyNumber')"
-          />
-          <small class="error-message" *ngIf="isFieldInvalid('policyNumber')">
-            {{ getErrorMessage('policyNumber') }}
-          </small>
-        </div>
+            <div class="form-field">
+              <label for="provider">Ubezpieczyciel <span class="required-star">*</span></label>
+              <span class="p-input-icon-left">
+                <i class="pi pi-building"></i>
+                <input pInputText
+                       id="provider"
+                       formControlName="provider"
+                       placeholder="np. PZU"
+                       [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('provider')}">
+              </span>
+              <small class="error-message" *ngIf="isFieldInvalid('provider')">
+                {{ getErrorMessage('provider') }}
+              </small>
+            </div>
 
-        <div class="dates-row">
-          <div class="form-field">
-            <label for="validFrom">Data rozpoczęcia</label>
-            <p-calendar
-              id="validFrom"
-              formControlName="validFrom"
-              [showIcon]="true"
-              [touchUI]="true"
-              [readonlyInput]="true"
-              [locale]="pl"
-              [showButtonBar]="true"
-              [class.ng-invalid]="isFieldInvalid('validFrom')"
-            ></p-calendar>
-            <small class="error-message" *ngIf="isFieldInvalid('validFrom')">
-              {{ getErrorMessage('validFrom') }}
-            </small>
+            <div class="form-field">
+              <label for="policyNumber">Numer polisy <span class="required-star">*</span></label>
+              <span class="p-input-icon-left">
+                <i class="pi pi-id-card"></i>
+                <input pInputText
+                       id="policyNumber"
+                       formControlName="policyNumber"
+                       placeholder="Wprowadź numer polisy"
+                       [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('policyNumber')}">
+              </span>
+              <small class="error-message" *ngIf="isFieldInvalid('policyNumber')">
+                {{ getErrorMessage('policyNumber') }}
+              </small>
+            </div>
           </div>
-
-          <div class="form-field">
-            <label for="validTo">Data zakończenia</label>
-            <p-calendar
-              id="validTo"
-              formControlName="validTo"
-              [minDate]="minDate"
-              [showIcon]="true"
-              [touchUI]="true"
-              [readonlyInput]="true"
-              [locale]="pl"
-              [showButtonBar]="true"
-              [class.ng-invalid]="isFieldInvalid('validTo') || state.dateError"
-            ></p-calendar>
-            <small class="error-message" *ngIf="isFieldInvalid('validTo') || state.dateError">
-              {{ getErrorMessage('validTo') }}
-            </small>
-          </div>
-        </div>
+        </p-card>
       </div>
 
-      <div class="form-actions">
-        <p-button
-          type="submit"
-          [label]="state.isSubmitting ? 'Zapisywanie...' : 'Zapisz'"
-          [disabled]="!createInsuranceForm.valid || state.isSubmitting || state.dateError"
-          styleClass="p-button-primary"
-          [loading]="state.isSubmitting"
-        ></p-button>
+      <div class="form-section">
+        <p-card>
+          <ng-template pTemplate="header">
+            <div class="card-header">
+              <i class="pi pi-calendar"></i>
+              <span>Okres ubezpieczenia</span>
+            </div>
+          </ng-template>
+
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="validFrom">Data rozpoczęcia <span class="required-star">*</span></label>
+              <p-calendar id="validFrom"
+                          formControlName="validFrom"
+                          [showIcon]="true"
+                          [minDate]="minDate"
+                          [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('validFrom')}"
+                          [style]="{'width':'100%'}"
+                          placeholder="Wybierz datę">
+              </p-calendar>
+              <small class="error-message" *ngIf="isFieldInvalid('validFrom')">
+                {{ getErrorMessage('validFrom') }}
+              </small>
+            </div>
+
+            <div class="form-field">
+              <label for="validTo">Data zakończenia <span class="required-star">*</span></label>
+              <p-calendar id="validTo"
+                          formControlName="validTo"
+                          [showIcon]="true"
+                          [minDate]="minDate"
+                          [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('validTo') || state.dateError}"
+                          [style]="{'width':'100%'}"
+                          placeholder="Wybierz datę">
+              </p-calendar>
+              <small class="error-message" *ngIf="isFieldInvalid('validTo') || state.dateError">
+                {{ getErrorMessage('validTo') }}
+              </small>
+            </div>
+          </div>
+        </p-card>
       </div>
-    </p-card>
+    </div>
+
+    <div class="form-actions">
+      <button pButton
+              type="button"
+              label="Anuluj"
+              icon="pi pi-times"
+              class="p-button-outlined p-button-secondary"
+              (click)="dialogRef.close()">
+      </button>
+      <button pButton
+              type="submit"
+              label="Zapisz"
+              icon="pi pi-check"
+              [loading]="state.isSubmitting"
+              [disabled]="!state.isValid || state.isSubmitting">
+      </button>
+    </div>
   </form>
 </div>

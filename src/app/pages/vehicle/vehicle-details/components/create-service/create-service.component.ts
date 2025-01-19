@@ -4,7 +4,7 @@ import {FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Val
 import {ServiceBookService} from "../../services/serviceBook/service-book.service";
 import {CreateService} from "../../types/create-service.type";
 import {MaterialImports} from "../../../../../imports/material.imports";
-import {NgClass, NgForOf, NgIf} from "@angular/common";
+import {AsyncPipe, NgClass, NgForOf, NgIf} from "@angular/common";
 import {DividerModule} from "primeng/divider";
 import {ButtonDirective} from "primeng/button";
 import {InputNumberModule} from "primeng/inputnumber";
@@ -51,7 +51,8 @@ const INITIAL_FORM_STATE: FormState = {
     NgClass,
     CalendarModule,
     CardModule,
-    InputTextareaModule
+    InputTextareaModule,
+    AsyncPipe
   ],
   providers: [ToastService],
   templateUrl: './create-service.component.html',
@@ -235,8 +236,8 @@ export class CreateServiceComponent implements OnInit, OnDestroy {
     this.dialogRef.close();
   }
 
-  resetForm() {
-    this.createServiceForm.reset();
-    this.costs.clear();
+  get isSubmitting(): boolean {
+    return this.formState$.value.isSubmitting;
   }
+
 }

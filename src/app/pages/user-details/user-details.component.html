@@ -1,113 +1,97 @@
-<div class="user-details">
-  <p-card>
-    <ng-template pTemplate="header">
-      <div class="card-header">
+<div *ngIf="state.isLoading" class="spinner">
+  <app-loading-spinner></app-loading-spinner>
+</div>
+
+<div class="user-details-container" *ngIf="!state.isLoading">
+  <div class="user-details-card" [class.editing]="state.isEditing">
+    <div class="card-header">
+      <div class="header-content">
         <h2>Szczegóły konta</h2>
-
-        <div class="menu-container">
-          <div *ngIf="!state.isEditing">
-            <p-menu
-              #menu
-              [model]="menuItems"
-              [popup]="true"
-              appendTo="body">
-            </p-menu>
-            <p-button
-              icon="pi pi-ellipsis-v"
-              (click)="menu.toggle($event)"
-              styleClass="p-button-text">
-            </p-button>
-          </div>
-
-          <div *ngIf="state.isEditing" class="edit-actions">
-            <p-button
-              icon="pi pi-check"
-              label="Zapisz"
-              (onClick)="onSubmit()"
-              [loading]="state.isSubmitting"
-              [disabled]="state.isSubmitting">
-            </p-button>
-            <p-button
-              icon="pi pi-times"
-              label="Anuluj"
-              (onClick)="cancelEdit()"
-              [disabled]="state.isSubmitting"
-              styleClass="p-button-outlined p-button-secondary">
-            </p-button>
-          </div>
-        </div>
+        <span class="role-badge" [ngClass]="state.userDetails?.role">
+          {{ state.userDetails?.role || 'Użytkownik' }}
+        </span>
       </div>
-    </ng-template>
-
-    <div class="card-content">
-      <p-progressSpinner *ngIf="state.isLoading"></p-progressSpinner>
-
-      <div *ngIf="state.error" class="error-message">
-        {{ state.error }}
-      </div>
-
-      <div *ngIf="!state.isLoading && !state.error">
-        <div *ngIf="!state.isEditing" class="view-mode">
-          <div class="info-grid">
-            <div class="info-item">
-              <label><i class="pi pi-envelope"></i> Email</label>
-              <div class="info-value">{{ state.userDetails?.email }}</div>
-            </div>
-            <div class="info-item">
-              <label><i class="pi pi-user"></i> Imię</label>
-              <div class="info-value">{{ state.userDetails?.firstName || '-' }}</div>
-            </div>
-            <div class="info-item">
-              <label><i class="pi pi-user"></i> Nazwisko</label>
-              <div class="info-value">{{ state.userDetails?.lastName || '-' }}</div>
-            </div>
-            <div class="info-item">
-              <label><i class="pi pi-phone"></i> Numer telefonu</label>
-              <div class="info-value">{{ state.userDetails?.phoneNumber || '-' }}</div>
-            </div>
-            <div class="info-item">
-              <label><i class="pi pi-users"></i> Rola</label>
-              <div class="info-value">{{ state.userDetails?.role }}</div>
-            </div>
-            <div class="info-item">
-              <label><i class="pi pi-calendar"></i> Utworzono</label>
-              <div class="info-value">{{ state.userDetails?.createdAt | date:'dd.MM.yyyy' }}</div>
-            </div>
-          </div>
-        </div>
-
-        <form *ngIf="state.isEditing" #editForm="ngForm" class="edit-mode">
-          <div class="form-grid">
-            <div class="form-field">
-              <label>Imię</label>
-              <input
-                pInputText
-                type="text"
-                name="firstName"
-                [(ngModel)]="state.editedUser.firstName"
-                [disabled]="state.isSubmitting">
-            </div>
-            <div class="form-field">
-              <label>Nazwisko</label>
-              <input
-                pInputText
-                type="text"
-                name="lastName"
-                [(ngModel)]="state.editedUser.lastName"
-                [disabled]="state.isSubmitting">
-            </div>
-            <div class="form-field">
-              <label>Numer telefonu</label>
-              <p-inputMask
-                mask="999-999-999"
-                name="phoneNumber"
-                [(ngModel)]="state.editedUser.phoneNumber"
-                [disabled]="state.isSubmitting">
-              </p-inputMask>
-            </div>
-          </div>
-        </form>
-      </div>
+      <button pButton icon="pi pi-ellipsis-v"
+              class="settings-button p-button-text"
+              (click)="menu.toggle($event)">
+      </button>
+      <p-menu #menu [model]="menuItems" [popup]="true" [appendTo]="'body'">
+      </p-menu>
     </div>
-  </p-card>
+
+    <div *ngIf="!state.isLoading && state.userDetails" class="card-content">
+      <div *ngIf="!state.isEditing" class="user-info">
+        <div class="info-section">
+          <h3>Podstawowe informacje</h3>
+          <div class="info-group">
+            <span class="label">Email</span>
+            <span class="value">{{ state.userDetails.email }}</span>
+          </div>
+          <div class="info-group">
+            <span class="label">Imię</span>
+            <span class="value">{{ state.userDetails.firstName || '-' }}</span>
+          </div>
+          <div class="info-group">
+            <span class="label">Nazwisko</span>
+            <span class="value">{{ state.userDetails.lastName || '-' }}</span>
+          </div>
+          <div class="info-group">
+            <span class="label">Telefon</span>
+            <span class="value">{{ state.userDetails.phoneNumber || '-' }}</span>
+          </div>
+        </div>
+
+        <div class="info-section">
+          <h3>Informacje o koncie</h3>
+          <div class="info-group">
+            <span class="label">Data utworzenia</span>
+            <span class="value">{{ state.userDetails.createdAt | date:'dd.MM.yyyy HH:mm' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <form #editForm="ngForm" *ngIf="state.isEditing" (ngSubmit)="onSubmit()" class="edit-form">
+        <div class="form-section">
+          <h3>Dane osobowe</h3>
+          <div class="form-group">
+            <label for="firstName">Imię</label>
+            <input pInputText id="firstName" name="firstName"
+                   [(ngModel)]="state.editedUser.firstName"
+                   placeholder="Wprowadź imię"/>
+          </div>
+          <div class="form-group">
+            <label for="lastName">Nazwisko</label>
+            <input pInputText id="lastName" name="lastName"
+                   [(ngModel)]="state.editedUser.lastName"
+                   placeholder="Wprowadź nazwisko"/>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>Dane kontaktowe</h3>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input pInputText id="email" type="email" [value]="state.userDetails.email"
+                   disabled class="disabled-input"/>
+          </div>
+          <div class="form-group">
+            <label for="phoneNumber">Telefon</label>
+            <p-inputMask id="phoneNumber" name="phoneNumber"
+                         [(ngModel)]="state.editedUser.phoneNumber"
+                         mask="999-999-999" placeholder="___-___-___">
+            </p-inputMask>
+          </div>
+        </div>
+
+        <div class="button-group">
+          <button pButton type="button" label="Anuluj"
+                  class="p-button-outlined" (click)="cancelEdit()">
+          </button>
+          <button pButton type="submit" label="Zapisz zmiany"
+                  [loading]="state.isSubmitting">
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
