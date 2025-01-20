@@ -1,5 +1,4 @@
 import {Component, Input} from '@angular/core';
-import {Button} from "primeng/button";
 import {MenuModule} from "primeng/menu";
 import {MenuItem} from "primeng/api";
 
@@ -7,7 +6,6 @@ import {MenuItem} from "primeng/api";
   selector: 'app-vehicle-header',
   standalone: true,
   imports: [
-    Button,
     MenuModule
   ],
   templateUrl: './vehicle-header.component.html',
@@ -15,4 +13,5 @@ import {MenuItem} from "primeng/api";
 })
 export class VehicleHeaderComponent {
   @Input() items: MenuItem[] | undefined = [];
+  @Input() vehicle: any;
 }

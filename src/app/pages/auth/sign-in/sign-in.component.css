@@ -13,8 +13,8 @@
   width: 100%;
   max-width: 1200px;
   min-height: 600px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
   overflow: hidden;
+  box-shadow: 10px 20px 60px rgba(0.30, 0, 0, 0.30);
 }
 
 .auth-image-section {
@@ -67,8 +67,6 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background: white;
-  border-radius: 0 0 32px 32px;
 }
 
 @keyframes waving {

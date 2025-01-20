@@ -1,23 +1,126 @@
-h2 {
-  display: flex;
-  justify-content: center;
-  text-align: center;
-  padding-top: 10px;
-  color: white;
-  font-weight: bold;
-  font-size: 32px;
-}
-
 .card-header {
   background: linear-gradient(135deg, #2196f3, #1976d2);
   padding: 1.5rem 2rem;
+  border-radius: 24px 24px 0 0;
+}
+
+.header-content {
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+.header-left {
+  flex: 1;
+}
+
+.breadcrumb {
+  display: flex;
+  gap: 0.5rem;
   align-items: center;
+  margin-bottom: 0.75rem;
+  color: white;
+  font-weight: 500;
+}
+
+h2 {
+  color: white;
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.2;
 }
 
 .header-actions {
   display: flex;
   align-items: center;
   gap: 1rem;
+}
+
+.vehicle-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0;
+  color: white;
+}
+
+.header-actions {
+  position: relative;
+}
+
+.settings-button {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: white;
+  margin-top: 10px;
+
+  i {
+    font-size: 1.25rem;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: rotate(30deg);
+  }
+}
+
+:host ::ng-deep {
+  .p-menu {
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+
+    .p-menuitem {
+      :is(-link) {
+        padding: 0.75rem 1rem;
+        transition: all 0.2s ease;
+        border-radius: 8px;
+        margin: 0.25rem;
+
+        &:hover {
+          background: #f8fafc;
+        }
+
+        .p-menuitem-icon {
+          color: #64748b;
+        }
+
+        .p-menuitem-text {
+          color: #1e293b;
+          font-weight: 500;
+        }
+
+        &:focus {
+          box-shadow: none;
+          outline: none;
+        }
+      }
+    }
+
+    .p-menuitem.danger {
+      .p-menuitem-link {
+        &:hover {
+          background: #fef2f2;
+
+          .p-menuitem-icon,
+          .p-menuitem-text {
+            color: #ef4444;
+          }
+        }
+      }
+    }
+  }
 }

@@ -1,4 +1,4 @@
-<div class="vehicle-image">
+<div class="image-uploader">
   <div class="image-container"
        (mouseenter)="showControls = true"
        (mouseleave)="showControls = false"
@@ -7,39 +7,46 @@
        (dragleave)="handleDragLeave($event)"
        (drop)="handleDrop($event)">
 
+    <div class="placeholder" *ngIf="!hasImage()">
+      <i class="pi pi-image"></i>
+      <span>Przeciągnij zdjęcie lub najedź aby wybrać</span>
+    </div>
+
     <img [src]="getImageUrl()"
          [alt]="'Vehicle Image'"
          class="vehicle-photo"
          [class.loading]="isLoading"
-    />
+         *ngIf="hasImage()">
 
     <div class="upload-overlay"
          [class.loading]="isLoading"
          [class.visible]="showControls || isLoading">
 
-      <div *ngIf="isLoading" class="spinner-overlay">
-        <p-progressSpinner [style]="{width: '50px', height: '50px'}"></p-progressSpinner>
+      <div *ngIf="isLoading">
+        <app-loading-spinner> </app-loading-spinner>
       </div>
 
-      <div
-           class="button-group"
+      <div class="button-group"
            [class.visible]="showControls">
         <input type="file"
                #fileInput
                (change)="onFileSelected($event)"
                style="display: none"
                accept="image/*">
-        <button class="icon-button edit-button"
+
+        <button class="action-button upload-button"
                 (click)="triggerFileInput()"
                 [disabled]="isLoading">
           <i class="pi pi-camera"></i>
+          <span>{{ hasImage() ? 'Zmień' : 'Wybierz' }}</span>
         </button>
-        <button
-          class="icon-button delete-button"
-          *ngIf="hasImage()"
-          (click)="deleteImage()"
-          [disabled]="isLoading">
+
+        <button class="action-button delete-button"
+                *ngIf="hasImage()"
+                (click)="deleteImage()"
+                [disabled]="isLoading">
           <i class="pi pi-trash"></i>
+          <span>Usuń</span>
         </button>
       </div>
     </div>

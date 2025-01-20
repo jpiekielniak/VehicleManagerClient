@@ -5,6 +5,7 @@ import {NgIf} from "@angular/common";
 import {ProgressSpinnerModule} from "primeng/progressspinner";
 import {VehicleService} from "../../../services/vehicle/vehicle.service";
 import {ToastService} from "../../../../../shared/services/toast/toast.service";
+import {LoadingSpinnerComponent} from "../../../../../shared/components/loading-spinner/loading-spinner.component";
 
 interface UploadResponse {
   blobUrl?: string;
@@ -17,7 +18,8 @@ interface UploadResponse {
     FileUploadModule,
     ButtonModule,
     NgIf,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    LoadingSpinnerComponent
   ],
   providers: [ToastService],
   templateUrl: './vehicle-image.component.html',

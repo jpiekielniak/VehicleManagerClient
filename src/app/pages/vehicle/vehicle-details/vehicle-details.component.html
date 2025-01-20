@@ -1,12 +1,20 @@
 <div class="vehicle-details-container">
-  <p-card *ngIf="vehicle">
-    <app-vehicle-header [items]="items"></app-vehicle-header>
-
+  <div class="vehicle-card" *ngIf="vehicle">
+    <app-vehicle-header
+      [vehicle]="vehicle"
+      [items]="items">
+    </app-vehicle-header>
     <div class="content-wrapper">
-      <app-vehicle-image [vehicleId]="vehicleId" [imageUrl]="vehicle.imageUrl"></app-vehicle-image>
-      <app-vehicle-info-grid [vehicle]="vehicle"></app-vehicle-info-grid>
+      <app-vehicle-image
+        [vehicleId]="vehicleId"
+        [imageUrl]="vehicle.imageUrl">
+      </app-vehicle-image>
+
+      <app-vehicle-info-grid
+        [vehicle]="vehicle">
+      </app-vehicle-info-grid>
     </div>
-  </p-card>
+  </div>
 
   <div *ngIf="vehicle" class="records-container">
     <p-tabView (onChange)="onTabChange($event)">
@@ -19,8 +27,7 @@
       <p-tabPanel header="Ubezpieczenia">
         <app-insurance-list
           #insuranceList
-          [vehicleId]="vehicle.id"
-        >
+          [vehicleId]="vehicle.id">
         </app-insurance-list>
       </p-tabPanel>
     </p-tabView>

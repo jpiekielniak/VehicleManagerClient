@@ -1,7 +1,27 @@
 <div class="card-header">
-  <h2>Szczegóły pojazdu</h2>
-  <div class="header-actions">
-    <p-button icon="pi pi-cog" (onClick)="menu.toggle($event)"></p-button>
-    <p-menu #menu [model]="items" [popup]="true"></p-menu>
+  <div class="header-content">
+    <div class="header-left">
+      <div class="breadcrumb">
+        <span class="breadcrumb-item">Moje pojazdy</span>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-item">Szczegóły pojazdu</span>
+      </div>
+      <h1 class="vehicle-title">{{ vehicle.brand }} {{ vehicle.model }}</h1>
+    </div>
+    <div class="header-actions">
+      <button
+        class="settings-button"
+        [pTooltip]="'Opcje'"
+        [tooltipPosition]="'left'"
+        (click)="menu.toggle($event)">
+        <i class="pi pi-cog"></i>
+      </button>
+      <p-menu
+        #menu
+        [popup]="true"
+        [appendTo]="'body'"
+        [model]="items">
+      </p-menu>
+    </div>
   </div>
 </div>
