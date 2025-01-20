@@ -80,8 +80,7 @@ export class VehiclesComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroy$),
         finalize(() => this.loadingService.setLoading(false)),
-        catchError(error => {
-          console.error('Błąd ładowania pojazdów', error);
+        catchError(() => {
           return EMPTY;
         })
       )
@@ -113,8 +112,7 @@ export class VehiclesComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroy$),
         finalize(() => this.loadingService.setLoading(false)),
-        catchError(error => {
-          console.error('Błąd sortowania', error);
+        catchError(() => {
           return EMPTY;
         })
       )
@@ -133,8 +131,7 @@ export class VehiclesComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroy$),
         finalize(() => this.loadingService.setLoading(false)),
-        catchError(error => {
-          console.error('Błąd filtrowania', error);
+        catchError(() => {
           return EMPTY;
         })
       )
@@ -153,8 +150,7 @@ export class VehiclesComponent implements OnInit, OnDestroy {
     this.vehicleDataService.changePage(event)
       .pipe(
         takeUntil(this.destroy$),
-        catchError(error => {
-          console.error('Błąd zmiany strony', error);
+        catchError(() => {
           return EMPTY;
         })
       )

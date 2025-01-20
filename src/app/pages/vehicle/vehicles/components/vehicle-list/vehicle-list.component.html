@@ -1,22 +1,46 @@
-<div class="container">
-  <div class="vehicle" *ngFor="let vehicle of vehicles; let i = index">
-    <div class="frame-1">
-      <div class="frame-2">
-        <div class="frame-3">
-          <div class="vehicle-position">
-            <span class="span-01">{{ i + 1 }}</span>
-          </div>
-          <span class="span-brand">{{ vehicle.brand }}</span>
-          <span class="span-area">
-            {{ vehicle.model }}
-          </span>
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+<div class="vehicles-container" [style.visibility]="isLoading ? 'hidden' : 'visible'">
+  <div class="vehicle-card" *ngFor="let vehicle of _vehicles; let i = index" @fadeInUp>
+    <div class="vehicle-content">
+      <div class="vehicle-info">
+        <div class="vehicle-number">
+          <span>{{ i + 1 }}</span>
         </div>
-        <button class="button" (click)="onNavigateToDetails(vehicle.vehicleId)">
-          <span class="span-view-vehicle">Zobacz więcej</span>
+
+        <div class="vehicle-details">
+          <span class="vehicle-brand">{{ vehicle.brand }}</span>
+          <h3 class="vehicle-model">{{ vehicle.model }}</h3>
+        </div>
+
+        <button
+          pButton
+          class="details-button p-button-rounded"
+          (click)="onNavigateToDetails(vehicle.vehicleId)"
+        >
+          <span>Zobacz więcej</span>
+          <i class="pi pi-arrow-right"></i>
         </button>
       </div>
-      <div class="image"
-           [style.backgroundImage]="getVehicleImage(vehicle.imageUrl)">
+
+      <div class="vehicle-image-container">
+        <div
+          class="vehicle-image"
+          [style.backgroundImage]="getVehicleImage(vehicle.imageUrl)"
+          [class.loaded]="!isImageLoading[vehicle.vehicleId]"
+        >
+          <img
+            [src]="vehicle.imageUrl"
+            style="display: none"
+            (load)="onImageLoad(vehicle.vehicleId)"
+            (error)="onImageLoad(vehicle.vehicleId)"
+           alt="Zdjęcie pojazdu"/>
+        </div>
+        <div
+          class="image-loader"
+          *ngIf="isImageLoading[vehicle.vehicleId]"
+        >
+          <i class="pi pi-spin pi-spinner"></i>
+        </div>
       </div>
     </div>
   </div>

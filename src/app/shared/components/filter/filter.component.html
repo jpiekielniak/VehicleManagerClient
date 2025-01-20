@@ -1,11 +1,16 @@
-<p-dropdown
-  [options]="formattedFilterOptions"
-  [(ngModel)]="selectedOption"
-  [placeholder]="placeholder"
-  (onChange)="onFilterChange()"
->
-  <ng-template pTemplate="selectedItem">
-    <i [class]="iconClass" style="margin-right: 0.5rem;"></i>
-    {{ selectedOption || placeholder }}
-  </ng-template>
-</p-dropdown>
+<div class="filter-container">
+  <p-dropdown
+    [options]="formattedFilterOptions"
+    [(ngModel)]="selectedOption"
+    [placeholder]="placeholder"
+    (onChange)="onFilterChange()"
+    styleClass="filter-dropdown"
+  >
+    <ng-template pTemplate="selectedItem">
+      <div class="selected-item">
+        <i [class]="iconClass"></i>
+        <span>{{ selectedOption || placeholder }}</span>
+      </div>
+    </ng-template>
+  </p-dropdown>
+</div>

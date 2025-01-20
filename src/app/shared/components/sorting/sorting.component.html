@@ -1,27 +1,31 @@
-<p-dropdown
-  [options]="sortOptions"
-  [(ngModel)]="selectedSortOption"
-  [placeholder]="placeholder"
-  (onChange)="onSortChange()"
->
-  <ng-template pTemplate="selectedItem">
-    <i [class]="iconClass" style="margin-right: 0.5rem;"></i>
-    {{ !selectedSortOption ? getSortOptionLabel(selectedSortOption) : placeholder }}
-  </ng-template>
-</p-dropdown>
+<div class="sort-container">
+  <p-dropdown
+    [options]="sortOptions"
+    [(ngModel)]="selectedSortOption"
+    [placeholder]="placeholder"
+    (onChange)="onSortChange()"
+    styleClass="sort-dropdown"
+  >
+    <ng-template pTemplate="selectedItem">
+      <div class="selected-item">
+        <i [class]="iconClass"></i>
+        <span>{{ getSortOptionLabel(selectedSortOption) || placeholder }}</span>
+      </div>
+    </ng-template>
+  </p-dropdown>
 
-<button
-  pButton
-  type="button"
-  class="sort-direction-btn"
-  (click)="toggleSortDirection()"
-  title="Zmień kierunek sortowania"
-  pTooltip="{{sortDirection === 'asc' ? 'Sortowanie rosnące' : 'Sortowanie malejące'}}"
->
-  <i class="pi"
-     [ngClass]="{
-             'pi-sort-up-fill': sortDirection === 'asc',
-             'pi-sort-down-fill': sortDirection === 'desc'
+  <button
+    pButton
+    type="button"
+    class="sort-direction-btn"
+    (click)="toggleSortDirection()"
+    [pTooltip]="sortDirection === 'asc' ? 'Sortowanie rosnące' : 'Sortowanie malejące'"
+  >
+    <i class="pi"
+       [ngClass]="{
+             'pi-sort-up': sortDirection === 'asc',
+             'pi-sort-down': sortDirection === 'desc'
            }">
-  </i>
-</button>
+    </i>
+  </button>
+</div>

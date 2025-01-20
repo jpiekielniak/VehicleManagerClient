@@ -271,3 +271,14 @@
   }
 }
 
+.filters-wrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  flex-wrap: wrap;
+  z-index:1000;
+}
+
+.list-container {
+  margin-top: 20px;
+}
