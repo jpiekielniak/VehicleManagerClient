@@ -17,6 +17,7 @@ import {LoadingService} from "../../../shared/services/loading/loading.service";
 import {LoadingSpinnerComponent} from "../../../shared/components/loading-spinner/loading-spinner.component";
 import {VehicleDialogService} from "../services/dialogs/vehicle/vehicle-dialog.service";
 import {DialogService} from "primeng/dynamicdialog";
+import {ToastService} from "../../../shared/services/toast/toast.service";
 
 const VEHICLE_SORT_OPTIONS: { label: string, value: keyof Vehicle }[] = [
   {label: 'Marka', value: 'brand'},
@@ -38,7 +39,7 @@ const VEHICLE_SORT_OPTIONS: { label: string, value: keyof Vehicle }[] = [
     ProgressSpinnerModule,
     LoadingSpinnerComponent,
   ],
-  providers: [VehicleDialogService, DialogService],
+  providers: [VehicleDialogService, DialogService, ToastService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './vehicles.component.html',
   styleUrl: './vehicles.component.css'
@@ -47,6 +48,7 @@ export class VehiclesComponent implements OnInit, OnDestroy {
   private readonly vehicleDataService = inject(VehicleDataService);
   private readonly dialogService = inject(VehicleDialogService);
   private readonly loadingService = inject(LoadingService);
+  private readonly toastService = inject(ToastService);
   private readonly router = inject(Router);
   private readonly destroy$ = new Subject<void>();
   protected readonly paginationService = inject(PaginationService);
@@ -57,6 +59,7 @@ export class VehiclesComponent implements OnInit, OnDestroy {
   sortOptions = VEHICLE_SORT_OPTIONS;
   isComponentLoaded = false;
   isLoading = true;
+  isError = false;
 
   ngOnInit(): void {
     this.loadVehicles();
@@ -77,6 +80,8 @@ export class VehiclesComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$),
         finalize(() => this.loadingService.setLoading(false)),
         catchError(() => {
+          this.toastService.showError('Wystąpił błąd podczas ładowania pojazdów');
+          this.isError = true;
           return EMPTY;
         })
       )
@@ -179,4 +184,5 @@ export class VehiclesComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
 }
