@@ -11,11 +11,19 @@
           {{ state.userDetails?.role || 'Użytkownik' }}
         </span>
       </div>
-      <button pButton icon="pi pi-ellipsis-v"
-              class="settings-button p-button-text"
-              (click)="menu.toggle($event)">
+      <button
+        pButton
+        icon="pi pi-ellipsis-v"
+        class="settings-button p-button-text"
+        (click)="menu.toggle($event)"
+      >
       </button>
-      <p-menu #menu [model]="menuItems" [popup]="true" [appendTo]="'body'">
+      <p-menu
+        #menu
+        [model]="menuItems"
+        [popup]="true"
+        [appendTo]="'body'"
+      >
       </p-menu>
     </div>
 
@@ -55,15 +63,23 @@
           <h3>Dane osobowe</h3>
           <div class="form-group">
             <label for="firstName">Imię</label>
-            <input pInputText id="firstName" name="firstName"
-                   [(ngModel)]="state.editedUser.firstName"
-                   placeholder="Wprowadź imię"/>
+            <input
+              pInputText
+              id="firstName"
+              name="firstName"
+              [(ngModel)]="state.editedUser.firstName"
+              placeholder="Wprowadź imię"
+            />
           </div>
           <div class="form-group">
             <label for="lastName">Nazwisko</label>
-            <input pInputText id="lastName" name="lastName"
-                   [(ngModel)]="state.editedUser.lastName"
-                   placeholder="Wprowadź nazwisko"/>
+            <input
+              pInputText
+              id="lastName"
+              name="lastName"
+              [(ngModel)]="state.editedUser.lastName"
+              placeholder="Wprowadź nazwisko"
+            />
           </div>
         </div>
 
@@ -71,24 +87,42 @@
           <h3>Dane kontaktowe</h3>
           <div class="form-group">
             <label for="email">Email</label>
-            <input pInputText id="email" type="email" [value]="state.userDetails.email"
-                   disabled class="disabled-input"/>
+            <input
+              pInputText
+              id="email"
+              type="email"
+              [value]="state.userDetails.email"
+              disabled
+              class="disabled-input"
+            />
           </div>
           <div class="form-group">
             <label for="phoneNumber">Telefon</label>
-            <p-inputMask id="phoneNumber" name="phoneNumber"
-                         [(ngModel)]="state.editedUser.phoneNumber"
-                         mask="999-999-999" placeholder="___-___-___">
+            <p-inputMask
+              id="phoneNumber"
+              name="phoneNumber"
+              [(ngModel)]="state.editedUser.phoneNumber"
+              mask="999-999-999"
+              placeholder="___-___-___">
             </p-inputMask>
           </div>
         </div>
 
         <div class="button-group">
-          <button pButton type="button" label="Anuluj"
-                  class="p-button-outlined" (click)="cancelEdit()">
+          <button
+            pButton
+            type="button"
+            label="Anuluj"
+            class="p-button-outlined"
+            (click)="cancelEdit()"
+          >
           </button>
-          <button pButton type="submit" label="Zapisz zmiany"
-                  [loading]="state.isSubmitting">
+          <button
+            pButton
+            type="submit"
+            label="Zapisz zmiany"
+            [loading]="state.isSubmitting"
+          >
           </button>
         </div>
       </form>

@@ -1,4 +1,4 @@
-import {Component, CUSTOM_ELEMENTS_SCHEMA, OnDestroy, OnInit} from '@angular/core';
+import {Component, CUSTOM_ELEMENTS_SCHEMA, inject, OnDestroy, OnInit} from '@angular/core';
 import {FilterComponent} from "../../../shared/components/filter/filter.component";
 import {NgClass, NgIf} from "@angular/common";
 import {SortConfig, SortingComponent} from "../../../shared/components/sorting/sorting.component";
@@ -44,7 +44,12 @@ const VEHICLE_SORT_OPTIONS: { label: string, value: keyof Vehicle }[] = [
   styleUrl: './vehicles.component.css'
 })
 export class VehiclesComponent implements OnInit, OnDestroy {
+  private readonly vehicleDataService = inject(VehicleDataService);
+  private readonly dialogService = inject(VehicleDialogService);
+  private readonly loadingService = inject(LoadingService);
+  private readonly router = inject(Router);
   private readonly destroy$ = new Subject<void>();
+  protected readonly paginationService = inject(PaginationService);
 
   vehicles: Vehicle[] = [];
   totalItems = 0;
@@ -52,15 +57,6 @@ export class VehiclesComponent implements OnInit, OnDestroy {
   sortOptions = VEHICLE_SORT_OPTIONS;
   isComponentLoaded = false;
   isLoading = true;
-
-  constructor(
-    private vehicleDataService: VehicleDataService,
-    private dialogService: VehicleDialogService,
-    protected paginationService: PaginationService,
-    private loadingService: LoadingService,
-    private router: Router
-  ) {
-  }
 
   ngOnInit(): void {
     this.loadVehicles();

@@ -4,15 +4,12 @@ body {
   flex-direction: column;
   background: linear-gradient(90deg, #f8f9fe 0%, #e9f0ff 100%);
   font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-
 }
 
 app-root {
   display: flex;
   flex-direction: column;
 }
-
-
 
 .record-list {
   display: flex;

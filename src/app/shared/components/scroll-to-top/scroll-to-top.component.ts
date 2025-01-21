@@ -1,11 +1,10 @@
 import {Component, HostListener} from '@angular/core';
-import {NgClass, NgIf} from "@angular/common";
+import {NgClass} from "@angular/common";
 
 @Component({
   selector: 'app-scroll-to-top',
   standalone: true,
   imports: [
-    NgIf,
     NgClass
   ],
   templateUrl: './scroll-to-top.component.html',

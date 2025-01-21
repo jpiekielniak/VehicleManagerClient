@@ -10,15 +10,6 @@ import { JwtHelperService } from "@auth0/angular-jwt";
 import { UserDetails } from "../../../user-details/types/user-details.type";
 import { ResetPassword } from "../../reset-password/types/reset-password.type";
 
-export interface DecodedToken {
-  sub: string;
-  unique_name: string;
-  jti: string;
-  role: string;
-  exp: number;
-  iss: string;
-  aud: string;
-}
 
 @Injectable({
   providedIn: 'root',

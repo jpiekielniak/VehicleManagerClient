@@ -1,6 +1,6 @@
 import {Observable} from "rxjs";
 import {inject, Injectable} from "@angular/core";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {API_CONSTANTS} from "../../../../constants/api.constants";
 import {Vehicle} from "../../vehicles/types/vehicle.type";
 import {PaginationResult} from "../../../../shared/components/pagination/types/pagination-result.type";
@@ -26,17 +26,19 @@ export class VehicleService {
     filter: any = null,
     sort: string = 'brand'
   ): Observable<PaginationResult<Vehicle>> {
-    let url = `${API_CONSTANTS.VEHICLE.BASE_PATH}?page=${page}&pageSize=${pageSize}`;
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('pageSize', pageSize.toString());
 
     if (filter) {
-      url += `&Filters=brand@=${encodeURIComponent(filter)}`;
+      params = params.set('Filters', `brand@=${filter}`);
     }
 
     if (sort) {
-      url += `&Sorts=${encodeURIComponent(sort)}`;
+      params = params.set('Sorts', sort);
     }
 
-    return this.http.get<PaginationResult<Vehicle>>(url);
+    return this.http.get<PaginationResult<Vehicle>>(API_CONSTANTS.VEHICLE.BASE_PATH, { params });
   }
 
   deleteVehicle(id: string): Observable<void> {

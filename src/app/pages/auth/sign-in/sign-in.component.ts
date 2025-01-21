@@ -3,7 +3,6 @@ import {FormBuilder, FormGroup, ReactiveFormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {SignIn} from './types/sign-in.type';
 import {AuthService} from '../shared/services/auth.service';
-import {MaterialImports} from '../../../imports/material.imports';
 import {Router, RouterLink} from '@angular/router';
 import {ToastModule} from 'primeng/toast';
 import {Subject, takeUntil} from "rxjs";
@@ -23,7 +22,6 @@ import {FormValidatorsService} from "../../../shared/services/form/form-validato
     ReactiveFormsModule,
     RouterLink,
     ToastModule,
-    ...MaterialImports,
     ButtonDirective,
     InputTextModule,
   ],

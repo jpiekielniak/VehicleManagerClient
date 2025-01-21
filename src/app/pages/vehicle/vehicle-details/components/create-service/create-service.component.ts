@@ -3,7 +3,6 @@ import {BehaviorSubject, debounceTime, distinctUntilChanged, finalize, Subject, 
 import {FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {ServiceBookService} from "../../services/serviceBook/service-book.service";
 import {CreateService} from "../../types/create-service.type";
-import {MaterialImports} from "../../../../../imports/material.imports";
 import {AsyncPipe, NgClass, NgForOf, NgIf} from "@angular/common";
 import {DividerModule} from "primeng/divider";
 import {ButtonDirective} from "primeng/button";
@@ -43,7 +42,6 @@ const INITIAL_FORM_STATE: FormState = {
     ReactiveFormsModule,
     NgIf,
     NgForOf,
-    ...MaterialImports,
     DividerModule,
     ButtonDirective,
     InputNumberModule,
@@ -239,5 +237,4 @@ export class CreateServiceComponent implements OnInit, OnDestroy {
   get isSubmitting(): boolean {
     return this.formState$.value.isSubmitting;
   }
-
 }

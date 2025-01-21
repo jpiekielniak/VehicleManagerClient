@@ -6,6 +6,16 @@ import {NgClass} from "@angular/common";
 import {ButtonDirective} from "primeng/button";
 import {TooltipModule} from "primeng/tooltip";
 
+export interface SortOption {
+  label: string;
+  value: string;
+}
+
+export interface SortConfig<T> {
+  field: keyof T;
+  direction: 'asc' | 'desc';
+}
+
 @Component({
   selector: 'app-sorting',
   standalone: true,
@@ -64,14 +74,4 @@ export class SortingComponent implements OnInit {
     const option = this.sortOptions.find(opt => opt.value === value);
     return option ? option.label : value;
   }
-}
-
-export interface SortOption {
-  label: string;
-  value: string;
-}
-
-export interface SortConfig<T> {
-  field: keyof T;
-  direction: 'asc' | 'desc';
 }

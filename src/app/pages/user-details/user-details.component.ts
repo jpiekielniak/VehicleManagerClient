@@ -1,21 +1,21 @@
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {DatePipe, NgClass, NgIf} from "@angular/common";
-import { FormsModule, NgForm } from "@angular/forms";
-import { Router } from "@angular/router";
-import { finalize, catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
-import { MenuItem } from "primeng/api";
+import {FormsModule} from "@angular/forms";
+import {Router} from "@angular/router";
+import {catchError, finalize} from 'rxjs/operators';
+import {of} from 'rxjs';
+import {MenuItem} from "primeng/api";
 import {ButtonDirective} from "primeng/button";
-import { CardModule } from "primeng/card";
-import { MenuModule } from "primeng/menu";
-import { InputMaskModule } from "primeng/inputmask";
-import { InputTextModule } from "primeng/inputtext";
-import { ProgressSpinnerModule } from "primeng/progressspinner";
+import {CardModule} from "primeng/card";
+import {MenuModule} from "primeng/menu";
+import {InputMaskModule} from "primeng/inputmask";
+import {InputTextModule} from "primeng/inputtext";
+import {ProgressSpinnerModule} from "primeng/progressspinner";
 
-import { AuthService } from "../auth/shared/services/auth.service";
-import { ConfirmDialogService } from "../../shared/services/dialogs/confirm/confirm-dialog.service";
-import { ToastService } from '../../shared/services/toast/toast.service';
-import { UserCompleteData } from "../../shared/types/user-complete-data.type";
+import {AuthService} from "../auth/shared/services/auth.service";
+import {ConfirmDialogService} from "../../shared/services/dialogs/confirm/confirm-dialog.service";
+import {ToastService} from '../../shared/services/toast/toast.service';
+import {UserCompleteData} from "../../shared/types/user-complete-data.type";
 import {UserDetails} from "./types/user-details.type";
 import {DialogService} from "primeng/dynamicdialog";
 import {LoadingSpinnerComponent} from "../../shared/components/loading-spinner/loading-spinner.component";
@@ -47,10 +47,9 @@ interface UserDetailsState {
   ],
   providers: [ToastService, ConfirmDialogService, DialogService],
   templateUrl: './user-details.component.html',
-  styleUrl: './user-details.component.scss'
+  styleUrl: './user-details.component.css'
 })
 export class UserDetailsComponent implements OnInit {
-  @ViewChild('editForm') private readonly editForm!: NgForm;
 
   private readonly confirmDialogService = inject(ConfirmDialogService);
   private readonly toastService = inject(ToastService);
@@ -166,7 +165,7 @@ export class UserDetailsComponent implements OnInit {
   }
 
   private prepareUpdateData(): UserCompleteData {
-    const { userId, firstName, lastName, phoneNumber } = this.state.editedUser;
+    const {userId, firstName, lastName, phoneNumber} = this.state.editedUser;
     const details = this.state.userDetails;
 
     if (!details) {

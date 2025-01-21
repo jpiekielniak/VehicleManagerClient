@@ -34,7 +34,7 @@ import {LoadingSpinnerComponent} from "../../../../../shared/components/loading-
 @Component({
   selector: 'app-vehicle-edit-dialog',
   templateUrl: './vehicle-edit-dialog.component.html',
-  styleUrls: ['./vehicle-edit-dialog.component.scss'],
+  styleUrls: ['./vehicle-edit-dialog.component.css'],
   standalone: true,
   imports: [
     NgIf,

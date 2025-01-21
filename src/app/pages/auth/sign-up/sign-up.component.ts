@@ -3,7 +3,6 @@ import {FormBuilder, FormGroup, ReactiveFormsModule} from '@angular/forms';
 import {AuthService} from '../shared/services/auth.service';
 import {SignUp} from './types/sign-up.type';
 import {Router} from '@angular/router';
-import {MaterialImports} from "../../../imports/material.imports";
 import {ToastModule} from "primeng/toast";
 import {MessageService} from "primeng/api";
 import {ButtonDirective} from "primeng/button";
@@ -12,6 +11,7 @@ import {FormErrorService} from "../../../shared/services/form/form-error.service
 import {Subject, takeUntil} from "rxjs";
 import {FormValidatorsService} from "../../../shared/services/form/form-validators.service";
 import {ToastService} from "../../../shared/services/toast/toast.service";
+import {NgIf} from "@angular/common";
 
 @Component({
   selector: 'sign-up',
@@ -19,9 +19,9 @@ import {ToastService} from "../../../shared/services/toast/toast.service";
   imports: [
     ReactiveFormsModule,
     ToastModule,
-    ...MaterialImports,
     ButtonDirective,
     InputTextModule,
+    NgIf,
   ],
   providers: [MessageService, ToastService],
   templateUrl: './sign-up.component.html',
@@ -78,7 +78,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: () => this.handleSignUpSuccess(),
-        error: (error) => {
+        error: () => {
           this.toastService.showError('Rejestracja nie powiodła się. Spróbuj ponownie.');
           this.isLoading.set(false);
         }
