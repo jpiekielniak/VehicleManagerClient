@@ -1,6 +1,6 @@
 :host {
   display: block;
-  margin-top: auto;
+  margin-top: 3rem;
 }
 
 .footer {
@@ -9,7 +9,6 @@
   width: 100%;
   padding: 3rem 0 1rem;
   position: relative;
-  overflow: hidden;
 
   &::before {
     content: '';

@@ -26,7 +26,7 @@ export class ServiceDialogService {
 
   openCreateService(serviceBookId: string): Observable<any> {
     return this.dialogService.open(CreateServiceComponent, {
-      width: '80vw',
+      width: '50vw',
       height: 'auto',
       style: { 'max-width': '100%' },
       data: { serviceBookId },
