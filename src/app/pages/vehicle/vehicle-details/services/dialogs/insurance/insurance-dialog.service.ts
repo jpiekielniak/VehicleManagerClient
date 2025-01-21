@@ -26,8 +26,9 @@ export class InsuranceDialogService {
   openCreateInsurance(vehicleId: string): Observable<any> {
     return this.dialogService.open(CreateInsuranceComponent, {
       header: 'Dodaj nowe ubezpieczenie',
-      width: '1050px',
-      style: { 'max-width': '90%'},
+      width: '80vw',
+      height: 'auto',
+      style: { 'max-width': '100%' },
       data: { vehicleId },
       baseZIndex: 10000,
       dismissableMask: true

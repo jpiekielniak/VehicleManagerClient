@@ -20,6 +20,7 @@ import {VehicleService} from "../../../services/vehicle/vehicle.service";
 import {InsuranceDialogService} from "../../services/dialogs/insurance/insurance-dialog.service";
 import {ConfirmDialogService} from "../../../../../shared/services/dialogs/confirm/confirm-dialog.service";
 import {ToastService} from '../../../../../shared/services/toast/toast.service';
+import {LoadingSpinnerComponent} from "../../../../../shared/components/loading-spinner/loading-spinner.component";
 
 interface InsuranceState {
   insurances: Insurance[];
@@ -39,7 +40,8 @@ interface InsuranceState {
     NgForOf,
     MenuModule,
     ProgressSpinnerModule,
-    ButtonDirective
+    ButtonDirective,
+    LoadingSpinnerComponent
   ],
   providers: [ToastService],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -147,13 +149,13 @@ export class InsuranceListComponent {
 
     try {
       this.state.isOperationInProgress = true;
-      const result = await firstValueFrom(
-        this.insuranceDialog.openCreateInsurance(this.vehicleId)
-      );
+      this.insuranceDialog.openCreateInsurance(this.vehicleId)
+        .subscribe(result => {
+          if (result) {
+            this.refreshData();
+          }
+        });
 
-      if (result) {
-        await this.refreshData();
-      }
     } finally {
       this.state.isOperationInProgress = false;
       this.cdr.detectChanges();
@@ -162,7 +164,6 @@ export class InsuranceListComponent {
 
   private async refreshData(): Promise<void> {
     this.state.isInitialized = false;
-    this.state.insurances = [];
     await this.loadInsurances();
   }
 }

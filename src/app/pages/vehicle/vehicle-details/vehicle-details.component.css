@@ -20,9 +20,6 @@
   padding: 2rem;
   background: white;
 
-  @media (max-width: 1024px) {
-    grid-template-columns: 1fr;
-  }
 }
 
 .records-container {

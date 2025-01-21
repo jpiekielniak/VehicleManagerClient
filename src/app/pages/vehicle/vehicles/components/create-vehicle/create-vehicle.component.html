@@ -1,28 +1,28 @@
 <div class="vehicle-dialog">
-<div class="dialog-container">
-  <div class="dialog-header">
-    <div class="header-content">
-      <div class="title-section">
-        <i class="pi pi-plus-circle"></i>
-        <h2>Dodaj nowy pojazd</h2>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="header-content">
+        <div class="title-section">
+          <i class="pi pi-plus-circle"></i>
+          <h2>Dodaj nowy pojazd</h2>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="dialog-content" *ngIf="!isLoading()">
-    <form [formGroup]="createVehicleForm" class="p-fluid">
-      <p-card styleClass="mb-3">
-        <ng-template pTemplate="header">
-          <div class="card-header">
-            <i class="pi pi-info-circle"></i>
-            <span>Informacje podstawowe</span>
-          </div>
-        </ng-template>
+    <div class="dialog-content" *ngIf="!isLoading()">
+      <form [formGroup]="createVehicleForm" class="p-fluid">
+        <p-card styleClass="mb-3">
+          <ng-template pTemplate="header">
+            <div class="card-header">
+              <i class="pi pi-info-circle"></i>
+              <span>Informacje podstawowe</span>
+            </div>
+          </ng-template>
 
-        <div class="p-grid form-grid">
-          <div class="form-field">
-            <label>Marka <span class="required-star">*</span></label>
-            <span class="p-input-icon-left">
+          <div class="p-grid form-grid">
+            <div class="form-field">
+              <label>Marka <span class="required-star">*</span></label>
+              <span class="p-input-icon-left">
               <i class="pi pi-tag"></i>
               <input
                 pInputText
@@ -31,14 +31,14 @@
                 placeholder="Wprowadź markę"
               />
             </span>
-            <small class="error-message" *ngIf="isFieldInvalid('brand')">
-              {{ getControlError('brand') }}
-            </small>
-          </div>
+              <small class="error-message" *ngIf="isFieldInvalid('brand')">
+                {{ getControlError('brand') }}
+              </small>
+            </div>
 
-          <div class="form-field">
-            <label>Model <span class="required-star">*</span></label>
-            <span class="p-input-icon-left">
+            <div class="form-field">
+              <label>Model <span class="required-star">*</span></label>
+              <span class="p-input-icon-left">
               <i class="pi pi-car"></i>
               <input
                 pInputText
@@ -47,131 +47,134 @@
                 placeholder="Wprowadź model"
               />
             </span>
-            <small class="error-message" *ngIf="isFieldInvalid('model')">
-              {{ getControlError('model') }}
-            </small>
-          </div>
-
-          <div class="form-field">
-            <label>Rok produkcji <span class="required-star">*</span></label>
-            <p-inputNumber
-              [attr.id]="'year'"
-              formControlName="year"
-              [min]="1900"
-              [max]="currentYear"
-              placeholder="Rok produkcji"
-              [useGrouping]="false"
-              [showButtons]="false"
-            >
-            </p-inputNumber>
-            <small class="error-message" *ngIf="isFieldInvalid('year')">
-              {{ getControlError('year') }}
-            </small>
-          </div>
-        </div>
-      </p-card>
-
-      <p-card styleClass="mb-3">
-        <ng-template pTemplate="header">
-          <div class="card-header">
-            <i class="pi pi-cog"></i>
-            <span>Informacje techniczne</span>
-          </div>
-        </ng-template>
-
-        <div class="p-grid form-grid">
-          <div class="form-field">
-            <label>Pojemność silnika (cm³) <span class="required-star">*</span></label>
-            <p-inputNumber
-              [attr.id]="'engineCapacity'"
-              formControlName="engineCapacity"
-              [min]="0"
-              placeholder="np. 1998"
-              [showButtons]="false"
-            >
-            </p-inputNumber>
-            <small class="error-message" *ngIf="isFieldInvalid('engineCapacity')">
-              {{ getControlError('engineCapacity') }}
-            </small>
-          </div>
-
-          <div class="form-field">
-            <label>Moc silnika (KM) <span class="required-star">*</span></label>
-            <p-inputNumber
-              [attr.id]="'enginePower'"
-              formControlName="enginePower"
-              [min]="0"
-              placeholder="np. 150"
-              [showButtons]="false"
-              suffix=" KM"
-            >
-            </p-inputNumber>
-            <small class="error-message" *ngIf="isFieldInvalid('enginePower')">
-              {{ getControlError('enginePower') }}
-            </small>
-          </div>
-
-          <ng-container *ngIf="enumData$ | async as enumData">
-            <div class="form-field">
-              <label>Rodzaj paliwa <span class="required-star">*</span></label>
-              <p-dropdown
-                [attr.id]="'fuelType'"
-                formControlName="fuelType"
-                [options]="enumData.fuelTypes"
-                optionLabel="value"
-                placeholder="Wybierz rodzaj paliwa"
-              >
-              </p-dropdown>
-              <small class="error-message" *ngIf="isFieldInvalid('fuelType')">
-                {{ getControlError('fuelType') }}
+              <small class="error-message" *ngIf="isFieldInvalid('model')">
+                {{ getControlError('model') }}
               </small>
             </div>
 
             <div class="form-field">
-              <label>Skrzynia biegów <span class="required-star">*</span></label>
-              <p-dropdown
-                [attr.id]="'gearboxType'"
-                formControlName="gearboxType"
-                [options]="enumData.gearboxTypes"
-                optionLabel="value"
-                placeholder="Wybierz typ skrzyni"
+              <label>Rok produkcji <span class="required-star">*</span></label>
+              <p-inputNumber
+                [attr.id]="'year'"
+                formControlName="year"
+                [min]="1900"
+                [max]="currentYear"
+                placeholder="Rok produkcji"
+                [useGrouping]="false"
+                [showButtons]="false"
               >
-              </p-dropdown>
-              <small class="error-message" *ngIf="isFieldInvalid('gearboxType')">
-                {{ getControlError('gearboxType') }}
+              </p-inputNumber>
+              <small class="error-message" *ngIf="isFieldInvalid('year')">
+                {{ getControlError('year') }}
+              </small>
+            </div>
+          </div>
+        </p-card>
+
+        <p-card styleClass="mb-3">
+          <ng-template pTemplate="header">
+            <div class="card-header">
+              <i class="pi pi-cog"></i>
+              <span>Informacje techniczne</span>
+            </div>
+          </ng-template>
+
+          <div class="p-grid form-grid">
+            <div class="form-field">
+              <label>Pojemność silnika (cm³) <span class="required-star">*</span></label>
+              <p-inputNumber
+                [attr.id]="'engineCapacity'"
+                formControlName="engineCapacity"
+                [min]="0"
+                placeholder="np. 1998"
+                [showButtons]="false"
+              >
+              </p-inputNumber>
+              <small class="error-message" *ngIf="isFieldInvalid('engineCapacity')">
+                {{ getControlError('engineCapacity') }}
               </small>
             </div>
 
             <div class="form-field">
-              <label>Typ pojazdu <span class="required-star">*</span></label>
-              <p-dropdown
-                [attr.id]="'vehicleType'"
-                formControlName="vehicleType"
-                [options]="enumData.vehicleTypes"
-                optionLabel="value"
-                placeholder="Wybierz typ pojazdu"
+              <label>Moc silnika (KM) <span class="required-star">*</span></label>
+              <p-inputNumber
+                [attr.id]="'enginePower'"
+                formControlName="enginePower"
+                [min]="0"
+                placeholder="np. 150"
+                [showButtons]="false"
+                suffix=" KM"
               >
-              </p-dropdown>
-              <small class="error-message" *ngIf="isFieldInvalid('vehicleType')">
-                {{ getControlError('vehicleType') }}
+              </p-inputNumber>
+              <small class="error-message" *ngIf="isFieldInvalid('enginePower')">
+                {{ getControlError('enginePower') }}
               </small>
             </div>
-          </ng-container>
-        </div>
-      </p-card>
 
-      <p-card>
-        <ng-template pTemplate="header">
-          <div class="card-header">
-            <i class="pi pi-list"></i>
-            <span>Informacje identyfikacyjne</span>
+            <ng-container *ngIf="enumData$ | async as enumData">
+              <div class="form-field">
+                <label>Rodzaj paliwa <span class="required-star">*</span></label>
+                <p-dropdown
+                  [attr.id]="'fuelType'"
+                  formControlName="fuelType"
+                  [options]="enumData.fuelTypes"
+                  optionLabel="value"
+                  optionValue="key"
+                  placeholder="Wybierz rodzaj paliwa"
+                >
+                </p-dropdown>
+                <small class="error-message" *ngIf="isFieldInvalid('fuelType')">
+                  {{ getControlError('fuelType') }}
+                </small>
+              </div>
+
+              <div class="form-field">
+                <label>Skrzynia biegów <span class="required-star">*</span></label>
+                <p-dropdown
+                  [attr.id]="'gearboxType'"
+                  formControlName="gearboxType"
+                  [options]="enumData.gearboxTypes"
+                  optionLabel="value"
+                  optionValue="key"
+                  placeholder="Wybierz typ skrzyni"
+                >
+                </p-dropdown>
+                <small class="error-message" *ngIf="isFieldInvalid('gearboxType')">
+                  {{ getControlError('gearboxType') }}
+                </small>
+              </div>
+
+              <div class="form-field">
+                <label>Typ pojazdu <span class="required-star">*</span></label>
+                <p-dropdown
+                  [attr.id]="'vehicleType'"
+                  formControlName="vehicleType"
+                  [options]="enumData.vehicleTypes"
+                  optionLabel="value"
+                  optionValue="key"
+                  placeholder="Wybierz typ pojazdu"
+                >
+                </p-dropdown>
+                <small class="error-message" *ngIf="isFieldInvalid('vehicleType')">
+                  {{ getControlError('vehicleType') }}
+                </small>
+              </div>
+            </ng-container>
           </div>
-        </ng-template>
+        </p-card>
 
-        <div class="p-grid form-grid">
-          <div class="form-field">
-            <label>VIN <span class="required-star">*</span></label>
-            <span class="p-input-icon-left">
+        <p-card>
+          <ng-template pTemplate="header">
+            <div class="card-header">
+              <i class="pi pi-list"></i>
+              <span>Informacje identyfikacyjne</span>
+            </div>
+          </ng-template>
+
+          <div class="p-grid form-grid">
+            <div class="form-field">
+              <label>VIN <span class="required-star">*</span></label>
+              <span class="p-input-icon-left">
               <i class="pi pi-id-card"></i>
               <input
                 pInputText
@@ -180,14 +183,14 @@
                 placeholder="VIN (17 znaków)"
               />
             </span>
-            <small class="error-message" *ngIf="isFieldInvalid('vin')">
-              {{ getControlError('vin') }}
-            </small>
-          </div>
+              <small class="error-message" *ngIf="isFieldInvalid('vin')">
+                {{ getControlError('vin') }}
+              </small>
+            </div>
 
-          <div class="form-field">
-            <label>Numer rejestracyjny <span class="required-star">*</span></label>
-            <span class="p-input-icon-left">
+            <div class="form-field">
+              <label>Numer rejestracyjny <span class="required-star">*</span></label>
+              <span class="p-input-icon-left">
               <i class="pi pi-id-card"></i>
               <input
                 pInputText
@@ -196,33 +199,33 @@
                 placeholder="np. WA12345"
               />
             </span>
-            <small class="error-message" *ngIf="isFieldInvalid('licensePlate')">
-              {{ getControlError('licensePlate') }}
-            </small>
+              <small class="error-message" *ngIf="isFieldInvalid('licensePlate')">
+                {{ getControlError('licensePlate') }}
+              </small>
+            </div>
           </div>
-        </div>
-      </p-card>
-    </form>
-  </div>
+        </p-card>
+      </form>
+    </div>
 
-  <div class="dialog-footer">
-    <p-button
-      icon="pi pi-times"
-      label="Anuluj"
-      (onClick)="onCancel()"
-      styleClass="p-button-outlined p-button-secondary"
-      [disabled]="isLoading()"
-    >
-    </p-button>
-    <p-button
-      icon="pi pi-check"
-      label="Dodaj pojazd"
-      (onClick)="onSubmit()"
-      [disabled]="!createVehicleForm.valid || isLoading()"
-      [loading]="isLoading()"
-      styleClass="p-button-primary"
-    >
-    </p-button>
+    <div class="dialog-footer">
+      <p-button
+        icon="pi pi-times"
+        label="Anuluj"
+        (onClick)="onCancel()"
+        styleClass="p-button-outlined p-button-secondary"
+        [disabled]="isLoading()"
+      >
+      </p-button>
+      <p-button
+        icon="pi pi-check"
+        label="Dodaj pojazd"
+        (onClick)="onSubmit()"
+        [disabled]="!createVehicleForm.valid || isLoading()"
+        [loading]="isLoading()"
+        styleClass="p-button-primary"
+      >
+      </p-button>
+    </div>
   </div>
-</div>
 </div>

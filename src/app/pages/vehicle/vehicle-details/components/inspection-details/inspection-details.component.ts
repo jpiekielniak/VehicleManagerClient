@@ -9,6 +9,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ServiceBookService } from "../../services/serviceBook/service-book.service";
 import { InspectionDetails } from "../../types/inspection-details.type";
 import { ToastService } from '../../../../../shared/services/toast/toast.service';
+import {LoadingSpinnerComponent} from "../../../../../shared/components/loading-spinner/loading-spinner.component";
 
 interface InspectionState {
   loading: boolean;
@@ -24,7 +25,8 @@ interface InspectionState {
     ButtonModule,
     CardModule,
     DividerModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    LoadingSpinnerComponent
   ],
   templateUrl: './inspection-details.component.html',
   styleUrl: './inspection-details.component.css'

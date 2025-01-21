@@ -2,6 +2,7 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {RecordListComponent} from "../record-list/record-list.component";
 import {NgIf} from "@angular/common";
 import {ProgressSpinnerModule} from "primeng/progressspinner";
+import {LoadingSpinnerComponent} from "../../../../../shared/components/loading-spinner/loading-spinner.component";
 
 interface Record {
   id: string;
@@ -14,7 +15,8 @@ interface Record {
   imports: [
     RecordListComponent,
     NgIf,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    LoadingSpinnerComponent
   ],
   templateUrl: './accordion-tab.component.html',
   styleUrl: './accordion-tab.component.css'

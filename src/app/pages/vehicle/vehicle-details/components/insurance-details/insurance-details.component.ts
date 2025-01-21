@@ -9,6 +9,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { VehicleService } from "../../../services/vehicle/vehicle.service";
 import { InsuranceDetails } from "../../types/insurance-details.type";
 import { ToastService } from '../../../../../shared/services/toast/toast.service';
+import {LoadingSpinnerComponent} from "../../../../../shared/components/loading-spinner/loading-spinner.component";
 
 interface InsuranceState {
   loading: boolean;
@@ -25,7 +26,8 @@ interface InsuranceState {
     DividerModule,
     ProgressSpinnerModule,
     NgClass,
-    NgIf
+    NgIf,
+    LoadingSpinnerComponent
   ],
   providers:[ToastService],
   templateUrl: './insurance-details.component.html',
@@ -71,7 +73,7 @@ export class InsuranceDetailsComponent implements OnInit, OnDestroy {
             details: response,
           };
         },
-        error: (error) => {
+        error: () => {
           this.state = {
             ...this.state,
           };

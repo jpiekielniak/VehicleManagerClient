@@ -40,7 +40,7 @@ export class ContactComponent {
       icon: 'pi-envelope',
       label: 'Email służbowy',
       value: 'jakubpiekielniak@icloud.com',
-      description: 'Napisz do mnie w sprawach biznesowych',
+      description: 'Napisz do mnie',
       link: 'mailto:jakubpiekielniak@icloud.com'
     },
     {

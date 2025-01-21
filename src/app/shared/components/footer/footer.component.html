@@ -1,8 +1,53 @@
-<footer
-  class="footer"
-  (mouseover)="isHovered = true"
-  (mouseleave)="isHovered = false"
-  [class.hovered]="isHovered"
->
-  <span>&copy; {{ currentYear }} Menadżer pojazdów. Wszelkie prawa zastrzeżone.</span>
+<footer class="footer">
+  <div class="footer-content">
+    <div class="footer-section">
+      <h4>Poznaj autora</h4>
+      <div class="social-links">
+        <a href="https://www.linkedin.com/in/jpiekielniak/"
+           target="_blank"
+           class="social-link"
+           aria-label="LinkedIn">
+          <i class="pi pi-linkedin"></i>
+        </a>
+        <a href="https://github.com/jpiekielniak"
+           target="_blank"
+           class="social-link"
+           aria-label="GitHub">
+          <i class="pi pi-github"></i>
+        </a>
+        <a href="mailto:jakubpiekielniak123@gmail.com"
+           class="social-link"
+           aria-label="Email">
+          <i class="pi pi-at"></i>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-section">
+      <h4>Kontakt</h4>
+      <ul>
+        <li><a [routerLink]="['/kontakt']">Skontaktuj się z nami</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-section">
+      <h4>Informacje</h4>
+      <ul>
+        <li><a [routerLink]="['/informacje-o-aplikacji']">Informacje o aplikacji</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="work-in-progress-section">
+    <div class="work-animation">
+      <i class="pi pi-cog spin-icon"></i>
+      <i class="pi pi-cog spin-icon-reverse"></i>
+    </div>
+    <h4>Newsletter już wkrótce!</h4>
+    <p>Nowa możliwość systemu, która pozwoli Ci być na bieżąco z najnowszymi aktualizacjami.</p>
+  </div>
+
+  <div class="footer-bottom">
+    <span>&copy; {{ currentYear }} Menedżer pojazdów. Wszelkie prawa zastrzeżone.</span>
+  </div>
 </footer>

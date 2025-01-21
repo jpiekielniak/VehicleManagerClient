@@ -1,9 +1,11 @@
 <nav class="navbar">
   <div class="navbar-container">
     <div class="navbar-brand">
-      <a [routerLink]="['/']" class="brand-link">
-        <i class="pi pi-car"></i>
-        <span>Menadżer pojazdów</span>
+      <a [routerLink]="['/informacje-o-aplikacji']" class="brand-link">
+        <span class="brand-icon">
+          <i class="pi pi-car brand-icon-car"></i>
+        </span>
+        <span class="brand-text">Menedżer Pojazdów</span>
       </a>
     </div>
 
@@ -13,7 +15,7 @@
            routerLinkActive="active"
            class="nav-link">
           <i class="{{item.icon}}"></i>
-          <span>{{item.label}}</span>
+          <span>{{ item.label }}</span>
         </a>
       </ng-container>
     </div>

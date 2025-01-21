@@ -29,7 +29,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   private readonly baseItems: MenuItem[] = [
     {
       label: 'Moje pojazdy',
-      icon: 'pi pi-car',
+      icon: 'pi pi-warehouse',
       routerLink: ['/moje-pojazdy']
     },
     {

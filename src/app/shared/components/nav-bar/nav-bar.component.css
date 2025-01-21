@@ -1,5 +1,5 @@
 .navbar {
-  background: linear-gradient(135deg, rgba(63, 161, 241, 0.8), rgba(74, 150, 228, 0.8));
+  background: linear-gradient(150deg, rgba(25, 123, 205, 0.8), rgba(35, 124, 213, 0.8));
   padding: 1rem 0;
   display: flex;
   justify-content: space-between;
@@ -32,7 +32,7 @@
 .brand-link {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 1rem;
   color: white;
   text-decoration: none;
   font-size: 1.25rem;
@@ -44,10 +44,20 @@
   opacity: 0.9;
 }
 
-.brand-link i {
-  font-size: 1.5rem;
+.brand-icon i:first-child {
+  color: #ffffff;
+  font-size: 2rem;
 }
 
+.brand-text {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  letter-spacing: 1px;
+  background: linear-gradient(to right, #ffffff, #e6f3ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 
 .nav-link {
   display: flex;
@@ -121,6 +131,9 @@
     margin: 1rem 0 0;
     justify-content: space-around;
     overflow-x: auto;
+    position: relative;
+    left: 0;
+    transform: none;
   }
 
   .nav-link {
