@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, catchError, map, Observable, of } from 'rxjs';
+import {BehaviorSubject, catchError, map, Observable, throwError} from 'rxjs';
 import { SignUp } from '../../sign-up/types/sign-up.type';
 import { SignIn } from '../../sign-in/types/sign-in.type';
 import { DOCUMENT } from '@angular/common';
@@ -42,9 +42,8 @@ export class AuthService {
           return false;
         }),
         catchError((error) => {
-          console.error('Sign in error:', error);
           this.resetAuthState();
-          return of(false);
+          return throwError(() => error);
         })
       );
   }

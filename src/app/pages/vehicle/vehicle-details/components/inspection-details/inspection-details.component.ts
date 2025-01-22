@@ -1,5 +1,5 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { DatePipe, NgIf } from "@angular/common";
+import {DatePipe, NgClass, NgIf} from "@angular/common";
 import { Subject, takeUntil, finalize } from 'rxjs';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ButtonModule } from 'primeng/button';
@@ -26,7 +26,8 @@ interface InspectionState {
     CardModule,
     DividerModule,
     ProgressSpinnerModule,
-    LoadingSpinnerComponent
+    LoadingSpinnerComponent,
+    NgClass
   ],
   templateUrl: './inspection-details.component.html',
   styleUrl: './inspection-details.component.css'
@@ -75,6 +76,21 @@ export class InspectionDetailsComponent implements OnInit, OnDestroy {
           this.toastService.showError('Nie udało się pobrać szczegółów przeglądu');
         }
       });
+  }
+
+  isInspectionValid(): boolean {
+    if (!this.state.details?.performDate) return false;
+
+    const performDate = new Date(this.state.details.performDate);
+    const currentDate = new Date();
+    const oneYearAgo = new Date();
+    oneYearAgo.setFullYear(currentDate.getFullYear() - 1);
+
+    return performDate >= oneYearAgo;
+  }
+
+  getValidityLabelClass(): string {
+    return this.isInspectionValid() ? 'status-valid' : 'status-invalid';
   }
 
   close(): void {

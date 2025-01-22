@@ -188,11 +188,16 @@ export class VehicleEditDialogComponent implements OnInit, OnDestroy {
   }
 
   private async handleSuccessfulUpdate(): Promise<void> {
+    const updatedVehicle = await firstValueFrom(
+      this.vehicleService.getById(this.vehicle().id).pipe(
+        takeUntil(this.destroy$)
+      )
+    );
+
     this.toastService.showSuccess('Pojazd został pomyślnie zaktualizowany');
-    this.dialogRef.close();
-    await new Promise(resolve => setTimeout(resolve, 300));
-    window.location.reload();
+    this.dialogRef.close(updatedVehicle);
   }
+
 
   private handleError(): void {
     this.toastService.showError('Wystąpił błąd podczas aktualizacji pojazdu');

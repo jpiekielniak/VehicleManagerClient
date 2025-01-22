@@ -1,6 +1,6 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 <div class="vehicles-container" [style.visibility]="isLoading ? 'hidden' : 'visible'">
-  <div class="vehicle-card" *ngFor="let vehicle of _vehicles; let i = index" @fadeInUp>
+  <div class="vehicle-card" *ngFor="let vehicle of _vehicles; let i = index">
     <div class="vehicle-content">
       <div class="vehicle-info">
         <div class="vehicle-number">
@@ -33,7 +33,7 @@
             style="display: none"
             (load)="onImageLoad(vehicle.vehicleId)"
             (error)="onImageLoad(vehicle.vehicleId)"
-           alt="Zdjęcie pojazdu"/>
+            alt="Zdjęcie pojazdu"/>
         </div>
         <div
           class="image-loader"

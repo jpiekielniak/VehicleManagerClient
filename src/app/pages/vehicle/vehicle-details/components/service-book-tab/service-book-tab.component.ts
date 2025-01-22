@@ -101,7 +101,8 @@ export class ServiceBookTabComponent implements OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(result => {
         if (result) {
-          this.refreshData();
+          this.state.services = [];
+          this.loadServices();
         }
       });
   }
@@ -111,7 +112,8 @@ export class ServiceBookTabComponent implements OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(result => {
         if (result) {
-          this.refreshData();
+          this.state.inspections = [];
+          this.loadInspections();
         }
       });
   }

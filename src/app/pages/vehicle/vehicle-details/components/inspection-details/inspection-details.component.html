@@ -3,6 +3,9 @@
     <ng-container *ngIf="!state.loading; else loadingTpl">
       <div class="header">
         <h2 class="title">{{ state.details?.title }}</h2>
+        <div class="validity-label" [ngClass]="getValidityLabelClass()">
+          {{ isInspectionValid() ? 'Aktywny' : 'Nieaktywny' }}
+        </div>
         <p-divider></p-divider>
       </div>
 

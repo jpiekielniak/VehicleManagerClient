@@ -82,23 +82,30 @@ export class SignInComponent implements OnInit, OnDestroy, AfterViewInit {
 
   async onSubmit(): Promise<void> {
     if (this.signInForm.valid) {
+      this.isLoading.set(true);
       try {
-        this.isLoading.set(true);
         await this.handleSignIn();
       } catch (error) {
         this.showError();
       } finally {
         this.isLoading.set(false);
       }
+    } else {
+      this.toastService.showWarning('Formularz zawiera błędy');
     }
   }
 
   private async handleSignIn(): Promise<void> {
     const signInData = this.signInForm.value as SignIn;
-    await this.authService.signIn(signInData)
-      .pipe(takeUntil(this.destroy$))
-      .toPromise();
-    await this.handleSignInSuccess();
+
+    this.authService.signIn(signInData)
+      .pipe(
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: () => this.handleSignInSuccess(),
+        error: () => this.showError()
+      });
   }
 
   private async handleSignInSuccess(): Promise<void> {

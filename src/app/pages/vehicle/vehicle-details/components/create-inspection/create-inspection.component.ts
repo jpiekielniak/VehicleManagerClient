@@ -126,7 +126,6 @@ export class CreateInspectionComponent implements OnInit, OnDestroy {
   private handleSuccess(): void {
     this.toastService.showSuccess('Przegląd został pomyślnie utworzony');
     this.dialogRef.close(true);
-    setTimeout(() => window.location.reload(), 300);
   }
 
   private handleError(message: string): void {

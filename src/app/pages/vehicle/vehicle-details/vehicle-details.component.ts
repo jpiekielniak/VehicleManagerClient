@@ -23,7 +23,7 @@ import {VehicleService} from "../services/vehicle/vehicle.service";
 import {MenuItem} from "primeng/api";
 import {VehicleDetails} from "./types/vehicle-details.type";
 import {Service} from "./types/service.type";
-import { InsuranceDialogService } from "./services/dialogs/insurance/insurance-dialog.service";
+import {InsuranceDialogService} from "./services/dialogs/insurance/insurance-dialog.service";
 
 @Component({
   selector: 'app-vehicle-details',
@@ -91,13 +91,14 @@ export class VehicleDetailsComponent implements OnInit {
   async openEditDialog(): Promise<void> {
     if (!this.vehicle) return;
 
-    const result = await firstValueFrom(
-      this.vehicleDialog.openVehicleEdit(this.vehicle)
+    await firstValueFrom(
+      this.vehicleDialog.openVehicleEdit(this.vehicle).pipe(
+        filter((result): result is VehicleDetails => !!result),
+        tap((updatedVehicle) => {
+          this.vehicle$.next(updatedVehicle);
+        })
+      )
     );
-
-    if (result) {
-      this.vehicle$.next(result);
-    }
   }
 
   async confirmVehicleDelete(): Promise<void> {
@@ -121,8 +122,7 @@ export class VehicleDetailsComponent implements OnInit {
       filter((id): id is string => !!id),
       tap(id => this.vehicleId = id),
       switchMap(id => this.vehicleService.getById(id)),
-      catchError(err => {
-        console.error('Failed to fetch vehicle details', err);
+      catchError(() => {
         return EMPTY;
       })
     ).subscribe(vehicle => this.vehicle$.next(vehicle));
