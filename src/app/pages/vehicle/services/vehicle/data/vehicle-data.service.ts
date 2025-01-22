@@ -37,13 +37,13 @@ export class VehicleDataService {
   }
 
   applySorting(sortConfig: SortConfig<Vehicle>): Observable<PaginationResult<Vehicle>> {
-    const { pageIndex, pageSize } = this.paginationService.getCurrentState();
-    return this.vehicleSortService.applySorting(this.vehicleService, pageIndex, pageSize, sortConfig);
+    const { pageSize } = this.paginationService.getCurrentState();
+    return this.vehicleSortService.applySorting(this.vehicleService, 0, pageSize, sortConfig);
   }
 
   applyFilter(selectedBrand: string): Observable<PaginationResult<Vehicle>> {
-    const { pageIndex, pageSize } = this.paginationService.getCurrentState();
-    return this.vehicleFilterService.applyFilter(this.vehicleService, selectedBrand, pageIndex, pageSize);
+    const { pageSize } = this.paginationService.getCurrentState();
+    return this.vehicleFilterService.applyFilter(this.vehicleService, selectedBrand, 0, pageSize);
   }
 
   changePage(event: PageChangeEvent): Observable<PaginationResult<Vehicle>> {

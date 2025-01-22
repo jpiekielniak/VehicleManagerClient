@@ -5,7 +5,7 @@
 
   <ng-container *ngIf="!isLoading">
     <ng-container *ngIf="!isError; else errorState">
-      <ng-container *ngIf="vehicles.length > 0; else emptyState">
+      <ng-container *ngIf="!isLoading && vehicles.length > 0; else emptyState">
         <div class="filters-wrapper">
           <app-filter
             *ngIf="uniqueBrands.length"
